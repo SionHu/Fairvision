@@ -8,7 +8,7 @@ Please choose one of the following:<br>
 
 {% if user.is_authenticated %}
 	<p class="pt-3">Logged in as <strong>{{ user.username }}</strong>. <a href="{% url 'logout' %}">Log out</a>.</p>
-	<h2>You are <strong>{{ user.is_player }} player</strong></h2>
+	<h2>You are <strong>{{ user.player.score }} player</strong></h2>
 
 	{% if user.isplayer %}
 		<h2>You are <strong>{{ user_type }} with score {{ user.score }}</strong></h2>
