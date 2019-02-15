@@ -15,7 +15,7 @@ Please choose one of the following:<br>
 	{% endif %}
 
 	{% if user.isrequester %}
-		<h2>You are <strong>requester</strong></h2>
+		<h2>You are <strong>requester with occupation {{ user.requester.occupation }}</strong></h2>
 	{% endif %}
 
 

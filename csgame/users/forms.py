@@ -85,7 +85,12 @@ class RequesterSignUpForm(UserCreationForm):
     def save(self):
         user = super().save(commit=False)
         user.is_requester = True
-        if commit:
-            user.save()
-            requester = Requester.objects.create(user=user)
+        user.is_player = False
+        user.save()
+        requester = Requester.objects.create(user=user)
         return user
+
+class RequesterChangeForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email')
