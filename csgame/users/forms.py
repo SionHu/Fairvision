@@ -48,7 +48,8 @@ class PlayerSignUpForm(UserCreationForm):
         user.is_player = True
         user.save()
         player = Player.objects.create(user=user)
-        player.score=0
+        player.score=100
+        player.save()
         return user
 
 class PlayerChangeForm(UserChangeForm):
@@ -83,11 +84,14 @@ class RequesterSignUpForm(UserCreationForm):
     
     @transaction.atomic
     def save(self):
+        # //print(self)
         user = super().save(commit=False)
         user.is_requester = True
         user.is_player = False
         user.save()
         requester = Requester.objects.create(user=user)
+        requester.occupation = self.cleaned_data['occupation']
+        requester.save()
         return user
 
 class RequesterChangeForm(UserChangeForm):
