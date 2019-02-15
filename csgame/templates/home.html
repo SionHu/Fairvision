@@ -6,7 +6,22 @@
 <h1> Hello world! </h1>
 Please choose one of the following:<br>
 
-<a href="{% url 'login' %}" class="btn btn-light" role="button">Log in</a>
-<p>   or   </p>
-<a href="{% url 'signup' %}" class="btn btn-light" role="button">Sign Up</a>
+{% if user.is_authenticated %}
+	<p class="pt-3">Logged in as <strong>{{ user.username }}</strong>. <a href="{% url 'logout' %}">Log out</a>.</p>
+	<h2>You are <strong>{{ user.is_player }} player</strong></h2>
+
+	{% if user.isplayer %}
+		<h2>You are <strong>{{ user_type }} with score {{ user.score }}</strong></h2>
+	{% endif %}
+
+	{% if user.isrequester %}
+		<h2>You are <strong>requester</strong></h2>
+	{% endif %}
+
+
+{% else %}
+    <a href="{% url 'login' %}" class="btn btn-light" role="button">Log in</a>
+	<a href="{% url 'signup' %}" class="btn btn-primary" role="button">Sign up</a>
+{% endif %}
+
 {% endblock %}

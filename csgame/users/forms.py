@@ -5,13 +5,25 @@ from django.forms.utils import ValidationError
 
 from users.models import Player, Requester, CustomUser
 
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta(UserCreationForm):
+        model = CustomUser
+        fields = ('username', 'email')
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        model = CustomUser
+        fields = UserChangeForm.Meta.fields
+
 class PlayerSignUpForm(UserCreationForm):
     
     email = forms.EmailField(max_length=254)
     
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'email', 'password1', 'password2')
 
     
     def clean_email(self):
@@ -36,14 +48,20 @@ class PlayerSignUpForm(UserCreationForm):
         user.is_player = True
         user.save()
         player = Player.objects.create(user=user)
+        player.score=0
         return user
- 
+
 class PlayerChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email')
 
 class RequesterSignUpForm(UserCreationForm):
+    email = forms.EmailField(max_length=254)
+    occupation = forms.CharField(label="Your occupation(optional)", required=False)
+
+    fields = ('username', 'email', 'occupation', 'password1,', 'password2')
+
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         
@@ -69,4 +87,5 @@ class RequesterSignUpForm(UserCreationForm):
         user.is_requester = True
         if commit:
             user.save()
+            requester = Requester.objects.create(user=user)
         return user
