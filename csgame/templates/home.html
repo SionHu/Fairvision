@@ -1,0 +1,12 @@
+
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1> Hello world! </h1>
+Please choose one of the following:<br>
+
+<a href="{% url 'login' %}" class="btn btn-light" role="button">Log in</a>
+<p>   or   </p>
+<a href="{% url 'signup' %}" class="btn btn-light" role="button">Sign Up</a>
+{% endblock %}

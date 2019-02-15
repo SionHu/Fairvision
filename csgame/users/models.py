@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
     
 class Player(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
-    score = models.IntergerField(default=0)
+    score = models.IntegerField(default=0)
     
 
 class Requester(models.Model):

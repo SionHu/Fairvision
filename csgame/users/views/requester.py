@@ -2,6 +2,12 @@ from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.views.generic import CreateView
 
+from ..models import CustomUser
+from ..forms import RequesterSignUpForm
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from ..decorators import requester_required
+
 class RequesterSignUpView(CreateView):
     model = CustomUser
     form_class = RequesterSignUpForm
@@ -14,4 +20,4 @@ class RequesterSignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('teachers:quiz_change_list')
+        return redirect('home')

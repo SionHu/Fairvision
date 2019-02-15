@@ -1,12 +1,13 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
+from django.forms.utils import ValidationError
 
-from users.models import Player, Subject, CustomUser
+from users.models import Player, Requester, CustomUser
 
 class PlayerSignUpForm(UserCreationForm):
     
-    email = forms.EmailForms(max_length=254)
+    email = forms.EmailField(max_length=254)
     
     class Meta(UserCreationForm.Meta):
         model = CustomUser
@@ -36,8 +37,13 @@ class PlayerSignUpForm(UserCreationForm):
         user.save()
         player = Player.objects.create(user=user)
         return user
-    
-class TeacherSignUpForm(UserCreationForm):
+ 
+class PlayerChangeForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email')
+
+class RequesterSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         

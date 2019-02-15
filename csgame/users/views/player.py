@@ -8,7 +8,6 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from ..decorators import player_required
 
-@method_decorator([login_required, player_required], name='dispatch')
 
 class PlayerSignUpView(CreateView):
     model = CustomUser
@@ -22,4 +21,4 @@ class PlayerSignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('students:quiz_list')
+        return redirect('home')
