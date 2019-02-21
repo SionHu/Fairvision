@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 
-from users.models import Player, Requester, CustomUser
+from users.models import Player, Requester, CustomUser, Document
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -48,7 +48,8 @@ class PlayerSignUpForm(UserCreationForm):
         user.is_player = True
         user.save()
         player = Player.objects.create(user=user)
-        player.score=100
+        player.score=0
+        player.level=0
         player.save()
         return user
 
@@ -98,3 +99,10 @@ class RequesterChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email')
+
+
+# class UploadFileForm():
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ('description', 'document',)
