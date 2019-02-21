@@ -17,12 +17,14 @@ from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
 from users.views import player, requester, home
+from csgame import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path('', home.home, name='home'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/profile', views.profile, name='profile'),
     path('accounts/signup/', home.SignUpView.as_view(), name='signup'),
     path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
     path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
+    path('accounts/profile/', include('django.contrib.auth.urls')),
 ]
