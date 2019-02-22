@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 class CustomUser(AbstractUser):
     # bools to keep track of types of users
@@ -27,6 +29,8 @@ class Label(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
     isTaboo = models.BooleanField(default=False)
     # taboo = model.ForeignKey(ImageModel)
+    def __str__(self):
+        return self.name
 
 class Zipfile(models.Model):
     # One requester can have multiple uploads, not useful so far
@@ -34,12 +38,10 @@ class Zipfile(models.Model):
     # local repository upload for testing
     zip_upload= models.FileField()
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    tb1 = models.CharField(max_length=20, default='N/A')
-    tb2 = models.CharField(max_length=20, default='N/A')
-    tb3 = models.CharField(max_length=20, default='N/A')
-    taboo1 = models.ManyToManyField(Label, related_name='first_taboo')
-    taboo2 = models.ManyToManyField(Label, related_name='second_taboo')
-    taboo3 = models.ManyToManyField(Label, related_name='third_taboo')
+    taboo_words_1 = models.CharField(verbose_name='Taboo Word 1', max_length=20, default='N/A')
+    taboo_words_2 = models.CharField(verbose_name='Taboo Word 2', max_length=20, default='N/A')
+    taboo_words_3 = models.CharField(verbose_name='Taboo Word 3', max_length=20, default='N/A')
+    tb = models.ManyToManyField(Label, related_name='taboowords')
 
     def __str__(self):
         return self.zip_upload.name
@@ -50,5 +52,11 @@ class Document(models.Model):
     description = models.CharField(max_length=255, blank=True)
     document = models.FileField(upload_to='documents/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+# Delete the file on S3 at the same time delete model on Django
+@receiver(models.signals.post_delete, sender=Zipfile)
+def delete_file(sender, instance, *args, **kwargs):
+    """ Deletes image files on `post_delete` """
+    instance.zip_upload.delete(save=False)
 
 

@@ -85,7 +85,7 @@ class RequesterSignUpForm(UserCreationForm):
     
     @transaction.atomic
     def save(self):
-        # //print(self)
+        # Requester Saving
         user = super().save(commit=False)
         user.is_requester = True
         user.is_player = False
@@ -110,28 +110,26 @@ class DocumentForm(forms.ModelForm):
 class ZipfileForm(forms.ModelForm):
     class Meta:
         model = Zipfile
-        fields = ('zip_upload', 'tb1', 'tb2', 'tb3',)
+        fields = ('zip_upload', 'taboo_words_1', 'taboo_words_2', 'taboo_words_3',)
 
     @transaction.atomic
     def save(self):
-        # //print(self)
+        # ZipFile Saving
         zipfile = super().save(commit=False)
-        taboo1 =  Label.objects.create()
-        taboo2 = Label.objects.create()
-        taboo3 = Label.objects.create()
-        taboo1.name=self.cleaned_data['tb1']
-        taboo2.name=self.cleaned_data['tb2']
-        taboo3.name=self.cleaned_data['tb3']
+        taboo1 =  Label.objects.create(name=self.cleaned_data['taboo_words_1'])
         taboo1.isTaboo=True
-        taboo2.isTaboo=True
-        taboo3.isTaboo=True
-
         taboo1.save()
+        taboo2 = Label.objects.create(name=self.cleaned_data['taboo_words_2'])
+        taboo2.isTaboo=True
         taboo2.save()
+        taboo3 = Label.objects.create(name=self.cleaned_data['taboo_words_3'])
+        taboo3.isTaboo=True
         taboo3.save()
-        zipfile.taboo1 = taboo1
-        zipfile.taboo2 = taboo2
-        zipfile.taboo3 = taboo3
 
         zipfile.save()
+        zipfile.tb.add(taboo1)
+        zipfile.tb.add(taboo2)
+        zipfile.tb.add(taboo3)
+        # zipfile.save()
+
         return zipfile

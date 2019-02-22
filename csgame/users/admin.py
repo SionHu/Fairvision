@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Zipfile
+from .models import CustomUser, Zipfile, Label
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -12,3 +12,4 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Zipfile)
+admin.site.register(Label)
