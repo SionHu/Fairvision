@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 
-from users.models import Player, Requester, CustomUser, Document
+from users.models import Player, Requester, CustomUser, Document, Label
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -101,8 +101,31 @@ class RequesterChangeForm(UserChangeForm):
         fields = ('username', 'email')
 
 
-# class UploadFileForm():
+# for testing purpose:
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ('description', 'document',)
+
+class ZipfileForm(forms.ModelForm):
+    class Meta:
+        model = Zipfile
+        fields = ('taboo words 1', 'taboo words 2', 'taboo words 3', 'File')
+
+    @transaction.atomic
+    def save(self):
+        # //print(self)
+        zipfile = super.save(commit=False)
+        taboo1 =  Label.objects.create(ziplink=zipfile)
+        taboo2 = Label.objects.create(ziplink=zipfile)
+        taboo3 = Label.objects.create(ziplink=zipfile)
+        taboo1.isTaboo=True
+        taboo2.isTaboo=True
+        taboo3.isTaboo=True
+
+        taboo1.save()
+        taboo2.save()
+        taboo3.save()
+
+        zipfile.save()
+        return zipfile

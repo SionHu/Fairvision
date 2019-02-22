@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from ..forms import DocumentForm
+from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from .models import Zipfile
+
 
 def simple_upload(request):
     if request.method == 'POST' and request.FILES['myfile']:
@@ -25,3 +30,14 @@ def model_form_upload(request):
     return render(request, 'model_form_upload.html', {
         'form': form
     })
+
+class ZipfileCreateView(CreateView):
+    model = Zipfile
+    fields = ['upload',]
+    success_url=reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        zipfiles=Zipfile.objects.all()
+        context['zipfiles']=zipfiles
+        return context

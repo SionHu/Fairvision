@@ -29,7 +29,6 @@ urlpatterns = [
     path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     url(r'^uploads/simple/$', upload.simple_upload, name='simple_upload'),
     url(r'^uploads/form/$', upload.model_form_upload, name='model_form_upload'),
+    
 ]
 
-if settings.DEBUG:
-    urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
