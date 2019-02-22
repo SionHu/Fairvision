@@ -110,18 +110,18 @@ class DocumentForm(forms.ModelForm):
 class ZipfileForm(forms.ModelForm):
     class Meta:
         model = Zipfile
-        fields = ('zip_upload', 'taboo1', 'taboo2', 'taboo3',)
+        fields = ('zip_upload', 'tb1', 'tb2', 'tb3',)
 
     @transaction.atomic
     def save(self):
         # //print(self)
-        zipfile = super.save(commit=False)
+        zipfile = super().save(commit=False)
         taboo1 =  Label.objects.create()
         taboo2 = Label.objects.create()
         taboo3 = Label.objects.create()
-        taboo1.name=self.cleaned_data['taboo_words_1']
-        taboo2.name=self.cleaned_data['taboo_words_2']
-        taboo3.name=self.cleaned_data['taboo_words_3']
+        taboo1.name=self.cleaned_data['tb1']
+        taboo2.name=self.cleaned_data['tb2']
+        taboo3.name=self.cleaned_data['tb3']
         taboo1.isTaboo=True
         taboo2.isTaboo=True
         taboo3.isTaboo=True

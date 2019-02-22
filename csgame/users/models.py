@@ -34,6 +34,9 @@ class Zipfile(models.Model):
     # local repository upload for testing
     zip_upload= models.FileField()
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    tb1 = models.CharField(max_length=20, default='N/A')
+    tb2 = models.CharField(max_length=20, default='N/A')
+    tb3 = models.CharField(max_length=20, default='N/A')
     taboo1 = models.ManyToManyField(Label, related_name='first_taboo')
     taboo2 = models.ManyToManyField(Label, related_name='second_taboo')
     taboo3 = models.ManyToManyField(Label, related_name='third_taboo')

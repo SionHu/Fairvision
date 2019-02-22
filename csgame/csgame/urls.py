@@ -29,6 +29,7 @@ urlpatterns = [
     path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     url(r'^uploads/simple/$', upload.simple_upload, name='simple_upload'),
     url(r'^uploads/form/$', upload.model_form_upload, name='model_form_upload'),
-    
+    path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
+
 ]
 
