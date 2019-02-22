@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import configparser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +36,7 @@ try:
     AWS_ACCESS_KEY_ID = my_env['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = my_env['AWS_SECRET_ACCESS_KEY']
     AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
-    
+
 except KeyError as e:
     print('Lacking Environment Variables: ' + str(e))
     exit()
