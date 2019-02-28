@@ -36,10 +36,13 @@ try:
     AWS_ACCESS_KEY_ID = my_env['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = my_env['AWS_SECRET_ACCESS_KEY']
     AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
+    IS_PRODUCTION_SITE = my_env['IS_PRODUCTION_SITE']
+    TEST_HTTP_HANDLING = my_env['TEST_HTTP_HANDLING']
 
 except KeyError as e:
     print('Lacking Environment Variables: ' + str(e))
     exit()
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -49,7 +52,11 @@ except KeyError as e:
 SECRET_KEY = 'jsl5xrm^in$mx)ftkdeybi0#(uqr)j=e=eer%eg2rxk#h#1l9r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if IS_PRODUCTION_SITE or TEST_HTTP_HANDLING:
+    DEBUG=False
+    print("We are now at testing 404 or production site")
+else:
+    DEBUG=True
 
 ALLOWED_HOSTS = [
 	'cdstrain.herokuapp.com',

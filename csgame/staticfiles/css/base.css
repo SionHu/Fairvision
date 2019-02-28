@@ -1,0 +1,15 @@
+body{
+	color: white;
+}
+
+h1{
+	font-size: 60px;
+}
+
+::-moz-selection {
+  background-color: #0099cc;
+}
+
+::selection {
+  background-color: #0099cc;
+} 

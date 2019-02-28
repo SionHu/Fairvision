@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 
-from users.models import Player, Requester, CustomUser, Document, Label, Zipfile
+from users.models import Player, CustomUser, Label
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -58,6 +58,7 @@ class PlayerChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username', 'email')
 
+'''
 class RequesterSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254)
     occupation = forms.CharField(label="Your occupation(optional)", required=False)
@@ -101,12 +102,6 @@ class RequesterChangeForm(UserChangeForm):
         fields = ('username', 'email')
 
 
-# for testing purpose:
-class DocumentForm(forms.ModelForm):
-    class Meta:
-        model = Document
-        fields = ('description', 'document',)
-
 class ZipfileForm(forms.ModelForm):
     class Meta:
         model = Zipfile
@@ -133,3 +128,4 @@ class ZipfileForm(forms.ModelForm):
         # zipfile.save()
 
         return zipfile
+'''

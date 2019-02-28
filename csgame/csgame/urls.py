@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
-from users.views import player, requester, home, upload
+from users.views import player, home
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,10 +26,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', home.SignUpView.as_view(), name='signup'),
     path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
-    path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
-    url(r'^uploads/simple/$', upload.simple_upload, name='simple_upload'),
-    url(r'^uploads/form/$', upload.model_form_upload, name='model_form_upload'),
-    path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
+    # path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
+    # path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
 
 ]
 
