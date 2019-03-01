@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
-from users.views import player, home
+from users.views import player, home, gamep
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
     # path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     # path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
+    url(r'^stjs/$', gamep.handle_ajax, name='gametest'),
 
 ]
 

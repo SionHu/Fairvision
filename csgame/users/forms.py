@@ -58,6 +58,10 @@ class PlayerChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username', 'email')
 
+
+class TestForm(forms.Form):
+    test = forms.CharField(label='test', max_length=100)
+
 '''
 class RequesterSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254)

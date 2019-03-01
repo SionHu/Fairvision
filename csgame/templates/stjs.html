@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/stjs.css" %}">
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+            $("button").click(function(){
+                alert("Hello you!")
+    })
+})
+
+$(document).ready(function(){
+        $("#next").submit(function(event){
+            alert("More images!")
+        })
+})
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h1>Hello, Welcome to the game, click the next button to show next images or end the game</h1>
+<div id="div1"><h3>Four images:</h3></div>
+<div class="image-wrapper">
+  <img src="{{ url1 }}" />
+  <span>Caption</span>
+</div>
+
+<div class="image-wrapper">
+  <img src="{{ url2 }}" />
+  <span>Caption 2</span>
+</div>
+
+<div class="image-wrapper">
+  <img src="{{ url3 }}" />
+  <span>Caption 3</span>
+</div>
+
+<div class="image-wrapper">
+  <img src="{{ url4 }}" />
+  <span>Caption 4</span>
+</div>
+
+<form action="/stjs/" method="post" id="next">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+<button onclick="window.location.href='/'">See Hello and Return to Home</button>
+{% endblock %}
