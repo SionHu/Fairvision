@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path('', home.home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signup/', home.SignUpView.as_view(), name='signup'),
+    # path('accounts/signup/', home.SignUpView.as_view(), name='signup'),
     path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
     # path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     # path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
