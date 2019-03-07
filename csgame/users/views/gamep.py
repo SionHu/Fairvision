@@ -8,9 +8,11 @@ import botocore
 from botocore.client import Config
 import random
 
+basket = {'taboo1', 'taboo2', 'taboo3',}
 def handle_ajax(request):
-    # generate random unique numbers
-    data = random.sample(range(1, 800), 4)
+    # test to see if we can get a number of words
+    # generate random unique numbers, without any models (First Try)
+    data = random.sample(range(121, 800), 4)
     for d in data:
         print("{0:04d}".format(d))
     print("4 random numbers are", data)
@@ -81,8 +83,9 @@ def handle_ajax(request):
         form = TestForm(request.POST)
 
         if form.is_valid():
-            input = form.cleaned_data['test']
-            print("input is:", input)
+            input1 = form.cleaned_data['test']
+            print("input is:", input1)
+            basket.add(input1)
     form = TestForm()
     # print("form is: ", form)
-    return render(request, 'stjs.html',{'form': form, 'url1': url1, 'url2': url2, 'url3': url3, 'url4': url4})
+    return render(request, 'stjs.html',{'form': form, 'url1': url1, 'url2': url2, 'url3': url3, 'url4': url4, 'dictionary': basket, })

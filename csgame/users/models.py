@@ -57,3 +57,17 @@ def delete_file(sender, instance, *args, **kwargs):
     instance.zip_upload.delete(save=False)
 '''
 
+class ImageModel(models.Model):
+    # name = models.CharField(max_length=64, primary_key=True)
+    img = models.ImageField(upload_to="airplanes/")
+    label = models.ManyToManyField(Label, related_name='labels')
+    def __str__(self):
+        return self.img.name
+
+# Delete the file on S3 at the same time delete model on Django
+@receiver(models.signals.post_delete, sender=ImageModel)
+def delete_file(sender, instance, *args, **kwargs):
+    """ Deletes image files on `post_delete` """
+    instance.img.delete(save=False)
+
+

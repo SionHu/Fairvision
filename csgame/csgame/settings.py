@@ -122,7 +122,7 @@ if 'DATABASE_URL' in os.environ:
 
 import dj_database_url
 if in_heroku:
-    DATABASES = {'default': dj_database_url.config()}
+    DATABASES = {'default': dj_database_url.config(default=config('DATABASE_URL'))}
 else:
     DATABASES = {
         'default': {

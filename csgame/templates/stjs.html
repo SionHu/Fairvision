@@ -52,5 +52,10 @@ $(document).ready(function(){
     <input type="submit" value="Submit">
 </form>
 
+<h2>The history of words</h2>
+{% for dic in dictionary %}
+  <h3>The word is: {{ dic }}</h3>
+{% endfor %}
+
 <button onclick="window.location.href='/'">See Hello and Return to Home</button>
 {% endblock %}
