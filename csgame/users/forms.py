@@ -3,8 +3,11 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 
-from users.models import Player, CustomUser, Label
+from users.models import Player, CustomUser, Label, ImageModel
 
+# Override the default filefield to make it possible to upload multiple files on admin site 1st step
+
+    
 class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
@@ -58,11 +61,11 @@ class PlayerChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username', 'email')
 
-
+'''
 class TestForm(forms.Form):
     test = forms.CharField(label='test', max_length=100)
 
-'''
+
 class RequesterSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254)
     occupation = forms.CharField(label="Your occupation(optional)", required=False)
