@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/stjs.css" %}">
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+        $("#next").submit(function(event){
+            alert("More images!")
+        })
+})
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Hello, Welcome to the game, click the next button to show next images or end the game</h1>
+<!-- IMAGES -->
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <!-- style="height: 350 px" will give more space -->
+            <div class="col-sm-4 mh-100">
+                <img src="{{ url1 }}" id="img1" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+            <div class="col-sm-4 mh-100">
+                <img src="{{ url2 }}" id="img2" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <!-- style="height: 350 px" will give more space -->
+            <div class="col-sm-4 mh-100">
+                <img src="{{ url3 }}" id="img3" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+            <div class="col-sm-4 mh-100">
+                <img src="{{ url4 }}" id="img4" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+        </div>
+    </div>
+    <!-- END IMAGES -->
+
+    <!-- INPUT BAR -->
+    <div class="input-group mb-3 container">
+        
+        <div class="input-group-prepend">
+            <form action='/stjs/' method='post' id='next'>
+                {% csrf_token %}
+                {{ form }}
+                <button type="button" id="btn">
+                    <span class="input-group-text">INPUT
+                    </span>
+                </button>
+                <button type="submit" id="nextbtn">
+                    <span class="input-group-text">
+                        NEXT
+                    </span>
+                </button>
+            </form>
+            
+        </div>
+    </div>
+    <!-- END INPUT BAR -->
+
+<script>
+        //input button listener when clicked
+        document.getElementById("btn").addEventListener("click", function() {
+            if (document.getElementById("id_test").value != "") { //makes sure no empty input TODO: move keyup function in here
+                var txt = document.getElementById("id_test").value; //inputted text
+                addLi();
+                console.log(txt); //puts entered string on console
+                document.getElementById("id_test").value = ""; //clear entry field
+            }
+
+        });
+
+        //input bar listener when "enter" is hit
+        document.getElementById("id_test")
+            .addEventListener("keyup", function(event) {
+                event.preventDefault();
+                if (event.keyCode === 13 && document.getElementById("id_test").value != "") { //make sure space is hit and input box is not empty string
+                    document.getElementById("btn").click(); //basically calls the button click function
+                }
+            });
+</script>
+    <!-- END SCRIPT -->
+
+<ul id="list">
+    </ul>
+
+    <!-- add attributes to the list -->
+    <script>
+        function addLi() {
+            var txtVal = document.getElementById("id_test").value,
+                listNode = document.getElementById('list'),
+                liNode = document.createElement("LI"),
+                txtNode = document.createTextNode(txtVal);
+
+            liNode.appendChild(txtNode);
+            listNode.appendChild(liNode);
+        }
+
+    </script>
+
+
+
+<button onclick="window.location.href='/'">See Hello and Return to Home</button>
+{% endblock %}

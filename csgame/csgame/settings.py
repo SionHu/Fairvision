@@ -11,10 +11,39 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import configparser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR =  os.path.dirname(PROJECT_ROOT)
+
+
+# Get Environment Variables from .env
+my_env = os.environ.copy()
+parser = configparser.ConfigParser({k: v.replace('$', '$$') for k, v in os.environ.items()},
+         interpolation=configparser.ExtendedInterpolation())
+def defaultSect(fp): yield '[DEFAULT]\n'; yield from fp
+settingsFile = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(settingsFile):
+    with open(settingsFile) as stream:
+        parser.read_file(defaultSect(stream))
+        for k, v in parser["DEFAULT"].items():
+            my_env.setdefault(k.upper(), v)
+
+# Environment Variables Import
+try:
+    # Amazon s3 secret
+    AWS_ACCESS_KEY_ID = my_env['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = my_env['AWS_SECRET_ACCESS_KEY']
+    AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
+    IS_PRODUCTION_SITE = my_env['IS_PRODUCTION_SITE']
+    TEST_HTTP_HANDLING = my_env['TEST_HTTP_HANDLING']
+
+except KeyError as e:
+    print('Lacking Environment Variables: ' + str(e))
+    exit()
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -23,8 +52,12 @@ BASE_DIR =  os.path.dirname(PROJECT_ROOT)
 SECRET_KEY = 'jsl5xrm^in$mx)ftkdeybi0#(uqr)j=e=eer%eg2rxk#h#1l9r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if IS_PRODUCTION_SITE or TEST_HTTP_HANDLING:
+    DEBUG=False
+else:
+    DEBUG=True
 
+DEBUG=True
 ALLOWED_HOSTS = [
 	'cdstrain.herokuapp.com',
     '127.0.0.1'	
@@ -41,6 +74,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
+    'corsheaders',
+    'rest_framework',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -86,7 +122,7 @@ if 'DATABASE_URL' in os.environ:
 
 import dj_database_url
 if in_heroku:
-    DATABASES = {'default': dj_database_url.config()}
+    DATABASES = {'default': dj_database_url.config(default=config('DATABASE_URL'))}
 else:
     DATABASES = {
         'default': {
@@ -152,3 +188,16 @@ LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'home'
 
+# Cloud Service by amazon s-3
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_DEFAULT_ACL = None
+
+# File upload ?
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+#Default file storage
+DEFAULT_FILE_STORAGE = 'csgame.storage_backends.MediaStorage'
