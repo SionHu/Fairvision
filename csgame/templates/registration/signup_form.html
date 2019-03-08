@@ -12,62 +12,30 @@
                 <hr style="border-top: 1px solid #FFC312;">
             </div>
                 
-            <div class="card-body" style="margin-bottom: 20px">
-<!--
-			    	<div class="row">
-			    	    <div class="col-xs-6 col-sm-6 col-md-6">
-			    	        <div class="form-group">
-			                     <input type="text" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name">
-			    	        </div>
-			             </div>
-			                 
-                         <div class="col-xs-6 col-sm-6 col-md-6">
-			    	            <div class="form-group">
-			    					<input type="text" name="last_name" id="last_name" class="form-control input-sm" placeholder="Last Name">
-			    	            </div>
-			    	     </div>
-			    	</div>
-
-			    	<div class="row">
-			    	    <div class="col-xs-6 col-sm-6 col-md-6">
-			    	        <div class="form-group">
-			    	            <input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
-			    	        </div>
-			    	    </div>
-			    	    
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-			    	        <select class="form-control">
-                                <option value="" disabled selected>Select your age</option>
-                                <option value="1">16</option>
-                                <option value="2">17</option>
-                                <option value="3">18</option>
-                                <option value="4">19</option>
-                                <option value="5">20</option>
-                                <option value="6">21</option>
-                            </select>
-			             </div>
-			    	</div>
-                    
-
-			    	<div class="form-group">
-			    	            <input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password">
-			    	        </div>
-                    
-                    <div class="form-group">
-			    	            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password">
-			    	        </div>
-			    			
-			    	<input type="submit" value="Register" class="btn btn-info btn-block">
--->
+            <div class="card-body" style="margin: auto">
                 
 
-  <div class="row" style="margin: 20px">
-
-      <h2>Sign up as a {{ user_type }}</h2>
+  <div class="row" style="margin: auto">
       <form method="post" novalidate>
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next }}">
-        {{ form }}
+        {% for field in form.visible_fields %}
+          <p>
+          {{ field.label_tag }}   
+          <br>
+                {% if field.errors %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                {% endif %}
+          
+          {{ field }}
+          
+<!--
+          {% if field.help_text %}
+            {{ field.help_text }}
+          {% endif %}
+-->        </p>  
+    {% endfor %}
         <button type="submit" class="btn btn-success">Sign up</button>
       </form>
         
@@ -78,21 +46,4 @@
     </div>
 </div>
 
-
-<!--
-<div class="container">    
-  <div class="row">
-    <div class="col-md-8 col-sm-10 col-12">
-      <h2>Sign up as a {{ user_type }}</h2>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next }}">
-        {{ form }}
-        <button type="submit" class="btn btn-success">Sign up</button>
-      </form>
-        
-    </div>
-  </div>    
-</div>
--->
 {% endblock %}

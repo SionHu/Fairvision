@@ -1,7 +1,6 @@
 
 {% extends 'base.html' %}
 
-
 {% block content %}
 
 <div class="container">
@@ -17,7 +16,7 @@
     {% endif %}
     
     {% if user.is_authenticated %}
-        <p class="pt-3">Logged in as <strong>{{ user.username }}</strong>. <a href="{% url 'logout' %}">Log out</a>.</p>
+        <p class="pt-3">Logged in as <strong>{{ user.username }}</strong>. <a href="{% url 'logout' %}">Log out</a></p>
 	   <h2>You are <strong>{{ user.isrequester }} player</strong></h2>
 
 	   {% if user.is_player %}
@@ -29,9 +28,18 @@
     {% endif %}
     
     {% else %}    
-        <h1>A demo of the game play. </h1>
+
+  <div class="row h-100 justify-content-center align-items-center">
+      <center>
+          <h2>Welcomt to the Crowdsourcing Game!</h2>
+          <br>
+            <a href="{% url 'phase01' %}">
+                <button class="btn btn-lg btn-success"><span><i class="fa fa-gamepad"></i></span> Start the Game</button>
+            </a>
+        </center>
+  </div>
+        
     {% endif %}
-    
     
 </div>
 {% endblock %}

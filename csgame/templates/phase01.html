@@ -19,49 +19,74 @@ $(document).ready(function(){
 
 {% block content %}
 
-<div class="container">
-<h3>Hello, Welcome to the game, click the next button to show next images or end the game</h3>
-<!-- IMAGES -->
-        <div class="row justify-content-md-center">
+<div class="text-center">
+    <h3>Game on!</h3>
+</div>    
+    
+<div class="row">
+        
+    <!-- IMAGES -->
+        <div class="col-md-8" style="margin-right: inherit">
+        <div class="row justify-content-md-center mt-4">
             <!-- style="height: 350 px" will give more space -->
-            <div class="col-sm-4 mh-100">
-                <img src="{{ url1 }}" id="img1" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            <div class="card col-sm-4" style="height: 35%; width: 108rem">
+                <div class="card-body">
+                    <img src="{{ url1 }}" id="img1" class="d-inline-block img-fluid">
+                </div> 
             </div>
-            <div class="col-sm-4 mh-100">
-                <img src="{{ url2 }}" id="img2" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            
+            <div class="card col-sm-4" style="height: 35%">
+                <div class="card-body">
+                    <img src="{{ url2 }}" id="img2" class="d-inline-block img-fluid" style="width:100% height:100%">
+                </div> 
             </div>
         </div>
+    
         <div class="row justify-content-md-center">
             <!-- style="height: 350 px" will give more space -->
-            <div class="col-sm-4 mh-100">
-                <img src="{{ url3 }}" id="img3" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            <div class="card col-sm-4" style="height: 35%">
+                <div class="card-body">
+                    <img src="{{ url3 }}" id="img3" class="d-inline-block img-fluid" style="width:100% height:100%">
+                </div> 
             </div>
-            <div class="col-sm-4 mh-100">
-                <img src="{{ url4 }}" id="img4" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            <div class="card col-sm-4" style="height: 35%">
+                <div class="card-body">
+                    <img src="{{ url4 }}" id="img4" class="d-inline-block img-fluid" style="width:100% height:100%">
+                </div> 
             </div>
+        </div>
         </div>
     <!-- END IMAGES -->
-
+    
+    <br>
+    
+    <div class="col-md-4 mt-4">
+        
     <!-- INPUT BAR -->
     <div class="input-group mb-3">
-        
         <div class="input-group-prepend">
-            <form action='/phase01/' method='post' id='next'>
-                {% csrf_token %}
-                {{ form }}
-                <button type="button" id="btn">
-                    <span class="input-group-text">INPUT
-                    </span>
-                </button>
-                <button type="submit" id="nextbtn" class="btn ">
-                    <span class="input-group-text">
-                        NEXT
-                    </span>
-                </button>
-            </form>
+            <button id="btn" class="btn btn-success">Input</button>
+            <input id="id_test" type="text" name="attribute">
         </div>
     </div>
     <!-- END INPUT BAR -->
+
+    <!-- NEXT BUTTON -->
+<!--
+    <div class="mb-3">
+        <button id="nextbtn" class="btn btn-primary">Next</button>
+    </div>
+-->
+    <!-- END NEXT BUTTON -->
+        
+    <!--  History of typed in attributes  -->
+    <div class="card" style="width: 50%">
+        <div class="card-content">
+            <ul id="list"></ul>
+        </div>
+    </div>
+        
+    </div>
 
 <script>
         //input button listener when clicked
@@ -74,20 +99,35 @@ $(document).ready(function(){
             }
 
         });
-
+    
+    
         //input bar listener when "enter" is hit
-        document.getElementById("id_test")
-            .addEventListener("keyup", function(event) {
+        document.getElementById("id_test").addEventListener("keyup", function(event) {
                 event.preventDefault();
                 if (event.keyCode === 13 && document.getElementById("id_test").value != "") { //make sure space is hit and input box is not empty string
                     document.getElementById("btn").click(); //basically calls the button click function
                 }
             });
+    
+        //next button listener
+        document.getElementById("nextbtn").addEventListener("click", function() {
+            if (document.getElementById("list").getElementsByTagName("li").length != 0) {
+                var arr = [];
+                while (arr.length < 4) {
+                    var r = Math.floor(Math.random() * 40) + 1;
+                    if (arr.indexOf(r) === -1) arr.push(r); //makes sure integers are unique
+                }
+                document.getElementById("img1").src = "img/img" + arr[0] + ".jpg";
+                document.getElementById("img2").src = "img/img" + arr[1] + ".jpg";
+                document.getElementById("img3").src = "img/img" + arr[2] + ".jpg";
+                document.getElementById("img4").src = "img/img" + arr[3] + ".jpg";
+
+
+                $('li').remove();
+            }
+        })
 </script>
     <!-- END SCRIPT -->
-
-<ul id="list">
-    </ul>
 
     <!-- add attributes to the list -->
     <script>
@@ -103,8 +143,5 @@ $(document).ready(function(){
 
     </script>
 
-
-
-<button onclick="window.location.href='/'">See Hello and Return to Home</button>
 </div>
 {% endblock %}
