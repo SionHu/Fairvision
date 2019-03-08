@@ -3,25 +3,35 @@
 
 
 {% block content %}
-<h1> Hello world! </h1>
-Please choose one of the following:<br>
 
-{% if user.is_authenticated %}
-	<p class="pt-3">Logged in as <strong>{{ user.username }}</strong>. <a href="{% url 'logout' %}">Log out</a>.</p>
-	<h2>You are <strong>{{ user.isrequester }} player</strong></h2>
+<div class="container">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {% for error in form.non_field_errors %}
+        <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+      {% endfor %}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %}
+    
+    {% if user.is_authenticated %}
+        <p class="pt-3">Logged in as <strong>{{ user.username }}</strong>. <a href="{% url 'logout' %}">Log out</a>.</p>
+	   <h2>You are <strong>{{ user.isrequester }} player</strong></h2>
 
-	{% if user.is_player %}
-		<h2>You are <strong>{{ user_type }} with score {{ user.player.score }}</strong></h2>
-	{% endif %}
+	   {% if user.is_player %}
+		  <h2>You are <strong>{{ user_type }} with score {{ user.player.score }}</strong></h2>
+	   {% endif %}
 
-	{% if user.is_requester %}
-		<h2>You are <strong>requester with occupation {{ user.requester.occupation }}</strong></h2>
-	{% endif %}
-
-
-{% else %}
-    <a href="{% url 'login' %}" class="btn btn-light" role="button">Log in</a>
-	<a href="{% url 'player_signup' %}" class="btn btn-primary" role="button">Sign up</a>
-{% endif %}
-
+	   {% if user.is_requester %}
+		  <h2>You are <strong>requester with occupation {{ user.requester.occupation }}</strong></h2>
+    {% endif %}
+    
+    {% else %}    
+        <h1>A demo of the game play. </h1>
+    {% endif %}
+    
+    
+</div>
 {% endblock %}
