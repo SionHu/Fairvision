@@ -6,14 +6,7 @@
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-        $("#next").submit(function(event){
-            alert("More images!")
-        })
-})
 
-</script>
 
 {% endblock %}
 
@@ -115,26 +108,23 @@ $(document).ready(function(){
         //next button listener
         $('#nextbtn').click(function(event){
             alert("New Images Inbound!")
-            // get the value of CSRF token
-            
+            var resultArray = [];
+
             if (document.getElementById("list").getElementsByTagName("li").length != 0) {
                 //retrieve the values and store it
-                var arr = [];
-                while (arr.length < 4) {
-                    var r = Math.floor(Math.random() * 40) + 1;
-                    if (arr.indexOf(r) === -1) arr.push(r); //makes sure integers are unique
-                }
-
-
+                $('#list li').each(function(){
+                    resultArray.push($(this).text());
+                });
+                //alert(resultArray);
                 //remove the list
                 $('li').remove();
-                //post method
             }
-            data = ['a', 'b', 'c', 'd'];
+            // get the value of CSRF token
             var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
             // console.log(CSRFtoken)
+            //post method 
             $.post('{% url 'phase01' %}', {
-                'data': data,
+                'data': resultArray,
                 csrfmiddlewaretoken : CSRFtoken
             }, function(data){});
             // reload the webpage to set new images

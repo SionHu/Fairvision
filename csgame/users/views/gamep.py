@@ -82,6 +82,7 @@ def handle_ajax(request):
 
     # print("Url is: ", url), get array data from here 
     if request.method == 'POST':
-        print("Hi there")
+        data = request.POST.getlist('data[]')
+        print("I got data: ", data)
     # form = TestForm()
     return render(request, 'phase01.html',{ 'url1': url1, 'url2': url2, 'url3': url3, 'url4': url4, 'dictionary': basket, })
