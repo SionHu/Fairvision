@@ -47,14 +47,12 @@
         <div class="collapse navbar-collapse" id="exCollapsingNavbar">
             <ul class="nav navbar-nav">
                 <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Service</a></li>
                 <li class="nav-item"><a href="#" class="nav-link">More</a></li>
             </ul>
             <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
                 <li class="dropdown order-1">
                     {% if user.is_authenticated %}
-                        <button type="button" onclick="location.href='{% url 'profile' %}'" class="btn btn-outline-secondary dropdown" >{{ user.username }}</button>
+                        <button type="button" onclick="location.href='{% url 'login' %}'" class="btn btn-outline-secondary dropdown" >{{ user.username }}</button>
     
                     {% else %}    
                         <button type="button" onclick="location.href='{% url 'login' %}'" class="btn btn-outline-secondary dropdown" >Login</button>

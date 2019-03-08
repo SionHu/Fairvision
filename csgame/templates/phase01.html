@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block css %}
-<link rel="stylesheet" href="{% static "css/stjs.css" %}">
+<link rel="stylesheet" href="{% static "css/phase01.css" %}">
 {% endblock %}
 
 {% block scripts %}
@@ -19,9 +19,9 @@ $(document).ready(function(){
 
 {% block content %}
 
-<h1>Hello, Welcome to the game, click the next button to show next images or end the game</h1>
+<div class="container">
+<h3>Hello, Welcome to the game, click the next button to show next images or end the game</h3>
 <!-- IMAGES -->
-    <div class="container">
         <div class="row justify-content-md-center">
             <!-- style="height: 350 px" will give more space -->
             <div class="col-sm-4 mh-100">
@@ -40,27 +40,25 @@ $(document).ready(function(){
                 <img src="{{ url4 }}" id="img4" class="img-thumbnail d-inline-block" style="width:100% height:100%">
             </div>
         </div>
-    </div>
     <!-- END IMAGES -->
 
     <!-- INPUT BAR -->
-    <div class="input-group mb-3 container">
+    <div class="input-group mb-3">
         
         <div class="input-group-prepend">
-            <form action='/stjs/' method='post' id='next'>
+            <form action='/phase01/' method='post' id='next'>
                 {% csrf_token %}
                 {{ form }}
                 <button type="button" id="btn">
                     <span class="input-group-text">INPUT
                     </span>
                 </button>
-                <button type="submit" id="nextbtn">
+                <button type="submit" id="nextbtn" class="btn ">
                     <span class="input-group-text">
                         NEXT
                     </span>
                 </button>
             </form>
-            
         </div>
     </div>
     <!-- END INPUT BAR -->
@@ -108,4 +106,5 @@ $(document).ready(function(){
 
 
 <button onclick="window.location.href='/'">See Hello and Return to Home</button>
+</div>
 {% endblock %}
