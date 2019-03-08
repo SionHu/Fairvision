@@ -25,6 +25,57 @@ $(document).ready(function(){
 {% block content %}
 
 <h1>Hello, Welcome to the game, click the next button to show next images or end the game</h1>
+<!-- IMAGES -->
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <!-- style="height: 350 px" will give more space -->
+            <div class="col-sm-4 mh-100">
+                replace with actual image from database api
+                <img src="{{ url1 }}" id="img1" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+            <div class="col-sm-4 mh-100">
+                replace with actual image from database api
+                <img src="{{ url2 }}" id="img2" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <!-- style="height: 350 px" will give more space -->
+            <div class="col-sm-4 mh-100">
+                replace with actual image from database api
+                <img src="{{ url3 }}" id="img3" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+            <div class="col-sm-4 mh-100">
+                replace with actual image from database api
+                <img src="{{ url4 }}" id="img4" class="img-thumbnail d-inline-block" style="width:100% height:100%">
+            </div>
+        </div>
+    </div>
+    <!-- END IMAGES -->
+
+    <!-- INPUT BAR -->
+    <div class="input-group mb-3 container">
+        <div class="input-group-prepend">
+            <button id="btn">
+                <span class="input-group-text">INPUT
+                </span>
+            </button>
+            <input id="in" type="text" name="attribute">
+        </div>
+    </div>
+    <!-- END INPUT BAR -->
+
+    <!-- NEXT BUTTON -->
+    <div class="container">
+        <button id="nextbtn">
+            <span class="input-group-text">NEXT
+            </span>
+        </button>
+    </div>
+
+    <!-- END NEXT BUTTON -->
+
+
+<!-- whb stupid test
 <div id="div1"><h3>Four images:</h3></div>
 <div class="image-wrapper">
   <img src="{{ url1 }}" />
@@ -45,6 +96,7 @@ $(document).ready(function(){
   <img src="{{ url4 }}" />
   <span>Caption 4</span>
 </div>
+-->
 
 <form action="/stjs/" method="post" id="next">
     {% csrf_token %}

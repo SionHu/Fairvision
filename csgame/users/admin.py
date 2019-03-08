@@ -10,12 +10,12 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
 
-class ImageMoedlInline(admin.StackedInline):
-    model = ImageModel
-    extra = 1
+#class ImageMoedlInline(admin.StackedInline):
+#    model = ImageModel
+#    extra = 1
 
 class ImageModelAdmin(admin.ModelAdmin):
-    inlines = [ImageMoedlInline]
+    # inlines = [ImageMoedlInline]
     def save_model(self, request, obj, form, change):
         obj.save()
  
