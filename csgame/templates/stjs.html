@@ -8,18 +8,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-            $("button").click(function(){
-                alert("Hello you!")
-    })
-})
-
-$(document).ready(function(){
         $("#next").submit(function(event){
             alert("More images!")
         })
 })
 
 </script>
+
 {% endblock %}
 
 {% block content %}
@@ -30,22 +25,18 @@ $(document).ready(function(){
         <div class="row justify-content-md-center">
             <!-- style="height: 350 px" will give more space -->
             <div class="col-sm-4 mh-100">
-                replace with actual image from database api
                 <img src="{{ url1 }}" id="img1" class="img-thumbnail d-inline-block" style="width:100% height:100%">
             </div>
             <div class="col-sm-4 mh-100">
-                replace with actual image from database api
                 <img src="{{ url2 }}" id="img2" class="img-thumbnail d-inline-block" style="width:100% height:100%">
             </div>
         </div>
         <div class="row justify-content-md-center">
             <!-- style="height: 350 px" will give more space -->
             <div class="col-sm-4 mh-100">
-                replace with actual image from database api
                 <img src="{{ url3 }}" id="img3" class="img-thumbnail d-inline-block" style="width:100% height:100%">
             </div>
             <div class="col-sm-4 mh-100">
-                replace with actual image from database api
                 <img src="{{ url4 }}" id="img4" class="img-thumbnail d-inline-block" style="width:100% height:100%">
             </div>
         </div>
@@ -54,60 +45,67 @@ $(document).ready(function(){
 
     <!-- INPUT BAR -->
     <div class="input-group mb-3 container">
+        
         <div class="input-group-prepend">
-            <button id="btn">
-                <span class="input-group-text">INPUT
-                </span>
-            </button>
-            <input id="in" type="text" name="attribute">
+            <form action='/stjs/' method='post' id='next'>
+                {% csrf_token %}
+                {{ form }}
+                <button type="button" id="btn">
+                    <span class="input-group-text">INPUT
+                    </span>
+                </button>
+                <button type="submit" id="nextbtn">
+                    <span class="input-group-text">
+                        NEXT
+                    </span>
+                </button>
+            </form>
+            
         </div>
     </div>
     <!-- END INPUT BAR -->
 
-    <!-- NEXT BUTTON -->
-    <div class="container">
-        <button id="nextbtn">
-            <span class="input-group-text">NEXT
-            </span>
-        </button>
-    </div>
+<script>
+        //input button listener when clicked
+        document.getElementById("btn").addEventListener("click", function() {
+            if (document.getElementById("id_test").value != "") { //makes sure no empty input TODO: move keyup function in here
+                var txt = document.getElementById("id_test").value; //inputted text
+                addLi();
+                console.log(txt); //puts entered string on console
+                document.getElementById("id_test").value = ""; //clear entry field
+            }
 
-    <!-- END NEXT BUTTON -->
+        });
+
+        //input bar listener when "enter" is hit
+        document.getElementById("id_test")
+            .addEventListener("keyup", function(event) {
+                event.preventDefault();
+                if (event.keyCode === 13 && document.getElementById("id_test").value != "") { //make sure space is hit and input box is not empty string
+                    document.getElementById("btn").click(); //basically calls the button click function
+                }
+            });
+</script>
+    <!-- END SCRIPT -->
+
+<ul id="list">
+    </ul>
+
+    <!-- add attributes to the list -->
+    <script>
+        function addLi() {
+            var txtVal = document.getElementById("id_test").value,
+                listNode = document.getElementById('list'),
+                liNode = document.createElement("LI"),
+                txtNode = document.createTextNode(txtVal);
+
+            liNode.appendChild(txtNode);
+            listNode.appendChild(liNode);
+        }
+
+    </script>
 
 
-<!-- whb stupid test
-<div id="div1"><h3>Four images:</h3></div>
-<div class="image-wrapper">
-  <img src="{{ url1 }}" />
-  <span>Caption</span>
-</div>
-
-<div class="image-wrapper">
-  <img src="{{ url2 }}" />
-  <span>Caption 2</span>
-</div>
-
-<div class="image-wrapper">
-  <img src="{{ url3 }}" />
-  <span>Caption 3</span>
-</div>
-
-<div class="image-wrapper">
-  <img src="{{ url4 }}" />
-  <span>Caption 4</span>
-</div>
--->
-
-<form action="/stjs/" method="post" id="next">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
-
-<h2>The history of words</h2>
-{% for dic in dictionary %}
-  <h3>The word is: {{ dic }}</h3>
-{% endfor %}
 
 <button onclick="window.location.href='/'">See Hello and Return to Home</button>
 {% endblock %}

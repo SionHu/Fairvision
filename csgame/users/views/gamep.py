@@ -87,5 +87,5 @@ def handle_ajax(request):
             print("input is:", input1)
             basket.add(input1)
     form = TestForm()
-    # print("form is: ", form)
+    print("form is: ", form)
     return render(request, 'stjs.html',{'form': form, 'url1': url1, 'url2': url2, 'url3': url3, 'url4': url4, 'dictionary': basket, })
