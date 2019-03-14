@@ -19,6 +19,7 @@ from django.contrib import admin
 from users.views import player, home, gamep
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 
 urlpatterns = [
@@ -31,5 +32,6 @@ urlpatterns = [
     # path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     # path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
     url(r'^phase01/$', gamep.handle_ajax, name='phase01'),
+    url(r'^profile/$', views.profile, name='profile'),
 ]
 

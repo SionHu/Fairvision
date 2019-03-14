@@ -2,15 +2,13 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-# from ..forms import TestForm
+from ..forms import TestForm
 import boto3
 import botocore
 from botocore.client import Config
 import random
 
 basket = {'taboo1', 'taboo2', 'taboo3',}
-
-@login_required
 def handle_ajax(request):
     # test to see if we can get a number of words
     # generate random unique numbers, without any models (First Try)
@@ -80,9 +78,14 @@ def handle_ajax(request):
         else:
             raise
 
-    # print("Url is: ", url), get array data from here 
+    # print("Url is: ", url)
     if request.method == 'POST':
-        data = request.POST.getlist('data[]')
-        print("I got data: ", data)
-    # form = TestForm()
-    return render(request, 'phase01.html',{ 'url1': url1, 'url2': url2, 'url3': url3, 'url4': url4, 'dictionary': basket, })
+        form = TestForm(request.POST)
+
+        if form.is_valid():
+            input1 = form.cleaned_data['test']
+            print("input is:", input1)
+            basket.add(input1)
+    form = TestForm()
+    print("form is: ", form)
+    return render(request, 'phase01.html',{'form': form, 'url1': url1, 'url2': url2, 'url3': url3, 'url4': url4, 'dictionary': basket, })
