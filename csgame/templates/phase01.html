@@ -85,6 +85,8 @@
         {% csrf_token %}
     </form>
 <script>
+        var image_list = {{ json_list|safe }}
+        // alert(image_list)
         //input button listener when clicked
         document.getElementById("btn").addEventListener("click", function() {
             if (document.getElementById("id_test").value != "") { //makes sure no empty input TODO: move keyup function in here
@@ -107,7 +109,7 @@
     
         //next button listener
         $('#nextbtn').click(function(event){
-            alert("New Images Inbound!")
+            // alert("New Images Inbound!")
             var resultArray = [];
 
             if (document.getElementById("list").getElementsByTagName("li").length != 0) {
@@ -125,6 +127,7 @@
             //post method 
             $.post('{% url 'phase01' %}', {
                 'data': resultArray,
+                'img_list' : image_list, 
                 csrfmiddlewaretoken : CSRFtoken
             }, function(data){});
             // reload the webpage to set new images
