@@ -60,7 +60,10 @@ else:
 DEBUG=True
 ALLOWED_HOSTS = [
 	'cdstrain.herokuapp.com',
-    '127.0.0.1'	
+    '127.0.0.1',
+    'https://crowdsourcing-game.herokuapp.com/',
+    'https://crowdsourcing-game.herokuapp.com',
+    'crowdsourcing-game.herokuapp.com'
 ]
 
 
