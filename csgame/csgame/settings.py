@@ -60,7 +60,10 @@ else:
 DEBUG=True
 ALLOWED_HOSTS = [
 	'cdstrain.herokuapp.com',
-    '127.0.0.1'	
+    '127.0.0.1',
+    'https://crowdsourcing-game.herokuapp.com/',
+    'https://crowdsourcing-game.herokuapp.com',
+    'crowdsourcing-game.herokuapp.com'
 ]
 
 
@@ -122,7 +125,7 @@ if 'DATABASE_URL' in os.environ:
 
 import dj_database_url
 if in_heroku:
-    DATABASES = {'default': dj_database_url.config(default=config('DATABASE_URL'))}
+    DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
 else:
     DATABASES = {
         'default': {

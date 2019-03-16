@@ -6,7 +6,14 @@
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+        $("#next").submit(function(event){
+            alert("More images!")
+        })
+})
 
+</script>
 
 {% endblock %}
 
@@ -65,15 +72,19 @@
     <!-- END INPUT BAR -->
 
     <!-- NEXT BUTTON -->
-
+<!--
     <div class="mb-3">
         <button id="nextbtn" class="btn btn-primary">Next</button>
     </div>
-
+-->
     <!-- END NEXT BUTTON -->
         
     <!--  History of typed in attributes  -->
-    <div class="card" style="width: 50%">
+    <div class="card" style="width: 50%; height: auto">
+        <div class="card-title text-center">
+            <h5>Input History</h5>
+        </div>
+        <br>
         <div class="card-content">
             <ul id="list"></ul>
         </div>
@@ -81,9 +92,6 @@
         
     </div>
 
-    <form>
-        {% csrf_token %}
-    </form>
 <script>
         var image_list = {{ json_list|safe }}
         // alert(image_list)
@@ -108,17 +116,22 @@
             });
     
         //next button listener
+
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
             var resultArray = [];
-
             if (document.getElementById("list").getElementsByTagName("li").length != 0) {
-                //retrieve the values and store it
-                $('#list li').each(function(){
-                    resultArray.push($(this).text());
-                });
-                //alert(resultArray);
-                //remove the list
+                var arr = [];
+                while (arr.length < 4) {
+                    var r = Math.floor(Math.random() * 40) + 1;
+                    if (arr.indexOf(r) === -1) arr.push(r); //makes sure integers are unique
+                }
+                document.getElementById("img1").src = "img/img" + arr[0] + ".jpg";
+                document.getElementById("img2").src = "img/img" + arr[1] + ".jpg";
+                document.getElementById("img3").src = "img/img" + arr[2] + ".jpg";
+                document.getElementById("img4").src = "img/img" + arr[3] + ".jpg";
+
+
                 $('li').remove();
             }
             // get the value of CSRF token
@@ -146,7 +159,6 @@
 
             liNode.appendChild(txtNode);
             listNode.appendChild(liNode);
-            console.log(listNode);
         }
 
     </script>
