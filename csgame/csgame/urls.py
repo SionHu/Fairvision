@@ -31,7 +31,8 @@ urlpatterns = [
     path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
     # path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     # path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
-    url(r'^phase01/$', gamep.handle_ajax, name='phase01'),
     url(r'^profile/$', views.profile, name='profile'),
+    url(r'^phase01/$', gamep.handle_ajax, name='phase01'),
+    url(r'^phase02/$', views.phase02, name='phase02'), # Using views for ui, can be changed accordingly
 ]
 
