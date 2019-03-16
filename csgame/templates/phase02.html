@@ -21,17 +21,14 @@ function drop(ev) {
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
 }
-
-// Add an empty card
-function addcard() {
-  var card = "<div class="card" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;"></div>";
-  $("img").after(card);
-  $("img").append(card);
-//  $("body").append(txt1, txt2, txt3);   // Append new elements
-}
-    
+ 
 </script>
 
+<script>
+    function addcard() {
+        $("<div class="res" id = "div" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;">asd</div>").insertAfter(".res");   // Append new elements
+    }
+</script>
 {% endblock %}
 
 {% block content %}
@@ -106,7 +103,7 @@ function addcard() {
     
     <div class="col-8 d-flex justify-content-start">
 <!--        <img src="https://dcassetcdn.com/design_img/1095918/76777/76777_5846308_1095918_image.png" style="height: 40; width: 40" alt="jQuery">-->
-        <div class="card" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;"></div>
+        <div class="res" id = "div" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;"></div>
     </div>
     
 </div>
