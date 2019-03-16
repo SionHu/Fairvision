@@ -93,6 +93,8 @@ $(document).ready(function(){
     </div>
 
 <script>
+        var image_list = {{ json_list|safe }}
+        // alert(image_list)
         //input button listener when clicked
         document.getElementById("btn").addEventListener("click", function() {
             if (document.getElementById("id_test").value != "") { //makes sure no empty input TODO: move keyup function in here
@@ -114,7 +116,10 @@ $(document).ready(function(){
             });
     
         //next button listener
-        document.getElementById("nextbtn").addEventListener("click", function() {
+
+        $('#nextbtn').click(function(event){
+            // alert("New Images Inbound!")
+            var resultArray = [];
             if (document.getElementById("list").getElementsByTagName("li").length != 0) {
                 var arr = [];
                 while (arr.length < 4) {
@@ -129,6 +134,17 @@ $(document).ready(function(){
 
                 $('li').remove();
             }
+            // get the value of CSRF token
+            var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            // console.log(CSRFtoken)
+            //post method 
+            $.post('{% url 'phase01' %}', {
+                'data': resultArray,
+                'img_list' : image_list, 
+                csrfmiddlewaretoken : CSRFtoken
+            }, function(data){});
+            // reload the webpage to set new images
+            location.reload();
         })
 </script>
     <!-- END SCRIPT -->
