@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block css %}
 <link rel="stylesheet" href="{% static "css/phase02.css" %}">
 {% endblock %}
+
 {% block scripts %}
 <script>
 function allowDrop(ev) {
@@ -18,21 +20,69 @@ function drop(ev) {
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
 }
+    
 </script>
 
+<!--Dragula Installation-->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script>
 {% endblock %}
 
 {% block content %}
 <div class="container">
 <!--Helpful link: https://mdbootstrap.com/plugins/jquery/draggable/-->
+<h2>Phase 02: Classification</h2>
+    
+<div class="row justify-content-center">
+    
+    <!--  Used to show the attribute list  -->
+    <div class="col">  <!--  List 1  -->
+        <!--  Each attribute should have this  -->
+        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag1" style="width: 100; height: 40">
+                <a class="m-2">facing right</a>
+            </div>
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag2" style="width: 100; height: 40">
+                <a class="m-2">has wings</a>
+            </div>
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag3" style="width: 100; height: 40">
+                <a class="m-2">background is sky</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col">  <!--  List 2  -->
+        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag4" style="width: 100; height: 40">
+                <a class="m-2">facing right</a>
+            </div>
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag5" style="width: 100; height: 40">
+                <a class="m-2">has wings</a>
+            </div>
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag6" style="width: 100; height: 40">
+                <a class="m-2">background is sky</a>
+        </div>
+    </div>
+    
+    <div class="col">  <!--  List 3  -->
+        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag1" style="width: 100; height: 40">
+                <a class="m-2">facing right</a>
+            </div>
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag2" style="width: 100; height: 40">
+                <a class="m-2">has wings</a>
+            </div>
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag2" style="width: 100; height: 40">
+                <a class="m-2">background is sky</a>
+        </div>
+    </div>
 
-<h2>Drag and Drop</h2>
-
-<div id="div" ondrop="drop(event)" ondragover="allowDrop(event)">
-    <img src="{% static "img/logo.jpg" %}" draggable="true" ondragstart="drag(event)" id="drag1" width="80" height="70">
-</div>
-
-<div id="div" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+</div>    
+    
+<div class="row justify-content-center">
+    <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     
 </div>
+    
+</div>
+
 {% endblock %}
