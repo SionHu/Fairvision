@@ -16,9 +16,7 @@
     {% endif %}
     
     {% if user.is_authenticated %}
-        <p class="pt-3">Logged in as <strong>{{ user.username }}</strong>. <a href="{% url 'logout' %}">Log out</a></p>
-	   <h2>You are <strong>{{ user.isrequester }} player</strong></h2>
-        <br><br><br><div class="row h-100 justify-content-center">
+        <div class="row h-100 justify-content-center align-items-center">
         <center>
           <h2>Welcome to the Crowdsourcing Game!</h2>
           <br>
@@ -28,13 +26,15 @@
         </center>
         </div>
 
+<!--
 	   {% if user.is_player %}
 		  <h2>You are <strong>{{ user_type }} with score {{ user.player.score }}</strong></h2>
 	   {% endif %}
 
 	   {% if user.is_requester %}
 		  <h2>You are <strong>requester with occupation {{ user.requester.occupation }}</strong></h2>
-    {% endif %}
+       {% endif %}
+-->
     
     {% else %}    
 
