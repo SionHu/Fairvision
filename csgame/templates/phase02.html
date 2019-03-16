@@ -19,19 +19,20 @@ function drop(ev) {
   ev.target.appendChild(document.getElementById(data));
 }
 </script>
+
 {% endblock %}
 
 {% block content %}
 <div class="container">
+<!--Helpful link: https://mdbootstrap.com/plugins/jquery/draggable/-->
 
 <h2>Drag and Drop</h2>
-<p>Drag the image back and forth between the two div elements.</p>
 
-<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
-  <img src="img_w3slogo.gif" draggable="true" ondragstart="drag(event)" id="drag1" width="88" height="31">
-    
+<div id="div" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <img src="{% static "img/logo.jpg" %}" draggable="true" ondragstart="drag(event)" id="drag1" width="80" height="70">
 </div>
 
-<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<div id="div" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    
 </div>
 {% endblock %}
