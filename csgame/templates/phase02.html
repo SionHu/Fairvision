@@ -19,6 +19,7 @@ function drag(ev) {
 function drop(ev) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
+  //console.log(data);
   ev.target.appendChild(document.getElementById(data));
 }
  
@@ -26,7 +27,36 @@ function drop(ev) {
 
 <script>
     function addcard() {
-        $("<div class="res" id = "div" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;">asd</div>").insertAfter(".res");   // Append new elements
+        //$("<a>asd</a>").insertAfter(".res");   // Append new elements
+        //var attr = document.getElementById("drag11").getElementsByTagName("center");
+        //console.log(attr);
+        var el = {};
+        var els = document.getElementById("div2").getElementsByTagName("*"); //array
+        
+        //console.log(els[0].getElementsByTagName("*"));
+        var elms = els[0].getElementsByTagName("*");
+        var elm = elms[0];
+        
+        //test print
+        //console.log(elm.innerHTML);
+        
+        $(elm).insertAfter(".res"); //this sorta works but it clears the value inside the box
+        //this shouldn't be a problem if we are getting rid of the boxes after "add card" is clicked
+        
+        /* TESTER. ignore this
+        var elm = {};
+        var elms = document.getElementById("drag11").getElementsByTagName("*");
+        for (var i = 0; i < elms.length; i++) {
+            if (elms[i].id === "d11") {
+                elm = elms[i];
+                break;
+            }
+        }
+        console.log(elm.innerHTML);
+        */
+        //var txt = attr.getElementsByTagName("CENTER").innerHTML;
+        //console.log(txt);
+        //txt.insertAfter(".res");
     }
 </script>
 {% endblock %}
@@ -44,7 +74,7 @@ function drop(ev) {
     <div class="col">  <!--  List 1  -->
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
             <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag11" style="width: 150; height: 40">
-                <center class="m-2">facing right</center>
+                <center id="d11" class="m-2">facing right</center>
             </div>
             <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag12" style="width: 150; height: 40">
                 <center class="m-2">has wings</center>
@@ -103,7 +133,7 @@ function drop(ev) {
     
     <div class="col-8 d-flex justify-content-start">
 <!--        <img src="https://dcassetcdn.com/design_img/1095918/76777/76777_5846308_1095918_image.png" style="height: 40; width: 40" alt="jQuery">-->
-        <div class="res" id = "div" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;"></div>
+        <div class="res" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;"></div>
     </div>
     
 </div>
