@@ -16,8 +16,8 @@ import json
 @login_required
 def handle_ajax(request):
     # Some test
-    #idk = ImageModel.objects.get(img='airplanes/image_0008.jpg')
-    #print(idk.label.all())
+    # idk = ImageModel.objects.get(img='airplanes/image_0053.jpg')
+    # print(idk.label.all())
 
     data = random.sample(range(1, 121), 4)
     print("4 random numbers are", data)
