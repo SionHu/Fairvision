@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-
 from users.models import ImageModel, Label
 
 # from ..forms import TestForm
@@ -10,7 +9,6 @@ import boto3
 import botocore
 from botocore.client import Config
 import random
-
 import json
 
 @login_required
@@ -51,7 +49,6 @@ def handle_ajax(request):
 
     # print("Url is: ", urls)
 
-
     if request.method == 'POST':
         data = request.POST.getlist('data[]')
 #        print("I got data: ", data)
@@ -91,4 +88,3 @@ def handle_ajax(request):
     # form = TestForm()
     json_list = json.dumps(data)
     return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, })
-
