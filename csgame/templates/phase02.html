@@ -29,18 +29,27 @@ function drop(ev) {
     function addcard() {
         //$("<a>asd</a>").insertAfter(".res");   // Append new elements
         //var attr = document.getElementById("drag11").getElementsByTagName("center");
-        //console.log(attr);
-        var el = {};
-        var els = document.getElementById("div2").getElementsByTagName("*"); //array
+        //var els = document.getElementById("div2");
+        //$(els).insertAfter(".res");
+        //console.log(els);
+        //document.getElementById("boxes").appendChild(els);
         
-        //console.log(els[0].getElementsByTagName("*"));
-        var elms = els[0].getElementsByTagName("*");
-        var elm = elms[0];
+        $("<div class=\"res\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250;\"></div>").insertAfter("#div3");
+        
+        /*
+        var el = {};
+        var els = document.getElementById("boxes").getElementsByTagName("*"); //array
+        
+        console.log(els[0].getElementsByTagName("*"));
+        */
+        //var elms = els[0].getElementsByTagName("*");
+        //var elm = elms[0];
         
         //test print
         //console.log(elm.innerHTML);
         
-        $(elm).insertAfter(".res"); //this sorta works but it clears the value inside the box
+        
+        //$(elm).insertAfter(".res"); //this sorta works but it clears the value inside the box
         //this shouldn't be a problem if we are getting rid of the boxes after "add card" is clicked
         
         /* TESTER. ignore this
@@ -131,8 +140,9 @@ function drop(ev) {
         <button class="btn btn-success" onclick="addcard()">Add Card</button>
     </div>
     
-    <div class="col-8 d-flex justify-content-start">
+    <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
 <!--        <img src="https://dcassetcdn.com/design_img/1095918/76777/76777_5846308_1095918_image.png" style="height: 40; width: 40" alt="jQuery">-->
+        <div id="div3"></div>
         <div class="res" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;"></div>
     </div>
     
