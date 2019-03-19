@@ -12,7 +12,7 @@ import random
 import json
 
 @login_required
-def handle_ajax(request):
+def phase01(request):
     # Some test
     # idk = ImageModel.objects.get(img='airplanes/image_0053.jpg')
     # print(idk.label.all())
@@ -88,3 +88,32 @@ def handle_ajax(request):
     # form = TestForm()
     json_list = json.dumps(data)
     return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, })
+
+# View for phase02
+@login_required
+def phase02(request):
+    # Get all (We should have at least 4)
+    hello = ImageModel.objects.exclude(label=None)
+
+    # Generate 3 random unique image number based on available entries
+    data = random.sample(range(0, len(hello)), 3)
+    # print("3 random numbers are", data)
+    
+    KEYS = list()
+    for d in data:
+        KEYS.append(hello[d])
+
+    # print("I got image list: ", KEYS)
+    labels = list()
+
+    for key in  KEYS:
+        img = ImageModel.objects.get(img=key)
+        label = img.label.all()
+
+        if label.exists():
+           labels.append(label)
+        else:
+            # else if there is nothing  
+            pass
+    # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
+    return render(request, 'home.html',{'labels': labels})
