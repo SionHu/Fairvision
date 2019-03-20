@@ -11,38 +11,36 @@
 {% endblock %}
 
 {% block content %}
+<div class="container">
 
-<div class="text-center">
-    <h3>Game on!</h3>
-</div>    
+<h2>Phase 01: Attribute Collection</h2>    
+<hr> <!--  Divider line  -->    
     
 <div class="row">
         
     <!-- IMAGES -->
-        <div class="col-md-8" style="margin-right: inherit">
-        <div class="row justify-content-md-center mt-4">
-            <!-- style="height: 350 px" will give more space -->
-            <div class="card col-sm-4" style="height: 35%; width: 108rem">
+        <div class="col-md-9">
+        <div class="row mt-3">
+            <div class="card col" style="height: 35%;">
                 <div class="card-body">
                     <img src="{{ url1 }}" id="img1" class="d-inline-block img-fluid">
                 </div> 
             </div>
             
-            <div class="card col-sm-4" style="height: 35%">
+            <div class="card col" style="height: 35%">
                 <div class="card-body">
                     <img src="{{ url2 }}" id="img2" class="d-inline-block img-fluid" style="width:100% height:100%">
                 </div> 
             </div>
         </div>
     
-        <div class="row justify-content-md-center">
-            <!-- style="height: 350 px" will give more space -->
-            <div class="card col-sm-4" style="height: 35%">
+        <div class="row">
+            <div class="card col" style="height: 35%">
                 <div class="card-body">
                     <img src="{{ url3 }}" id="img3" class="d-inline-block img-fluid" style="width:100% height:100%">
                 </div> 
             </div>
-            <div class="card col-sm-4" style="height: 35%">
+            <div class="card col" style="height: 35%">
                 <div class="card-body">
                     <img src="{{ url4 }}" id="img4" class="d-inline-block img-fluid" style="width:100% height:100%">
                 </div> 
@@ -53,27 +51,20 @@
     
     <br>
     
-    <div class="col-md-4 mt-4">
+    <div class="col-md-3 mt-3">
         
     <!-- INPUT BAR -->
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <button id="btn" class="btn btn-success">Input</button>
             <input id="id_test" type="text" name="attribute">
+            <button id="nextbtn" type="button" class="btn btn-primary round">Next</button>
         </div>
     </div>
     <!-- END INPUT BAR -->
-
-    <!-- NEXT BUTTON -->
-
-    <div class="mb-3">
-        <button id="nextbtn" class="btn btn-primary">Next</button>
-    </div>
-
-    <!-- END NEXT BUTTON -->
         
     <!--  History of typed in attributes  -->
-    <div class="card" style="width: 50%">
+    <div class="card" style="width: 118%; height: 62%">
         <div class="card-content">
             <ul id="list"></ul>
         </div>
@@ -159,5 +150,6 @@
         }
     </script>
 
+</div>
 </div>
 {% endblock %}
