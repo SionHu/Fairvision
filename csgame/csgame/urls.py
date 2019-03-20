@@ -35,5 +35,6 @@ urlpatterns = [
     url(r'^profile/$', views.profile, name='profile'),
     # Change phase02 view as the link below
     url(r'^phase02/$', gamep.phase02, name='phase02'),
+    url(r'^phase03/$', gamep.phase03, name='phase03')
 ]
 
