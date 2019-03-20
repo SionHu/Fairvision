@@ -20,14 +20,45 @@ function drag(ev) {
 function drop(ev) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
-  //console.log(data);
   ev.target.appendChild(document.getElementById(data));
 }
+    
+document.addEventListener("dragstart", function(event) {
+  // The dataTransfer.setData() method sets the data type and the value of the dragged data
+  event.dataTransfer.setData("Text", event.target.id);
+  
+  // Output some text when starting to drag the p element
+  document.getElementById("info").innerHTML = "Started to drag the attribute.";
+  
+  // Change the opacity of the draggable element
+  event.target.style.opacity = "0.4";
+});
+
+
+// Output some text when finished dragging the p element and reset the opacity
+document.addEventListener("dragend", function(event) {
+  document.getElementById("info").innerHTML = "Finished dragging the attribute.";
+  event.target.style.opacity = "1";
+});
+    
 </script>
 
 <script>
+    var clicks = 0;
     function addcard() {
-        $("<div class=\"res\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250;\"></div>").insertAfter("#div3");
+        clicks++;
+        if (clicks <= 3){
+            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250;\"></div>").insertAfter("#div3");
+            
+        }else if (clicks > 3 && clicks < 8) {
+            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250;\"></div>").insertAfter("#div4");
+        }else{
+            window.alert("Too many cards added. Maybe regroup the attributes?");
+        }
+    }
+    function remcard() { // Haven't been implemented
+        document.getElementById("div2").remove();
+        clicks--;
     }
 </script>
 {% endblock %}
@@ -35,7 +66,15 @@ function drop(ev) {
 {% block content %}
 <div class="container">
 <!--Helpful link: https://mdbootstrap.com/plugins/jquery/draggable/-->
-<h2>Phase 02: Classification</h2>
+<div class="row">
+    <div class="col">
+        <h2>Phase 02: Reduce redundency</h2>
+    </div>
+    <div class="col">
+        <h2 id="info"></h2>
+    </div>
+</div>
+
     
 <hr> <!--  Divider line  -->    
     
@@ -103,13 +142,29 @@ function drop(ev) {
     </div>
     
     <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
-<!--        <img src="https://dcassetcdn.com/design_img/1095918/76777/76777_5846308_1095918_image.png" style="height: 40; width: 40" alt="jQuery">-->
         <div id="div3"></div>
-        <div class="res" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;"></div>
+        <div class="card" id="div2">
+<!--            <button class="btn btn-danger" onclick="remcard()">Remove</button>-->   
+            <div class="card-header">
+                <a class="collapsed card-link" data-toggle="collapse" href="#content">
+                    Card Name
+                    <div ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                </a>
+                
+            </div>
+            <div id="content" class="collapse show" data-parent="#accordion">
+                <div id="droppable" class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;">
+                    
+                </div>
+            </div>
+        </div>
     </div>
     
+<div class="row pb-5">
+    <div id="div4"></div>
 </div>
     
 </div>
+
 
 {% endblock %}
