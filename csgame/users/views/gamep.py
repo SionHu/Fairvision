@@ -128,7 +128,7 @@ def phase02(request):
                 attribute.save()
 
     # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
-    return render(request, 'home.html',{'labels': labels})
+    return render(request, 'phase02.html', {'labels': labels})
 
 # View for phase3
 @login_required

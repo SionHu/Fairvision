@@ -7,7 +7,8 @@
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
+
+<script> //Used to make drag and drop
 function allowDrop(ev) {
   ev.preventDefault();
 }
@@ -22,50 +23,11 @@ function drop(ev) {
   //console.log(data);
   ev.target.appendChild(document.getElementById(data));
 }
- 
 </script>
 
 <script>
     function addcard() {
-        //$("<a>asd</a>").insertAfter(".res");   // Append new elements
-        //var attr = document.getElementById("drag11").getElementsByTagName("center");
-        //var els = document.getElementById("div2");
-        //$(els).insertAfter(".res");
-        //console.log(els);
-        //document.getElementById("boxes").appendChild(els);
-        
         $("<div class=\"res\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250;\"></div>").insertAfter("#div3");
-        
-        /*
-        var el = {};
-        var els = document.getElementById("boxes").getElementsByTagName("*"); //array
-        
-        console.log(els[0].getElementsByTagName("*"));
-        */
-        //var elms = els[0].getElementsByTagName("*");
-        //var elm = elms[0];
-        
-        //test print
-        //console.log(elm.innerHTML);
-        
-        
-        //$(elm).insertAfter(".res"); //this sorta works but it clears the value inside the box
-        //this shouldn't be a problem if we are getting rid of the boxes after "add card" is clicked
-        
-        /* TESTER. ignore this
-        var elm = {};
-        var elms = document.getElementById("drag11").getElementsByTagName("*");
-        for (var i = 0; i < elms.length; i++) {
-            if (elms[i].id === "d11") {
-                elm = elms[i];
-                break;
-            }
-        }
-        console.log(elm.innerHTML);
-        */
-        //var txt = attr.getElementsByTagName("CENTER").innerHTML;
-        //console.log(txt);
-        //txt.insertAfter(".res");
     }
 </script>
 {% endblock %}

@@ -31,11 +31,12 @@ urlpatterns = [
     path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
     # path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     # path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
+    
+    url(r'^profile/$', views.profile, name='profile'),
 
     url(r'^phase01/$', gamep.phase01, name='phase01'),
-    url(r'^profile/$', views.profile, name='profile'),
-    # Change phase02 view as the link below
-    url(r'^phase02/$', gamep.phase02, name='phase02'),
+#    url(r'^phase02/$', gamep.phase02, name='phase02'),
+    url(r'^phase02/$', views.phase02, name='phase02'),
     url(r'^phase03/$', gamep.phase03, name='phase03')
 ]
 
