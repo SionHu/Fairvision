@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from users.models import ImageModel, Label
+from users.models import ImageModel, Label, Attribute
 
 # from ..forms import TestForm
 import boto3
@@ -12,7 +12,7 @@ import random
 import json
 
 @login_required
-def handle_ajax(request):
+def phase01(request):
     # Some test
     # idk = ImageModel.objects.get(img='airplanes/image_0053.jpg')
     # print(idk.label.all())
@@ -88,3 +88,64 @@ def handle_ajax(request):
     # form = TestForm()
     json_list = json.dumps(data)
     return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, })
+
+# View for phase02
+@login_required
+def phase02(request):
+    # Get all (We should have at least 4)
+    hello = ImageModel.objects.exclude(label=None)
+
+    # Generate 3 random unique image number based on available entries
+    data = random.sample(range(0, len(hello)), 3)
+    # print("3 random numbers are", data)
+    
+    KEYS = list()
+    for d in data:
+        KEYS.append(hello[d])
+
+    # print("I got image list: ", KEYS)
+    labels = list()
+
+    for key in  KEYS:
+        img = ImageModel.objects.get(img=key)
+        label = img.label.all()
+
+        if label.exists():
+           labels.append(label)
+        else:
+            # else if there is nothing  
+            pass
+    # Fetch the attributes and make new attributes
+    if reuqest.method == 'POST':
+        attributes = request.POST.getlist('attributes[]')
+        for attr in attributes:
+            attribute = Attribute.objects.filter(word=attr).first()
+            if attribute:
+                # Not save the same name of the attribute twice
+                pass
+            else:
+                attribute = Attibute.objects.create(name=attr)
+                attribute.save()
+
+    # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
+    return render(request, 'home.html',{'labels': labels})
+
+# View for phase3
+@login_required
+def phase03(request):
+
+    attr = Attribute.objects.all()
+    attributes = list()
+
+    if attr.exits():
+        attributes = attr
+    else:
+        # just send only none
+        attr = ['none']
+
+    # Update count
+    if request.method == 'POST':
+        # Do something need to discuss
+        return render(request, 'finish.html',) 
+    else:
+        return render(request, 'phase03.html', {'attributes': attributes})
