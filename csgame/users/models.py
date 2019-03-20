@@ -57,6 +57,11 @@ def delete_file(sender, instance, *args, **kwargs):
     instance.zip_upload.delete(save=False)
 '''
 
+# Attributes that we ask and decide for dataset
+class Attribute(models.Model):
+    word = models.CharField(max_length=20, primary_key=True)
+    count = models.IntegerField(default=0)
+
 class ImageModel(models.Model):
     # name = models.CharField(max_length=64, primary_key=True)
     img = models.ImageField(upload_to="airplanes/")
