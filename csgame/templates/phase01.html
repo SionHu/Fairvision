@@ -6,14 +6,7 @@
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-        $("#next").submit(function(event){
-            alert("More images!")
-        })
-})
 
-</script>
 
 {% endblock %}
 
@@ -72,19 +65,15 @@ $(document).ready(function(){
     <!-- END INPUT BAR -->
 
     <!-- NEXT BUTTON -->
-<!--
+
     <div class="mb-3">
         <button id="nextbtn" class="btn btn-primary">Next</button>
     </div>
--->
+
     <!-- END NEXT BUTTON -->
         
     <!--  History of typed in attributes  -->
-    <div class="card" style="width: 50%; height: auto">
-        <div class="card-title text-center">
-            <h5>Input History</h5>
-        </div>
-        <br>
+    <div class="card" style="width: 50%">
         <div class="card-content">
             <ul id="list"></ul>
         </div>
@@ -92,7 +81,12 @@ $(document).ready(function(){
         
     </div>
 
+    <form>
+        {% csrf_token %}
+    </form>
 <script>
+        var image_list = {{ json_list|safe }}
+        // alert(image_list)
         //input button listener when clicked
         document.getElementById("btn").addEventListener("click", function() {
             if (document.getElementById("id_test").value != "") { //makes sure no empty input TODO: move keyup function in here
@@ -101,7 +95,6 @@ $(document).ready(function(){
                 console.log(txt); //puts entered string on console
                 document.getElementById("id_test").value = ""; //clear entry field
             }
-
         });
     
     
@@ -114,21 +107,29 @@ $(document).ready(function(){
             });
     
         //next button listener
-        document.getElementById("nextbtn").addEventListener("click", function() {
+        $('#nextbtn').click(function(event){
+            // alert("New Images Inbound!")
+            var resultArray = [];
             if (document.getElementById("list").getElementsByTagName("li").length != 0) {
-                var arr = [];
-                while (arr.length < 4) {
-                    var r = Math.floor(Math.random() * 40) + 1;
-                    if (arr.indexOf(r) === -1) arr.push(r); //makes sure integers are unique
-                }
-                document.getElementById("img1").src = "img/img" + arr[0] + ".jpg";
-                document.getElementById("img2").src = "img/img" + arr[1] + ".jpg";
-                document.getElementById("img3").src = "img/img" + arr[2] + ".jpg";
-                document.getElementById("img4").src = "img/img" + arr[3] + ".jpg";
-
-
+                //retrieve the values and store it
+                $('#list li').each(function(){
+                    resultArray.push($(this).text());
+                });
+                //alert(resultArray);
+                //remove the list
                 $('li').remove();
             }
+            // get the value of CSRF token
+            var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            // console.log(CSRFtoken)
+            //post method 
+            $.post('{% url 'phase01' %}', {
+                'data': resultArray,
+                'img_list' : image_list, 
+                csrfmiddlewaretoken : CSRFtoken
+            }, function(data){});
+            // reload the webpage to set new images
+            location.reload();
         })
 </script>
     <!-- END SCRIPT -->
@@ -140,11 +141,10 @@ $(document).ready(function(){
                 listNode = document.getElementById('list'),
                 liNode = document.createElement("LI"),
                 txtNode = document.createTextNode(txtVal);
-
             liNode.appendChild(txtNode);
             listNode.appendChild(liNode);
+            console.log(listNode);
         }
-
     </script>
 
 </div>
