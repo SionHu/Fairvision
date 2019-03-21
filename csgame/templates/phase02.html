@@ -79,58 +79,19 @@ document.addEventListener("dragend", function(event) {
 <hr> <!--  Divider line  -->    
     
 <div class="row">
-    
     <!--  Used to show the attribute list  -->
-    <div class="col">  <!--  List 1  -->
+    {% for label in labels %}
+    <div class="col">  <!-- Single List Set  -->
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag11" style="width: 150; height: 40">
-                <center id="d11" class="m-2">facing right</center>
+            
+            {% for lb in label %}
+            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" style="width: 150; height: 40">
+                <center id="d11" class="m-2">{{ lb }}</center>
             </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag12" style="width: 150; height: 40">
-                <center class="m-2">has wings</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag13" style="width: 150; height: 40">
-                <center class="m-2">background is sky</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag14" style="width: 150; height: 40">
-                <center class="m-2">xiao hu</center>
-            </div>
+            {% endfor %}
         </div>
     </div>
-    
-    <div class="col">  <!--  List 2  -->
-        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll;">
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag21" style="width: 150; height: 40;">
-                <center class="m-2">facing right</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag22" style="width: 150; height: 40">
-                <center class="m-2">has wings</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag23" style="width: 150; height: 40">
-                <center class="m-2">background is sky</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag24" style="width: 150; height: 40">
-                <center class="m-2">SionWHO</center>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col">  <!--  List 3  -->
-        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag31" style="width: 150; height: 40">
-                <center class="m-2">facing right</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag32" style="width: 150; height: 40">
-                <center class="m-2">has wings</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag33" style="width: 150; height: 40">
-                <center class="m-2">background is sky</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag34" style="width: 150; height: 40">
-                <center class="m-2">sion</center>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>    
 
 <hr> <!--  Divider line  -->
@@ -140,11 +101,35 @@ document.addEventListener("dragend", function(event) {
     <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
         Add Card
     </button>
-    <button class="btn btn-success" style="width: 100">
+    
+    <button id= "nextbtn" type="button" class="btn btn-success round" style="width: 100">
         Submit
     </button>
 </div>
-    
+
+<!-- Important: csrf token for django communication -->
+<form>
+    {% csrf_token %}
+</form>
+<script>
+    //submit button listener
+        $('#nextbtn').click(function(event){
+            // Insert attribute names in the resultArray, make it empty first
+            var resultArray = ['wings'];
+            // get the value of CSRF token
+            var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            //post method 
+            $.post('{% url 'phase02' %}', {
+                'attributes': resultArray,
+                csrfmiddlewaretoken : CSRFtoken
+            }, function(data){});
+            // reload the webpage to set new images
+            location.reload();
+        })
+
+</script>
+
+
 <div class="row">
     <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
         <div id="div3"></div>
