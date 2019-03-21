@@ -43,12 +43,27 @@ document.addEventListener("dragend", function(event) {
     
 </script>
 
-<script>
+<script> // Card functions and send
+    // Global vars
     var clicks = 0;
+    var resultArr = [];
+    
     function addcard() {
+        // Add the number of cards
         clicks++;
+        
+        // Get card name from user
+        var name = prompt("Please type the card name", "Choose one attribute as the name");
+        
+        if (name == null){
+            window.alert("Card name cannot be empty!")
+        } else {
+            resultArr.push(name);
+        }
+      
+        // Add aother card
         if (clicks <= 3){
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"></div>").insertAfter("#div3");
+            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"><div class=\"card-title\">Need to change it to the previous input from user</div></div>").insertAfter("#div3");
             
         }else if (clicks > 3 && clicks < 8) {
             $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"></div>").insertAfter("#div4");
@@ -56,16 +71,29 @@ document.addEventListener("dragend", function(event) {
             window.alert("Too many cards added. Maybe regroup the attributes?");
         }
     }
+    
+    function send(){
+        // get the value of CSRF token
+        var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        // console.log(CSRFtoken)
+        //post method 
+        $.post('{% url 'phase02' %}', {
+            'attribute': resultArr, 
+            csrfmiddlewaretoken : CSRFtoken
+        }, function(data){});
+    }
+    
     function remcard() { // Haven't been implemented
         document.getElementById("div2").remove();
         clicks--;
     }
 </script>
+
 {% endblock %}
 
 {% block content %}
 <div class="container">
-<!--Helpful link: https://mdbootstrap.com/plugins/jquery/draggable/-->
+
 <div class="row">
     <div class="col">
         <h2>Phase 02: Reduce redundency</h2>
@@ -137,33 +165,24 @@ document.addEventListener("dragend", function(event) {
     
 <!--  Categories  -->
 <div class="row justify-content-center">
+    
     <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
         Add Card
     </button>
     <button class="btn btn-success" style="width: 100">
         Submit
     </button>
+    
 </div>
     
+    <form>
+        {% csrf_token %}
+    </form>
+    
 <div class="row">
-    <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
-        <div id="div3"></div>
-        <div class="card" id="div2" style="height: 200; width: 250; overflow-y: scroll">
-<!--            <button class="btn btn-danger" onclick="remcard()">Remove</button>-->   
-<!--
-            <div class="card-header">
-                <a class="collapsed card-link" data-toggle="collapse" href="#content">
-                    Card Name
-                    <div ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                </a>
-                
-            </div>
--->
-            <div id="content" class="collapse show" data-parent="#accordion">
-                <div id="droppable" class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;" >
-                </div>
-            </div>
-        </div>
+    <div id="div3"></div>
+    <div class="card" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250; overflow-y: scroll">
+        <div class="card-title">Name</div>
     </div>
 </div>
     
