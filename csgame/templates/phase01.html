@@ -11,11 +11,10 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
 
 <h2>Phase 01: Collect attributes</h2>    
-<hr> <!--  Divider line  -->     
+<hr> <!--  Divider line  -->    
     
 <div class="row">
         
@@ -63,14 +62,6 @@
         </div>
     </div>
     <!-- END INPUT BAR -->
-
-    <!-- NEXT BUTTON -->
-<!--
-    <div class="mb-3">
-        <button id="nextbtn" class="btn btn-primary">Next</button>
-    </div>
--->
-    <!-- END NEXT BUTTON -->
         
     <!--  History of typed in attributes  -->
     <div class="card" style="width: 118%; height: 62%">
@@ -135,6 +126,18 @@
             location.reload();
             }
         })
+
+	$(function() {
+
+    var $body = $(document);
+    $body.bind('scroll', function() {
+        // "Disable" the horizontal scroll.
+        if ($body.scrollLeft() !== 0) {
+            $body.scrollLeft(0);
+        }
+    });
+
+}); 
 </script>
     <!-- END SCRIPT -->
 
@@ -153,4 +156,5 @@
 
 </div>
 </div>
+
 {% endblock %}

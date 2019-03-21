@@ -6,3 +6,6 @@ def profile(request):
 
 def phase02(request):
     return render(request, 'phase02.html')
+
+def phase03(request):
+    return render(request, 'phase03.html')
