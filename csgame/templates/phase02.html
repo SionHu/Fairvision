@@ -48,10 +48,10 @@ document.addEventListener("dragend", function(event) {
     function addcard() {
         clicks++;
         if (clicks <= 3){
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250;\"></div>").insertAfter("#div3");
+            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"></div>").insertAfter("#div3");
             
         }else if (clicks > 3 && clicks < 8) {
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250;\"></div>").insertAfter("#div4");
+            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"></div>").insertAfter("#div4");
         }else{
             window.alert("Too many cards added. Maybe regroup the attributes?");
         }
@@ -136,15 +136,21 @@ document.addEventListener("dragend", function(event) {
 <hr> <!--  Divider line  -->
     
 <!--  Categories  -->
-<div class="row">
-    <div class="col-2 d-flex justify-content-start">
-        <button class="btn btn-success" onclick="addcard()">Add Card</button>
-    </div>
+<div class="row justify-content-center">
+    <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
+        Add Card
+    </button>
+    <button class="btn btn-success" style="width: 100">
+        Submit
+    </button>
+</div>
     
+<div class="row">
     <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
         <div id="div3"></div>
-        <div class="card" id="div2">
+        <div class="card" id="div2" style="height: 200; width: 250; overflow-y: scroll">
 <!--            <button class="btn btn-danger" onclick="remcard()">Remove</button>-->   
+<!--
             <div class="card-header">
                 <a class="collapsed card-link" data-toggle="collapse" href="#content">
                     Card Name
@@ -152,19 +158,20 @@ document.addEventListener("dragend", function(event) {
                 </a>
                 
             </div>
+-->
             <div id="content" class="collapse show" data-parent="#accordion">
-                <div id="droppable" class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;">
-                    
+                <div id="droppable" class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;" >
                 </div>
             </div>
         </div>
     </div>
+</div>
     
-<div class="row pb-5">
+<div class="row pb-5 ">
     <div id="div4"></div>
 </div>
     
-</div>
+
 
 
 {% endblock %}
