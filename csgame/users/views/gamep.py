@@ -116,16 +116,20 @@ def phase02(request):
             # else if there is nothing  
             pass
     # Fetch the attributes and make new attributes
-    if reuqest.method == 'POST':
+    if request.method == 'POST':
+        print("POST method")
         attributes = request.POST.getlist('attributes[]')
+        print("I got attributes: ", attributes)
         for attr in attributes:
             attribute = Attribute.objects.filter(word=attr).first()
             if attribute:
                 # Not save the same name of the attribute twice
+                print("Same attribute:", attribute)
                 pass
             else:
-                attribute = Attibute.objects.create(name=attr)
-                attribute.save()
+                # attribute = Attibute.objects.create(name=attr)
+                # attribute.save()
+                print("I got new attribute: ", attribute)
 
     # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
     return render(request, 'phase02.html', {'labels': labels})

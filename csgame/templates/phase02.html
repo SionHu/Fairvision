@@ -75,12 +75,14 @@ document.addEventListener("dragend", function(event) {
     function send(){
         // get the value of CSRF token
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-        // console.log(CSRFtoken)
+        console.log(CSRFtoken)
         //post method 
         $.post('{% url 'phase02' %}', {
-            'attribute': resultArr, 
+            'attributes': resultArr, 
             csrfmiddlewaretoken : CSRFtoken
-        }, function(data){});
+        }, function(resultArr){});
+        // location.reload();
+        console.log("Hello")
     }
     
     function remcard() { // Haven't been implemented
@@ -169,7 +171,7 @@ document.addEventListener("dragend", function(event) {
     <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
         Add Card
     </button>
-    <button class="btn btn-success" style="width: 100">
+    <button type="button"  class="btn btn-success" onclick="send()" style="width: 100">
         Submit
     </button>
     
@@ -178,16 +180,20 @@ document.addEventListener("dragend", function(event) {
     <form>
         {% csrf_token %}
     </form>
-    
+
+
 <div class="row">
     <div id="div3"></div>
+    <!-- Sample card test
     <div class="card" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250; overflow-y: scroll">
         <div class="card-title">Name</div>
     </div>
+    -->
 </div>
     
 <div class="row pb-5 ">
     <div id="div4"></div>
+
 </div>
     
 
