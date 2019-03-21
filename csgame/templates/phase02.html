@@ -102,33 +102,10 @@ document.addEventListener("dragend", function(event) {
         Add Card
     </button>
     
-    <button id= "nextbtn" type="button" class="btn btn-success round" style="width: 100">
+    <button class="btn btn-success round" style="width: 100">
         Submit
     </button>
 </div>
-
-<!-- Important: csrf token for django communication -->
-<form>
-    {% csrf_token %}
-</form>
-<script>
-    //submit button listener
-        $('#nextbtn').click(function(event){
-            // Insert attribute names in the resultArray, make it empty first
-            var resultArray = ['wings'];
-            // get the value of CSRF token
-            var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-            //post method 
-            $.post('{% url 'phase02' %}', {
-                'attributes': resultArray,
-                csrfmiddlewaretoken : CSRFtoken
-            }, function(data){});
-            // reload the webpage to set new images
-            location.reload();
-        })
-
-</script>
-
 
 <div class="row">
     <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
