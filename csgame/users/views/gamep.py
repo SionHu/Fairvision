@@ -137,7 +137,7 @@ def phase03(request):
     attr = Attribute.objects.all()
     attributes = list()
 
-    if attr.exits():
+    if attr.exists():
         attributes = attr
     else:
         # just send only none
