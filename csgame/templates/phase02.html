@@ -62,11 +62,11 @@ document.addEventListener("dragend", function(event) {
         }
       
         // Add aother card
-        if (clicks <= 3){
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"><div class=\"card-title\">Need to change it to the previous input from user</div></div>").insertAfter("#div3");
+        if (clicks <= 4){
+            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"><div class=\"card-title\">"+name+"</div></div>").insertAfter("#div3");
             
-        }else if (clicks > 3 && clicks < 8) {
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"></div>").insertAfter("#div4");
+        }else if (clicks > 4 && clicks <= 8) {
+            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div4");
         }else{
             window.alert("Too many cards added. Maybe regroup the attributes?");
         }
