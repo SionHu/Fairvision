@@ -17,12 +17,11 @@ function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function drop(ev) {
-
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        ev.target.appendChild(document.getElementById(data));
-    }    
+function drop(ev) {    
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}    
     
     
 document.addEventListener("dragstart", function(event) {
@@ -55,8 +54,8 @@ document.addEventListener("dragend", function(event) {
         clicks++;
         
         // Get card name from user
-        var name = prompt("Please type the card name", "Choose one attribute as the name");
-        var alertmsg = "Choose one attribute as the name";
+        var alertmsg = "Choose one attribute as the category name";
+        var name = prompt("Please type the card name", alertmsg);
         
         if (!name || name==alertmsg || !name.replace(/\s/g, '').length){
             window.alert("Card name cannot be empty or unchanged!")
@@ -119,7 +118,7 @@ document.addEventListener("dragend", function(event) {
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
             {% with forloop.counter as outer_counter %}
             {% for lb in label %}
-                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="{{ outer_counter }}{{ forloop.counter }}" style="width: 150; height: 40">
+                <div class="card justify-content-center m-2 mx-auto" draggable="true" ondragstart="drag(event)" id="{{ outer_counter }}{{ forloop.counter }}" style="width: 210; height: 40;">
                     <center id="d11" class="m-2">{{ lb }}</center>
                 </div>
             {% endfor %}
