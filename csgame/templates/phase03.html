@@ -8,7 +8,7 @@
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-    var resultArr=[]
+    var resultArr=[];
     function rank(){
         // get the value of CSRF token
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
@@ -31,24 +31,25 @@
 <hr> <!--  Divider line  -->
 {% for attr in attributes %}
 <div class="d-flex justify-content-center">
-    <h4>Do you think <font color="red"><b>{{ attr }}</b></font> is a meaningful attribute to describe an image of airplane?</h4>
-    <div class="ml-3 mt-1 form-check">
-        <input class="form-check-input" type="radio" name="radios" id="exampleRadios1" value="option1" checked>
+    <h4>Do you think <font color="red"><b>{{ attr.word }}</b></font> is a meaningful attribute to describe an image of airplane?</h4>
+    <form action="/phase03.html" id="bias">
+    <div class="ml-3 mt-1 form-check-inline">
         <label class="form-check-label" for="exampleRadios1">
-            YES
+            <input class="form-check-input" type="radio" name="radios" id="exampleRadios1" value="option1" checked>YES
         </label>
     </div>
-    <div class="ml-3 mt-1 form-check">
-        <input class="form-check-input" type="radio" name="radios" id="exampleRadios2" value="option2">
+    <div class="ml-3 mt-1 form-check-inline">
         <label class="form-check-label" for="exampleRadios2">
-            NO
+            <input class="form-check-input" type="radio" name="radios" id="exampleRadios2" value="option2">NO
         </label>
-    </div>    
+    </div>
+    </form>
 </div>
+<hr> <!--  Divider line  -->
 {% endfor %}
-<hr>
+
     <!--  Categories  -->
-<div class="row">
+<div class="row justify-content-center">
     <button type="button"  class="btn btn-success" onclick="rank()" style="width: 100">
         Submit
     </button>
