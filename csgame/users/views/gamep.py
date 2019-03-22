@@ -149,6 +149,9 @@ def phase03(request):
     # Update count
     if request.method == 'POST':
         print("response: ", json.loads(request.POST['data[dict]']))
+        dictionary = json.loads(request.POST['data[dict]'])
+        for d in dictionary:
+            print("key: ", d, " value: ", dictionary[d])
         
         return render(request, 'home.html',{}) 
     else:
