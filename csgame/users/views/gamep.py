@@ -97,7 +97,6 @@ def phase02(request):
 
     # Generate 3 random unique image number based on available entries
     data = random.sample(range(0, len(hello)), 3)
-    # print("3 random numbers are", data)
     
     KEYS = list()
     for d in data:
@@ -111,26 +110,26 @@ def phase02(request):
         label = img.label.all()
 
         if label.exists():
-           labels.append(label)
+            labels.append(label)
         else:
             # else if there is nothing  
             pass
     # Fetch the attributes and make new attributes
     if request.method == 'POST':
-        print("POST method")
+
         attributes = request.POST.getlist('attributes[]')
         print("I got attributes: ", attributes)
         for attr in attributes:
             attribute = Attribute.objects.filter(word=attr).first()
             if attribute:
                 # Not save the same name of the attribute twice
-                print("Same attribute:", attribute)
+
+                # print("the attr exists: ", attribute)
                 pass
             else:
-                # attribute = Attibute.objects.create(name=attr)
-                # attribute.save()
-                print("I got new attribute: ", attribute)
-
+                attribute = Attribute.objects.create(word=attr)
+                attribute.save()
+                # print("this is new: ", attr)
     # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
     return render(request, 'phase02.html', {'labels': labels})
 
@@ -141,7 +140,7 @@ def phase03(request):
     attr = Attribute.objects.all()
     attributes = list()
 
-    if attr.exits():
+    if attr.exists():
         attributes = attr
     else:
         # just send only none
