@@ -144,11 +144,11 @@ def phase03(request):
         attributes = attr
     else:
         # just send only none
-        attr = ['none']
+        attributes = ['none']
 
     # Update count
     if request.method == 'POST':
         # Do something need to discuss
-        return render(request, 'finish.html',) 
+        return render(request, 'home.html',) 
     else:
         return render(request, 'phase03.html', {'attributes': attributes})

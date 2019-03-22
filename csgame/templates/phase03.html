@@ -6,6 +6,20 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    var resultArr=[]
+    function rank(){
+        // get the value of CSRF token
+        var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        //post method 
+        $.post('{% url 'phase03' %}', {
+            'attributes': resultArr, 
+            csrfmiddlewaretoken : CSRFtoken
+        }, function(resultArr){});
+        // location.reload();
+    }
+</script>
 
 {% endblock %}
 
@@ -15,12 +29,37 @@
 
 <h2>Phase 03: Define biases</h2>
 <hr> <!--  Divider line  -->
-
+{% for attr in attributes %}
 <div class="d-flex justify-content-center">
-    <h3>Do you think xxx is a meaningful attribute to describe an image of airplane?</h3>
-    
+    <h4>Do you think <font color="red"><b>{{ attr }}</b></font> is a meaningful attribute to describe an image of airplane?</h4>
+    <div class="ml-3 mt-1 form-check">
+        <input class="form-check-input" type="radio" name="radios" id="exampleRadios1" value="option1" checked>
+        <label class="form-check-label" for="exampleRadios1">
+            YES
+        </label>
+    </div>
+    <div class="ml-3 mt-1 form-check">
+        <input class="form-check-input" type="radio" name="radios" id="exampleRadios2" value="option2">
+        <label class="form-check-label" for="exampleRadios2">
+            NO
+        </label>
+    </div>    
 </div>
-    
+{% endfor %}
+<hr>
+    <!--  Categories  -->
+<div class="row">
+    <button type="button"  class="btn btn-success" onclick="rank()" style="width: 100">
+        Submit
+    </button>
 </div>
+
+    
+    <form>
+        {% csrf_token %}
+    </form>
+</div>
+
+
 
 {% endblock %}

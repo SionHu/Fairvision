@@ -77,14 +77,13 @@ document.addEventListener("dragend", function(event) {
     function send(){
         // get the value of CSRF token
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-        console.log(CSRFtoken)
+        // console.log(CSRFtoken)
         //post method 
         $.post('{% url 'phase02' %}', {
             'attributes': resultArr, 
             csrfmiddlewaretoken : CSRFtoken
         }, function(resultArr){});
         // location.reload();
-        console.log("Hello")
     }
     
     function remcard() { // Haven't been implemented
