@@ -116,11 +116,14 @@ def phase02(request):
             pass
     # Fetch the attributes and make new attributes
     if request.method == 'POST':
+
         attributes = request.POST.getlist('attributes[]')
+        print("I got attributes: ", attributes)
         for attr in attributes:
             attribute = Attribute.objects.filter(word=attr).first()
             if attribute:
                 # Not save the same name of the attribute twice
+
                 # print("the attr exists: ", attribute)
                 pass
             else:
