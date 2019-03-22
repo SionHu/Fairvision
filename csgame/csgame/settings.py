@@ -38,6 +38,7 @@ try:
     AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
     IS_PRODUCTION_SITE = my_env['IS_PRODUCTION_SITE']
     TEST_HTTP_HANDLING = my_env['TEST_HTTP_HANDLING']
+    SQLPASS = my_env['POSTGRESQLPASS']
 
 except KeyError as e:
     print('Lacking Environment Variables: ' + str(e))
@@ -120,15 +121,21 @@ WSGI_APPLICATION = 'csgame.wsgi.application'
 in_heroku = False
 if 'DATABASE_URL' in os.environ:
     in_heroku = True
-
 import dj_database_url
 if in_heroku:
     DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
 else:
+    password = os.environ
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#            'ENGINE': 'django.db.backends.sqlite3',
+#            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+            'NAME' : 'cam2cds',
+            'USER' : 'cam2crowdsourcing',
+            'PASSWORD' : SQLPASS,
+            'HOST' : 'cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com',
+            'PORT' : '8080'
         }
     }
 
