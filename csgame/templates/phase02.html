@@ -18,11 +18,13 @@ function drag(ev) {
 }
 
 function drop(ev) {
-
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");       
+    var targetBox = ev.target.id;
+    if (targetBox=="div2" || targetBox=="div3") {
         ev.target.appendChild(document.getElementById(data));
-    }    
+    }
+}    
     
     
 document.addEventListener("dragstart", function(event) {
