@@ -18,10 +18,21 @@ function drag(ev) {
 }
 
 function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  ev.target.appendChild(document.getElementById(data));
-}
+
+        var $body = $(div2);
+        $body.bind('scroll', function() {
+            // "Disable" the horizontal scroll.
+            if ($body.scrollLeft() !== 0) {
+                $body.scrollLeft(0);
+            }
+        });
+        //document.body.style.overflow = 'hidden';
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+        console.log(data);
+    }    
+    
     
 document.addEventListener("dragstart", function(event) {
   // The dataTransfer.setData() method sets the data type and the value of the dragged data
