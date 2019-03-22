@@ -3,44 +3,56 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static "css/phase02.css" %}">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
 {% endblock %}
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script> //Used to make drag and drop
-function allowDrop(ev) {
-  ev.preventDefault();
-}
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
 
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
 
-function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  ev.target.appendChild(document.getElementById(data));
-}
-    
-document.addEventListener("dragstart", function(event) {
-  // The dataTransfer.setData() method sets the data type and the value of the dragged data
-  event.dataTransfer.setData("Text", event.target.id);
-  
-  // Output some text when starting to drag the p element
-  document.getElementById("info").innerHTML = "Started to drag the attribute.";
-  
-  // Change the opacity of the draggable element
-  event.target.style.opacity = "0.4";
-});
+    function drop(ev) {
+
+        var $body = $(div2);
+        $body.bind('scroll', function() {
+            // "Disable" the horizontal scroll.
+            if ($body.scrollLeft() !== 0) {
+                $body.scrollLeft(0);
+            }
+        });
+        //document.body.style.overflow = 'hidden';
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+        console.log(data);
+    }
+
+    document.addEventListener("dragstart", function(event) {
+        // The dataTransfer.setData() method sets the data type and the value of the dragged data
+        event.dataTransfer.setData("Text", event.target.id);
+
+        // Output some text when starting to drag the p element
+        document.getElementById("info").innerHTML = "Started to drag the attribute.";
+
+        // Change the opacity of the draggable element
+        event.target.style.opacity = "0.4";
+    });
 
 
-// Output some text when finished dragging the p element and reset the opacity
-document.addEventListener("dragend", function(event) {
-  document.getElementById("info").innerHTML = "Finished dragging the attribute.";
-  event.target.style.opacity = "1";
-});
-    
+    // Output some text when finished dragging the p element and reset the opacity
+    document.addEventListener("dragend", function(event) {
+        document.getElementById("info").innerHTML = "Finished dragging the attribute.";
+        event.target.style.opacity = "1";
+    });
+
 </script>
 
 <script>
@@ -49,7 +61,7 @@ document.addEventListener("dragend", function(event) {
         clicks++;
         if (clicks <= 3){
             $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"></div>").insertAfter("#div3");
-            
+
         }else if (clicks > 3 && clicks < 8) {
             $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"></div>").insertAfter("#div4");
         }else{
@@ -65,113 +77,128 @@ document.addEventListener("dragend", function(event) {
 
 {% block content %}
 <div class="container">
-<!--Helpful link: https://mdbootstrap.com/plugins/jquery/draggable/-->
-<div class="row">
-    <div class="col">
-        <h2>Phase 02: Reduce redundency</h2>
+    <!--Helpful link: https://mdbootstrap.com/plugins/jquery/draggable/-->
+    <div class="row">
+        <div class="col">
+            <h2>Phase 02: Reduce redundency</h2>
+        </div>
+        <div class="col">
+            <h2 id="info"></h2>
+        </div>
     </div>
-    <div class="col">
-        <h2 id="info"></h2>
-    </div>
-</div>
 
-    
-<hr> <!--  Divider line  -->    
-    
-<div class="row">
-    
-    <!--  Used to show the attribute list  -->
-    <div class="col">  <!--  List 1  -->
-        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag11" style="width: 150; height: 40">
-                <center id="d11" class="m-2">facing right</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag12" style="width: 150; height: 40">
-                <center class="m-2">has wings</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag13" style="width: 150; height: 40">
-                <center class="m-2">background is sky</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag14" style="width: 150; height: 40">
-                <center class="m-2">xiao hu</center>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col">  <!--  List 2  -->
-        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll;">
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag21" style="width: 150; height: 40;">
-                <center class="m-2">facing right</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag22" style="width: 150; height: 40">
-                <center class="m-2">has wings</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag23" style="width: 150; height: 40">
-                <center class="m-2">background is sky</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag24" style="width: 150; height: 40">
-                <center class="m-2">SionWHO</center>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col">  <!--  List 3  -->
-        <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag31" style="width: 150; height: 40">
-                <center class="m-2">facing right</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag32" style="width: 150; height: 40">
-                <center class="m-2">has wings</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag33" style="width: 150; height: 40">
-                <center class="m-2">background is sky</center>
-            </div>
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag34" style="width: 150; height: 40">
-                <center class="m-2">sion</center>
-            </div>
-        </div>
-    </div>
-</div>    
 
-<hr> <!--  Divider line  -->
-    
-<!--  Categories  -->
-<div class="row justify-content-center">
-    <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
-        Add Card
-    </button>
-    <button class="btn btn-success" style="width: 100">
-        Submit
-    </button>
-</div>
-    
-<div class="row">
-    <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
-        <div id="div3"></div>
-        <div class="card" id="div2" style="height: 200; width: 250; overflow-y: scroll">
-<!--            <button class="btn btn-danger" onclick="remcard()">Remove</button>-->   
-<!--
-            <div class="card-header">
-                <a class="collapsed card-link" data-toggle="collapse" href="#content">
-                    Card Name
-                    <div ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                </a>
-                
+    <hr> <!--  Divider line  -->    
+
+    <div class="row">
+
+        <!--  Used to show the attribute list  -->
+        <div class="col">  <!--  List 1  -->
+
+            <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag11" style="width: 150; height: 40">
+                    <center id="d11" class="m-2">facing right</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag12" style="width: 150; height: 40">
+                    <center class="m-2">has wings</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag13" style="width: 150; height: 40">
+                    <center class="m-2">background is sky</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag14" style="width: 150; height: 40">
+                    <center class="m-2">xiao hu</center>
+                </div>
             </div>
+        </div>
+
+        <div class="col">  <!--  List 2  -->
+            <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll;">
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag21" style="width: 150; height: 40;">
+                    <center class="m-2">facing right</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag22" style="width: 150; height: 40">
+                    <center class="m-2">has wings</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag23" style="width: 150; height: 40">
+                    <center class="m-2">background is sky</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag24" style="width: 150; height: 40">
+                    <center class="m-2">SionWHO</center>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">  <!--  List 3  -->
+            <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag31" style="width: 150; height: 40">
+                    <center class="m-2">facing right</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag32" style="width: 150; height: 40">
+                    <center class="m-2">has wings</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag33" style="width: 150; height: 40">
+                    <center class="m-2">background is sky</center>
+                </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag34" style="width: 150; height: 40">
+                    <center class="m-2">sion</center>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <hr> <!--  Divider line  -->
+
+    <!--  Categories  -->
+    <div class="row justify-content-center">
+        <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
+            Add Card
+        </button>
+        <button class="btn btn-success" style="width: 100">
+            Submit
+        </button>
+    </div>
+
+    <div class="row">
+        <div id="boxes" class="d-flex justify-content-start"><!-- removed class="col-8" -->
+            <div id="div3"></div>
+            <div class="card" id="div2" style="height: 200; width: 250; overflow-y: scroll; overflow-x: hidden">
+                <!--            <button class="btn btn-danger" onclick="remcard()">Remove</button>-->   
+                <!--
+<div class="card-header">
+<a class="collapsed card-link" data-toggle="collapse" href="#content">
+Card Name
+<div ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+</a>
+
+</div>
 -->
-            <div id="content" class="collapse show" data-parent="#accordion">
-                <div id="droppable" class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;" >
+                <div id="content" class="collapse show" data-parent="#accordion">
+                  <!-- Change for preventing overlapping
+                        <style>
+                        #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+                        #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+                        #sortable li span { position: absolute; margin-left: -1.3em; }
+                    </style>
+                    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                    <script>
+                        $( function() {
+                            $( "#droppable" ).sortable();
+                            $( "#droppable" ).disableSelection();
+                        } );
+                    </script> -->
+                    <div id="droppable" class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250;" >
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    
-<div class="row pb-5 ">
-    <div id="div4"></div>
-</div>
-    
+
+    <div class="row pb-5 ">
+        <div id="div4"></div>
+    </div>
 
 
 
-{% endblock %}
+
+    {% endblock %}
