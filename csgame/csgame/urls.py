@@ -34,6 +34,7 @@ urlpatterns = [
     
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^over/$', views.over, name='over'),
+    url(r'^about/$', views.about, name='about'),
 
     url(r'^phase01/$', gamep.phase01, name='phase01'),
     url(r'^phase02/$', gamep.phase02, name='phase02'),
