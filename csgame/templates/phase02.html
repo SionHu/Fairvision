@@ -17,7 +17,9 @@ function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function drop(ev) {
+
+function drop(ev) {    
+
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");       
     var targetBox = ev.target.id;
@@ -57,22 +59,24 @@ document.addEventListener("dragend", function(event) {
         clicks++;
         
         // Get card name from user
-        var name = prompt("Please type the card name", "Choose one attribute as the name");
+        var alertmsg = "Choose one attribute as the category name";
+        var name = prompt("Please type the card name", alertmsg);
         
-        if (name == null){
-            window.alert("Card name cannot be empty!")
+        if (!name || name==alertmsg || !name.replace(/\s/g, '').length){
+            window.alert("Card name cannot be empty or unchanged!")
         } else {
             resultArr.push(name);
-        }
+        
       
-        // Add aother card
-        if (clicks <= 4){
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"><div class=\"card-title\">"+name+"</div></div>").insertAfter("#div3");
+            // Add aother card
+            if (clicks <= 4){
+                $("<div id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div3");
             
-        }else if (clicks > 4 && clicks <= 8) {
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div4");
-        }else{
-            window.alert("Too many cards added. Maybe regroup the attributes?");
+            }else if (clicks > 4 && clicks <= 8) {
+                $("<div id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div3");
+            }else{
+                window.alert("Too many cards added. Maybe regroup the attributes?");
+            }
         }
     }
     
@@ -118,7 +122,7 @@ document.addEventListener("dragend", function(event) {
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
             {% with forloop.counter as outer_counter %}
             {% for lb in label %}
-                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="{{ outer_counter }}{{ forloop.counter }}" style="width: 150; height: 40">
+                <div class="card justify-content-center m-2 mx-auto" draggable="true" ondragstart="drag(event)" id="{{ outer_counter }}{{ forloop.counter }}" style="width: 210; height: 40;">
                     <center id="d11" class="m-2">{{ lb }}</center>
                 </div>
             {% endfor %}
@@ -136,8 +140,7 @@ document.addEventListener("dragend", function(event) {
     <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
         Add Card
     </button>
-
-    <button type="button"  class="btn btn-success" onclick="send()" style="width: 100">
+    <button type="button" class="btn btn-success" onclick="send()" style="width: 100">
         Submit
     </button>
     
@@ -150,11 +153,6 @@ document.addEventListener("dragend", function(event) {
 
 <div class="row">
     <div id="div3"></div>
-    <!-- Sample card test
-    <div class="card" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250; overflow-y: scroll">
-        <div class="card-title">Name</div>
-    </div>
-    -->
 </div>
     
 <div class="row pb-5 ">
