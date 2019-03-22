@@ -23,13 +23,13 @@
         <div class="row mt-3">
             <div class="card col" style="height: 35%;">
                 <div class="card-body">
-                    <img src="{{ url1 }}" id="img1" class="d-inline-block img-fluid">
+                    <img src="{{ url1 }}" id="img1" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
                 </div> 
             </div>
             
             <div class="card col" style="height: 35%">
                 <div class="card-body">
-                    <img src="{{ url2 }}" id="img2" class="d-inline-block img-fluid" style="width:100% height:100%">
+                    <img src="{{ url2 }}" id="img2" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
                 </div> 
             </div>
         </div>
@@ -37,12 +37,12 @@
         <div class="row">
             <div class="card col" style="height: 35%">
                 <div class="card-body">
-                    <img src="{{ url3 }}" id="img3" class="d-inline-block img-fluid" style="width:100% height:100%">
+                    <img src="{{ url3 }}" id="img3" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
                 </div> 
             </div>
             <div class="card col" style="height: 35%">
                 <div class="card-body">
-                    <img src="{{ url4 }}" id="img4" class="d-inline-block img-fluid" style="width:100% height:100%">
+                    <img src="{{ url4 }}" id="img4" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
                 </div> 
             </div>
         </div>
@@ -57,8 +57,8 @@
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <button id="btn" class="btn btn-success">Input</button>
-            <input id="id_test" type="text" name="attribute">
-            <button id="nextbtn" type="button" class="btn btn-primary round">Next</button>
+            <input id="id_test" type="text" name="attribute" maxlength="20">
+            <button id="nextbtn" class="btn btn-primary">Next</button>
         </div>
     </div>
     <!-- END INPUT BAR -->
@@ -80,12 +80,15 @@
         // alert(image_list)
         //input button listener when clicked
         document.getElementById("btn").addEventListener("click", function() {
-            if (document.getElementById("id_test").value != "") { //makes sure no empty input TODO: move keyup function in here
-                var txt = document.getElementById("id_test").value; //inputted text
-                addLi();
+            var txtVal = document.getElementById("id_test").value.toLowerCase(); //gets inputted string
+            var element = $("#list:contains(" + txtVal + ")"); //checks if list contains string. returns -1 if not
+
+            if (document.getElementById("id_test").value != "" && element.length <= 0) { //makes sure no empty input and not already inputted
+                var txt = document.getElementById("id_test").value.toLowerCase(); //inputted text
+                addLi(); //adds to list
                 console.log(txt); //puts entered string on console
-                document.getElementById("id_test").value = ""; //clear entry field
             }
+            document.getElementById("id_test").value = ""; //clear entry field
         });
     
     
@@ -109,7 +112,7 @@
                 //alert(resultArray);
                 //remove the list
                 $('li').remove();
-            }
+            
             // get the value of CSRF token
             var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
             // console.log(CSRFtoken)
@@ -121,6 +124,7 @@
             }, function(data){});
             // reload the webpage to set new images
             location.reload();
+            }
         })
 
 	$(function() {
@@ -140,16 +144,17 @@
     <!-- add attributes to the list -->
     <script>
         function addLi() {
-            var txtVal = document.getElementById("id_test").value,
+            var txtVal = document.getElementById("id_test").value.toLowerCase(),
                 listNode = document.getElementById('list'),
                 liNode = document.createElement("LI"),
                 txtNode = document.createTextNode(txtVal);
             liNode.appendChild(txtNode);
             listNode.appendChild(liNode);
-            console.log(listNode);
+            //console.log(listNode);
         }
     </script>
 
 </div>
 </div>
+
 {% endblock %}
