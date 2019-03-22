@@ -8,9 +8,24 @@
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+    
+    function radioCheck(){
+        {% for attr in attributs %}
+            {%  %}
+        {% endfor %}    
+    }
+    
     var resultArr = {
         "dict" : {"hi": 0, "nono": 1},
     }
+    
+    var attr_list = "{{ attributes }}";
+    for (i=0; i<attr_list.length;i++){
+        if (attr_list[i].biased == True){
+            resultArr.dict.push(attr_list[i]."{{ biased }}": 1);
+        }
+    }    
+    
     function rank(){
         resultArr['dict']= JSON.stringify(resultArr['dict']);
         console.log(resultArr)
@@ -44,7 +59,7 @@
     <form action="/phase03.html" id="bias">
     <div class="ml-3 mt-1 form-check-inline">
         <label class="form-check-label" for="exampleRadios1">
-            <input class="form-check-input" type="radio" name="radios" id="yes" value="option1" checked>YES
+            <input class="form-check-input" type="radio" name="radios" id="yes" value="option1" oninput="radioCheck()" checked>YES
         </label>
     </div>
     <div class="ml-3 mt-1 form-check-inline">
@@ -53,12 +68,13 @@
         </label>
     </div>
     </form>
+    
 </div>
 <hr> <!--  Divider line  -->
 {% endfor %}
 
     <!--  Categories  -->
-<div class="row justify-content-center">
+<div class="row justify-content-center" style="margin-bottom: 100px">
     <button type="button"  class="btn btn-success" onclick="rank()" style="width: 100">
         Submit
     </button>
