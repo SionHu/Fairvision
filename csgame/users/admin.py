@@ -11,10 +11,6 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
 
-#class ImageMoedlInline(admin.StackedInline):
-#    model = ImageModel
-#    extra = 1
-
 class ImageModelForm(forms.ModelForm):
     
     img = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}), help_text=('Optional image (2.5 MB or less)'), required=True)
