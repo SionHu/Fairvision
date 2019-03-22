@@ -17,7 +17,9 @@ function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
 }
 
+
 function drop(ev) {    
+
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");       
     var targetBox = ev.target.id;
@@ -81,14 +83,13 @@ document.addEventListener("dragend", function(event) {
     function send(){
         // get the value of CSRF token
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-        console.log(CSRFtoken)
+        // console.log(CSRFtoken)
         //post method 
         $.post('{% url 'phase02' %}', {
             'attributes': resultArr, 
             csrfmiddlewaretoken : CSRFtoken
         }, function(resultArr){});
-        // location.reload();
-        console.log("Hello")
+        location.reload();
     }
     
     function remcard() { // Haven't been implemented

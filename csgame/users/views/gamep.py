@@ -3,6 +3,7 @@ from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
 from users.models import ImageModel, Label, Attribute
+from django.http import HttpResponse
 
 # from ..forms import TestForm
 import boto3
@@ -144,11 +145,17 @@ def phase03(request):
         attributes = attr
     else:
         # just send only none
-        attr = ['none']
+        attributes = ['none']
 
     # Update count
     if request.method == 'POST':
-        # Do something need to discuss
-        return render(request, 'finish.html',) 
+        dictionary = json.loads(request.POST['data[dict]'])
+        for d in dictionary:
+            # print("key: ", d, " value: ", dictionary[d])
+            at = Attribute.objects.get(word=d)
+            at.count += dictionary[d]
+            at.save()
+            
+        return HttpResponse(None)
     else:
         return render(request, 'phase03.html', {'attributes': attributes})

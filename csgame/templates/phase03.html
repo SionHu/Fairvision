@@ -6,21 +6,83 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    
+    var dict = {}
+    var resultArr = {
+        "dict" : {},
+    }
+       
+    
+    function rank(){
+        {% for attr in attributes %}
+            
+            if(document.getElementById("{{ attr.word }}yes").checked == true){
+                resultArr['dict']["{{ attr.word }}"] = 0;
+            }
+            else if(document.getElementById("{{ attr.word }}yes").checked == false){
+                resultArr['dict']["{{ attr.word }}"] = -1;
+            }
+        {% endfor %}
+        resultArr['dict']= JSON.stringify(resultArr['dict']);
+        
+        // console.log(resultArr);
+        var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        //post method
+        $.post('{% url 'phase03' %}', {
+            "data": resultArr,
+            csrfmiddlewaretoken : CSRFtoken,
+            success: function() {
+              window.location = '{% url 'home' %}';
+            }
+        }, function(data){});
+    }
+    
+</script>
 
 {% endblock %}
 
 {% block content %}
+<form>
+    {% csrf_token %}
+</form>
 
 <div class="container">
 
 <h2>Phase 03: Define biases</h2>
 <hr> <!--  Divider line  -->
-
+{% for attr in attributes %}
 <div class="d-flex justify-content-center">
-    <h3>Do you think xxx is a meaningful attribute to describe an image of airplane?</h3>
+    <h4>Do you think <font color="red"><b>{{ attr.word }}</b></font> is a meaningful attribute to describe an image of airplane?</h4>
+    <form action="/phase03.html" id="bias">
+    <div class="ml-3 mt-1 form-check-inline">
+        <label class="form-check-label" for="exampleRadios1">
+            <input class="form-check-input" type="radio" name="radios" id="{{ attr.word }}yes" value="option1" checked>YES
+        </label>
+    </div>
+    <div class="ml-3 mt-1 form-check-inline">
+        <label class="form-check-label" for="exampleRadios2">
+            <input class="form-check-input" type="radio" name="radios" id="{{ attr.word }}no" value="option2">NO
+        </label>
+    </div>
+    </form>
     
 </div>
-    
+<hr> <!--  Divider line  -->
+{% endfor %}
+
+    <!--  Categories  -->
+<div class="row justify-content-center" style="margin-bottom: 100px">
+    <button type="button"  class="btn btn-success" onclick="rank()" style="width: 100">
+        Submit
+    </button>
 </div>
+
+    
+
+</div>
+
+
 
 {% endblock %}
