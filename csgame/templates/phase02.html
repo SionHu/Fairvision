@@ -166,13 +166,12 @@ document.addEventListener("dragend", function(event) {
     
     {% for label in labels %}
     <div class="col">  
-
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
-            
+            {% with forloop.counter as outer_counter %}
             {% for lb in label %}
-            <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" style="width: 150; height: 40">
-                <center id="d11" class="m-2">{{ lb }}</center>
-            </div>
+                <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="{{ outer_counter }}{{ forloop.counter }}" style="width: 150; height: 40">
+                    <center id="d11" class="m-2">{{ lb }}</center>
+                </div>
             {% endfor %}
         </div>
     </div>
