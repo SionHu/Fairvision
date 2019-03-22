@@ -119,10 +119,9 @@ document.addEventListener("dragend", function(event) {
     
 <hr> <!--  Divider line  -->    
     
-
-    
 <div class="row">
-      <div class="col">  <!--  List 1  -->
+<!--
+      <div class="col">  
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
             <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag11" style="width: 150; height: 40">
                 <center id="d11" class="m-2">facing right</center>
@@ -139,7 +138,7 @@ document.addEventListener("dragend", function(event) {
         </div>
     </div>
     
-    <div class="col">  <!--  List 2  -->
+    <div class="col"> 
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll;">
             <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag21" style="width: 150; height: 40;">
                 <center class="m-2">facing right</center>
@@ -156,7 +155,7 @@ document.addEventListener("dragend", function(event) {
         </div>
     </div>
     
-    <div class="col">  <!--  List 3  -->
+    <div class="col">  
         <div id="div" ondrop="drop(event)" ondragover="allowDrop(event)" style="overflow-y: scroll">
             <div class="card justify-content-center m-2" draggable="true" ondragstart="drag(event)" id="drag31" style="width: 150; height: 40">
                 <center class="m-2">facing right</center>
@@ -172,8 +171,8 @@ document.addEventListener("dragend", function(event) {
             </div>
         </div>
     </div>
+-->
     
-<!--
     {% for label in labels %}
     <div class="col">  
 
@@ -187,7 +186,6 @@ document.addEventListener("dragend", function(event) {
         </div>
     </div>
     {% endfor %}
--->
 </div>    
 
 <hr> <!--  Divider line  -->
