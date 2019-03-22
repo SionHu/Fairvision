@@ -148,7 +148,8 @@ def phase03(request):
 
     # Update count
     if request.method == 'POST':
-        # Do something need to discuss
-        return render(request, 'home.html',) 
+        print("response: ", json.loads(request.POST['data[dict]']))
+        
+        return render(request, 'home.html',{}) 
     else:
         return render(request, 'phase03.html', {'attributes': attributes})

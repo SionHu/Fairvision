@@ -8,22 +8,27 @@
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-    var resultArr=[];
+    var resultArr = {
+        "dict" : {"hi": 0, "nono": 1},
+    }
     function rank(){
-        // get the value of CSRF token
+        resultArr['dict']= JSON.stringify(resultArr['dict']);
+        console.log(resultArr)
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         //post method 
         $.post('{% url 'phase03' %}', {
-            'attributes': resultArr, 
-            csrfmiddlewaretoken : CSRFtoken
-        }, function(resultArr){});
-        // location.reload();
+            "data": resultArr,
+            csrfmiddlewaretoken : CSRFtoken,
+        }, function(data){});
     }
 </script>
 
 {% endblock %}
 
 {% block content %}
+<form>
+    {% csrf_token %}
+</form>
 
 <div class="container">
 
@@ -56,9 +61,7 @@
 </div>
 
     
-    <form>
-        {% csrf_token %}
-    </form>
+
 </div>
 
 
