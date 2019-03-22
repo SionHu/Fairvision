@@ -57,7 +57,7 @@ def delete_file(sender, instance, *args, **kwargs):
     instance.zip_upload.delete(save=False)
 '''
 
-# Attributes that we ask and decide for dataset
+# Phase 03: attributes that we ask and decide for dataset
 class Attribute(models.Model):
     word = models.CharField(max_length=20, primary_key=True)
     count = models.IntegerField(default=0)
