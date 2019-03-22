@@ -149,10 +149,13 @@ def phase03(request):
 
     # Update count
     if request.method == 'POST':
-        print("response: ", json.loads(request.POST['data[dict]']))
         dictionary = json.loads(request.POST['data[dict]'])
         for d in dictionary:
-            print("key: ", d, " value: ", dictionary[d])
+            # print("key: ", d, " value: ", dictionary[d])
+            at = Attribute.objects.get(word=d)
+            at.count += dictionary[d]
+            at.save()
+            
         return HttpResponse(None)
     else:
         return render(request, 'phase03.html', {'attributes': attributes})
