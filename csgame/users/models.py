@@ -65,7 +65,7 @@ class Attribute(models.Model):
 class ImageModel(models.Model):
     # name = models.CharField(max_length=64, primary_key=True)
     img = models.ImageField(upload_to="airplanes/")
-    label = models.ManyToManyField(Label, related_name='labels')
+    label = models.ManyToManyField(Label, related_name='labels', blank=True)
     def __str__(self):
         return self.img.name
 
