@@ -56,21 +56,23 @@ document.addEventListener("dragend", function(event) {
         
         // Get card name from user
         var name = prompt("Please type the card name", "Choose one attribute as the name");
+        var alertmsg = "Choose one attribute as the name";
         
-        if (name == null){
-            window.alert("Card name cannot be empty!")
+        if (!name || name==alertmsg || !name.replace(/\s/g, '').length){
+            window.alert("Card name cannot be empty or unchanged!")
         } else {
             resultArr.push(name);
-        }
+        
       
-        // Add aother card
-        if (clicks <= 4){
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\"><div class=\"card-title\">"+name+"</div></div>").insertAfter("#div3");
+            // Add aother card
+            if (clicks <= 4){
+                $("<div id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div3");
             
-        }else if (clicks > 4 && clicks <= 8) {
-            $("<div class=\"card\" id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div4");
-        }else{
-            window.alert("Too many cards added. Maybe regroup the attributes?");
+            }else if (clicks > 4 && clicks <= 8) {
+                $("<div id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div3");
+            }else{
+                window.alert("Too many cards added. Maybe regroup the attributes?");
+            }
         }
     }
     
@@ -135,8 +137,7 @@ document.addEventListener("dragend", function(event) {
     <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
         Add Card
     </button>
-
-    <button type="button"  class="btn btn-success" onclick="send()" style="width: 100">
+    <button type="button" class="btn btn-success" onclick="send()" style="width: 100">
         Submit
     </button>
     
@@ -149,11 +150,6 @@ document.addEventListener("dragend", function(event) {
 
 <div class="row">
     <div id="div3"></div>
-    <!-- Sample card test
-    <div class="card" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 200; width: 250; overflow-y: scroll">
-        <div class="card-title">Name</div>
-    </div>
-    -->
 </div>
     
 <div class="row pb-5 ">
