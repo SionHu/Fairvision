@@ -19,6 +19,9 @@
         $.post('{% url 'phase03' %}', {
             "data": resultArr,
             csrfmiddlewaretoken : CSRFtoken,
+            success: function() {
+              window.location = '{% url 'home' %}';
+            }
         }, function(data){});
     }
     

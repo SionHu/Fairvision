@@ -152,7 +152,5 @@ def phase03(request):
         dictionary = json.loads(request.POST['data[dict]'])
         for d in dictionary:
             print("key: ", d, " value: ", dictionary[d])
-        
-        return render(request, 'home.html',{}) 
     else:
         return render(request, 'phase03.html', {'attributes': attributes})
