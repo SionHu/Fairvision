@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser, Label, ImageModel, Attribute
 from django import forms
+from natsort import natsorted
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
