@@ -67,7 +67,7 @@ def export_csv(self, request, queryset):
     for obj in queryset:
         writer.writerow([getattr(obj, field) for field in field_names])
     return response
-export_csv.short_description = "Export selected user as csv"
+export_csv.short_description = "Export selected attributes as csv"
 
 class AttributeAdmin(admin.ModelAdmin):
     actions = [export_csv]
