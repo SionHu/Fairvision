@@ -78,7 +78,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'corsheaders',
     'rest_framework',
-    'storages'
+    'storages',
+    'import_export'
 ]
 
 MIDDLEWARE = [

@@ -7,6 +7,10 @@ from .models import CustomUser, Label, ImageModel, Attribute
 from django import forms
 from natsort import natsorted
 
+import csv
+from django.http import HttpResponse
+
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     add_form = CustomUserCreationForm
@@ -42,8 +46,34 @@ class ImageModelAdmin(admin.ModelAdmin):
     model = ImageModel
     form = ImageModelForm
 
+
+
+def export_csv(self, request, queryset):
+    # https://docs.djangoproject.com/en/1.11/howto/outputting-csv/
+    # https://stackoverflow.com/questions/18685223/how-to-export-django-model-data-into-csv-file
+
+    # setup csv writer
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;filename=phase3-attributes.csv'
+    writer = csv.writer(response)
+
+    required_field_names = ['word','count']
+
+    field_names = required_field_names.copy()
+
+    writer.writerow(field_names)
+
+    # output data 
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    return response
+export_csv.short_description = "Export selected user as csv"
+
+class AttributeAdmin(admin.ModelAdmin):
+    actions = [export_csv]
+    
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
 admin.site.register(Label)
-admin.site.register(Attribute)
+admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(ImageModel, ImageModelAdmin)
