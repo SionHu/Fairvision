@@ -75,5 +75,6 @@ class ImageModelAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
 admin.site.register(Label)
-admin.site.register(Attribute, AttributeAdmin)
+#admin.site.register(Attribute, AttributeAdmin)
+admin.site.register(Attribute)
 admin.site.register(ImageModel, ImageModelAdmin)
