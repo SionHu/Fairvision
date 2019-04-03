@@ -11,13 +11,19 @@ import botocore
 from botocore.client import Config
 import random
 import json
+from .roundsgenerator import rphase01
+
 
 @login_required
 def phase01(request):
     # Some test
     # idk = ImageModel.objects.get(img='airplanes/image_0053.jpg')
     # print(idk.label.all())
-
+    groups = request.session.get('groups')
+    # if all groups have been played
+    if not groups:
+        return render(request, 'wait.html', {'phase': 'PHASE 01'})
+    num = num +1
     data = random.sample(range(1, 121), 4)
     print("4 random numbers are", data)
     
@@ -93,6 +99,7 @@ def phase01(request):
 # View for phase02
 @login_required
 def phase02(request):
+    # external files to get process the 
     # Get all (We should have at least 4)
     hello = ImageModel.objects.exclude(label=None)
 
