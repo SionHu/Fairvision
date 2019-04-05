@@ -104,14 +104,25 @@ document.addEventListener("dragend", function(event) {
 <div class="container">
 
 <div class="row">
-    <div class="col">
-        <h2>Phase 02: Reduce redundancy</h2>
+    <div class="col-8">
+        <h2>Phase 02: Reduce redundancy 
+            <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>
+        </h2>
     </div>
-    <div class="col">
+    <div class="col-4">
         <h2 id="info"></h2>
     </div>
 </div>
 
+ <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 200%;height: 50%; margin-left: -250px; margin-top: -40px">
+            <img src="../static/img/instructions/phase02_instruction.png" class="center-block">    
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
     
 <hr> <!--  Divider line  -->    
     
