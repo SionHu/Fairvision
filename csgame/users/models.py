@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.contrib.postgres.fields import ArrayField
 
 class CustomUser(AbstractUser):
     # bools to keep track of types of users
@@ -79,5 +80,12 @@ def delete_file(sender, instance, *args, **kwargs):
 class RoundsNum(models.Model):
     num = models.IntegerField(default=0)
     phase = models.CharField(max_length=10, primary_key=True, default='phase01')
+    def __str__(self):
+        return self.phase
+
+# Array indices for recursion list of phase02
+class listArray(models.Model):
+    attrlist = ArrayField(models.IntegerField(), blank=True)
+    phase = models.CharField(max_length=10, default='phase02')
     def __str__(self):
         return self.phase

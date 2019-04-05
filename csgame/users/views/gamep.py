@@ -36,7 +36,7 @@ def phase01(request):
     if roundsnum == int(settings.NUMROUNDS) + 1:
         # print("The phase01 stops here")
         # push all to waiting page
-        return render(request, 'home.html', {'phase': 'PHASE 01'})
+        return render(request, 'chicken_dinner.html', {'phase': 'PHASE 01'})
 
     '''
     no random assignment for the images serving anymore. Assume dataset has been randomly cleared
@@ -152,7 +152,6 @@ def phase02(request):
             if attribute:
                 # Not save the same name of the attribute twice
 
-                # print("the attr exists: ", attribute)
                 pass
             else:
                 attribute = Attribute.objects.create(word=attr)
