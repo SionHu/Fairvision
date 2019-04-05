@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from users.models import ImageModel, Label, Attribute, RoundsNum
+from users.models import ImageModel, Label, Attribute, RoundsNum, listArray
 from django.http import HttpResponse
 
 # from ..forms import TestForm
@@ -11,7 +11,7 @@ import botocore
 from botocore.client import Config
 import random
 import json
-from .roundsgenerator import rphase01
+from .roundsgenerator import rphase02
 
 
 @login_required
@@ -33,7 +33,7 @@ def phase01(request):
     
     print("I got roundsNUM is: ", roundsnum)
 
-    if roundsnum == int(settings.NUMROUNDS) + 1:
+    if roundsnum >= int(settings.NUMROUNDS) + 1:
         # print("The phase01 stops here")
         # push all to waiting page
         return render(request, 'chicken_dinner.html', {'phase': 'PHASE 01'})
@@ -121,6 +121,13 @@ def phase01(request):
 def phase02(request):
     # external files to get process the 
     # Get all (We should have at least 4)
+    listarr = listArray.objects.filter(phase='phase02')
+
+    if not listarr:
+        print("No list array exists, create a new one")
+        listarr = rphase02(int(settings.NUMROUNDS))
+        print("listarr new is: ", listarr)
+        # listarr.save()
     hello = ImageModel.objects.exclude(label=None)
 
     # Generate 3 random unique image number based on available entries
