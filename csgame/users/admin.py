@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Label, ImageModel, Attribute
+from .models import CustomUser, Label, ImageModel, Attribute, RoundsNum
 from django import forms
 from natsort import natsorted
 
@@ -75,6 +75,7 @@ class ImageModelAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
 admin.site.register(Label)
+admin.site.register(RoundsNum)
 #admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(Attribute)
 admin.site.register(ImageModel, ImageModelAdmin)

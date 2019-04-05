@@ -39,6 +39,7 @@ try:
     IS_PRODUCTION_SITE = my_env['IS_PRODUCTION_SITE']
     TEST_HTTP_HANDLING = my_env['TEST_HTTP_HANDLING']
     SQLPASS = my_env['POSTGRESQLPASS']
+    NUMROUNDS = my_env['NUMROUNDS']
 
 except KeyError as e:
     print('Lacking Environment Variables: ' + str(e))
