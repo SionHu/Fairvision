@@ -69,10 +69,15 @@ class ImageModel(models.Model):
     def __str__(self):
         return self.img.name
 
+
 # Delete the file on S3 at the same time delete model on Django
 @receiver(models.signals.post_delete, sender=ImageModel)
 def delete_file(sender, instance, *args, **kwargs):
     """ Deletes image files on `post_delete` """
     instance.img.delete(save=False)
 
+# Instructions on each phase
+class phase01_instruction(models.Model):
+    inst = models.CharField(max_length=50, primary_key=True)
+    img = models.ImageField(upload_to=get_image_path, blank=True, null=True)
 
