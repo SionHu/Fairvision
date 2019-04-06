@@ -120,22 +120,32 @@ def phase01(request):
 @login_required
 def phase02(request):
     # external files to get process the 
-    # Get all (We should have at least 4)
+    # Get the index array model from database 
     listarr = listArray.objects.filter(phase='phase02')
-
-    if not listarr:
-        print("No list array exists, create a new one")
-        listarr = rphase02(int(settings.NUMROUNDS))
-        print("listarr new is: ", listarr)
-        # listarr.save()
-    hello = ImageModel.objects.exclude(label=None)
-
-    # Generate 3 random unique image number based on available entries
-    data = random.sample(range(0, len(hello)), 3)
+    # print("I got the existing index list: ", listarr.first().attrlist)
+    indexlist = listarr.first().attrlist
     
-    KEYS = list()
-    for d in data:
-        KEYS.append(hello[d])
+    if not listarr:
+        # print("No list array exists, create a new one")
+        listarr = rphase02(int(settings.NUMROUNDS))
+        # print("listarr new is: ", listarr)
+        # Create Model Instance and save
+        p2list = listArray.objects.create(attrlist=listarr)
+        p2list.save()
+        indexlist = listarr
+        
+    hello = ImageModel.objects.exclude(label=None)
+    print("lenth of index array is: ", len(indexlist))
+    # Generate 3 random unique image number based on available entries
+    data = random.sample(range(0, len(indexlist) + 1), 4)
+
+    
+    KEY = "media/airplanes/image_"
+    KEYS = [KEY] * 4
+    for x in range(0, 4):
+        KEYS[x] += "{:04d}".format(data[x]) + ".jpg"
+
+    print("KEYS: ", KEYS)
 
     # print("I got image list: ", KEYS)
     labels = list()

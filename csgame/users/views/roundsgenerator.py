@@ -6,5 +6,8 @@ import numpy as np
 
 def rphase02(num):
     datas = list()
-    for i in range(0, num + 1)
+    for i in range(0, num):
+        insertnum = 1 + 4 * i
+        datas.append(insertnum)
+    # print("The final datas is: ", datas)
     return datas
