@@ -31,12 +31,12 @@ def phase01(request):
     else:
         roundsnum = rounds.first().num
     
-    print("I got roundsNUM is: ", roundsnum)
+    # print("I got roundsNUM is: ", roundsnum)
 
     if roundsnum >= int(settings.NUMROUNDS) + 1:
         # print("The phase01 stops here")
         # push all to waiting page
-        return render(request, 'chicken_dinner.html', {'phase': 'PHASE 01'})
+        return render(request, 'over.html', {'phase': 'PHASE 01'})
 
     '''
     no random assignment for the images serving anymore. Assume dataset has been randomly cleared
@@ -119,8 +119,10 @@ def phase01(request):
 # View for phase02
 @login_required
 def phase02(request):
+    
     # external files to get process the 
     # Get the index array model from database 
+    
     listarr = listArray.objects.filter(phase='phase02')
     # print("I got the existing index list: ", listarr.first().attrlist)
     indexlist = listarr.first().attrlist
@@ -133,21 +135,19 @@ def phase02(request):
         p2list = listArray.objects.create(attrlist=listarr)
         p2list.save()
         indexlist = listarr
-        
-    hello = ImageModel.objects.exclude(label=None)
-    print("lenth of index array is: ", len(indexlist))
-    # Generate 3 random unique image number based on available entries
-    data = random.sample(range(0, len(indexlist) + 1), 4)
-
     
-    KEY = "media/airplanes/image_"
+        return redirect(request, 'over.html', {'phase': 'PHASE 02'})
+            
+    # Generate 3 random unique image number based on available entries
+    data = random.sample(range(0, len(indexlist)), 4)
+    
+    KEY = "airplanes/image_"
     KEYS = [KEY] * 4
     for x in range(0, 4):
-        KEYS[x] += "{:04d}".format(data[x]) + ".jpg"
+        KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
 
-    print("KEYS: ", KEYS)
+    # print("KEYS: ", KEYS)
 
-    # print("I got image list: ", KEYS)
     labels = list()
 
     for key in  KEYS:
@@ -159,22 +159,39 @@ def phase02(request):
         else:
             # else if there is nothing  
             pass
-    # Fetch the attributes and make new attributes
+        
+    # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
     if request.method == 'POST':
-
-        attributes = request.POST.getlist('attributes[]')
-        print("I got attributes: ", attributes)
-        for attr in attributes:
+        
+        # Get the card names as a list from front-end
+        newlabels = request.POST.getlist('newlabels[]')
+        print("I got replacing label set: ", newlabels)
+        
+        # remove the prvious manytomany labels and attach new list
+        remainIndex = request.POST.get('remainIndex')
+        delIndices = request.POST.getlist('delIndices[]')
+        
+        print("I got remain index: ", remainIndex)
+        print("I got delete indices: ", delIndices)
+        
+        
+        # Update the label lists of one of the image model in database 
+        
+        # Remove the delIndices from the current list
+        
+        # If the array list is already empty, redirect players to wait
+        
+        '''
             attribute = Attribute.objects.filter(word=attr).first()
             if attribute:
                 # Not save the same name of the attribute twice
-
                 pass
             else:
                 attribute = Attribute.objects.create(word=attr)
                 attribute.save()
-                # print("this is new: ", attr)
-    # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
+        '''
+    
+    
     return render(request, 'phase02.html', {'labels': labels})
 
 # View for phase3

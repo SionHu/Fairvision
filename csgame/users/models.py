@@ -89,3 +89,7 @@ class listArray(models.Model):
     phase = models.CharField(max_length=10, default='phase02')
     def __str__(self):
         return self.phase
+
+class PhaseBreak(models.Model):
+    phase = models.CharField(max_length=10, default='phase01')
+    break = models
