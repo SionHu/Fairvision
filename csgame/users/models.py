@@ -30,6 +30,7 @@ class Requester(models.Model):
 # Label that returns to the user
 class Label(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
+    # Treat isTaboo as is cardname = True
     isTaboo = models.BooleanField(default=False)
     # taboo = model.ForeignKey(ImageModel)
     def __str__(self):
@@ -69,6 +70,8 @@ class ImageModel(models.Model):
     label = models.ManyToManyField(Label, related_name='labels', blank=True)
     def __str__(self):
         return self.img.name
+    def allLabel(self):
+        return "\n".join([l.name for l in self.label.all()])
 
 # Delete the file on S3 at the same time delete model on Django
 @receiver(models.signals.post_delete, sender=ImageModel)
@@ -91,5 +94,7 @@ class listArray(models.Model):
         return self.phase
 
 class PhaseBreak(models.Model):
-    phase = models.CharField(max_length=10, default='phase01')
-    break = models
+    phase = models.CharField(max_length=10, default='phase02')
+    stop = models.BooleanField(default=False)
+    def __str__(self):
+        return self.phase02

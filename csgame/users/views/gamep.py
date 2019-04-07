@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from users.models import ImageModel, Label, Attribute, RoundsNum, listArray
+from users.models import ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak
 from django.http import HttpResponse
 
 # from ..forms import TestForm
@@ -119,13 +119,25 @@ def phase01(request):
 # View for phase02
 @login_required
 def phase02(request):
-    
+    # First check if phase 2 is finished or not created
+    breaking = PhaseBreak.objects.filter(phase='phase02')
+
+    if not breaking:
+        breaking = PhaseBreak.objects.create(phase='phase02')
+        breaking.save()
+    else:
+        if breaking.first().stop:
+            return redirect(request, 'over.html', {'phase': 'PHASE 02'})
+#        else:
+#            print("not done yet!")
+
+
+
     # external files to get process the 
     # Get the index array model from database 
     
     listarr = listArray.objects.filter(phase='phase02')
     # print("I got the existing index list: ", listarr.first().attrlist)
-    indexlist = listarr.first().attrlist
     
     if not listarr:
         # print("No list array exists, create a new one")
@@ -135,8 +147,9 @@ def phase02(request):
         p2list = listArray.objects.create(attrlist=listarr)
         p2list.save()
         indexlist = listarr
+    else:
+        indexlist = listarr.first().attrlist
     
-        return redirect(request, 'over.html', {'phase': 'PHASE 02'})
             
     # Generate 3 random unique image number based on available entries
     data = random.sample(range(0, len(indexlist)), 4)
@@ -177,6 +190,7 @@ def phase02(request):
         
         # Update the label lists of one of the image model in database 
         
+
         # Remove the delIndices from the current list
         
         # If the array list is already empty, redirect players to wait
@@ -190,9 +204,8 @@ def phase02(request):
                 attribute = Attribute.objects.create(word=attr)
                 attribute.save()
         '''
-    
-    
-    return render(request, 'phase02.html', {'labels': labels})
+    json_list = json.dumps(indexlist)
+    return render(request, 'phase02.html', {'labels': labels, 'json_list': 'json_list'})
 
 # View for phase3
 @login_required

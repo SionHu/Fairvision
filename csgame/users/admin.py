@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Label, ImageModel, Attribute, RoundsNum, listArray
+from .models import CustomUser, Label, ImageModel, Attribute, RoundsNum, listArray, PhaseBreak
 from django import forms
 from natsort import natsorted
 
@@ -45,7 +45,10 @@ class ImageModelForm(forms.ModelForm):
 class ImageModelAdmin(admin.ModelAdmin):
     model = ImageModel
     form = ImageModelForm
+    list_display = ('img', 'allLabel')
 
+class LabelAdmin(admin.ModelAdmin):
+    list_filter=('isTaboo', 'name')
 
 
 def export_csv(self, request, queryset):
@@ -74,8 +77,8 @@ class AttributeAdmin(admin.ModelAdmin):
     
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
-admin.site.register(Label)
-
+admin.site.register(Label, LabelAdmin)
+admin.site.register(PhaseBreak)
 admin.site.register(RoundsNum)
 
 admin.site.register(listArray)
