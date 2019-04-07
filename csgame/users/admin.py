@@ -45,6 +45,7 @@ class ImageModelForm(forms.ModelForm):
 class ImageModelAdmin(admin.ModelAdmin):
     model = ImageModel
     form = ImageModelForm
+    fields = ['img', 'label']
     list_display = ('img', 'allLabel')
 
 class LabelAdmin(admin.ModelAdmin):

@@ -153,12 +153,15 @@ def phase02(request):
             
     # Generate 3 random unique image number based on available entries
     data = random.sample(range(0, len(indexlist)), 4)
-    
+    sendArray = list()
+
     KEY = "airplanes/image_"
     KEYS = [KEY] * 4
     for x in range(0, 4):
         KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
+        sendArray.append(indexlist[data[x]])
 
+    print("Sendarray: ", sendArray)
     # print("KEYS: ", KEYS)
 
     labels = list()
@@ -178,7 +181,6 @@ def phase02(request):
         
         # Get the card names as a list from front-end
         newlabels = request.POST.getlist('newlabels[]')
-        print("I got replacing label set: ", newlabels)
         
         # remove the prvious manytomany labels and attach new list
         remainIndex = request.POST.get('remainIndex')
@@ -187,12 +189,24 @@ def phase02(request):
         print("I got remain index: ", remainIndex)
         print("I got delete indices: ", delIndices)
         
-        
+
         # Update the label lists of one of the image model in database 
-        
+        ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
+        print("Updateing image: ", ukey)
+        imageup = ImageModel.objects.filter(img=ukey)
+        if imageup:
+            print("I got the image, updating...")
+        else:
+            print("wtf Error")
 
         # Remove the delIndices from the current list
-        
+        old_i_list = listArray.objects.get(phase='phase02')
+        old_index = old_i_list.attrlist
+        for di in delIndices:
+            old_index.remove(int(di))
+        print("New index is: ", old_index)
+        # old_index.update(attrlist=old_index)
+
         # If the array list is already empty, redirect players to wait
         
         '''
@@ -204,8 +218,9 @@ def phase02(request):
                 attribute = Attribute.objects.create(word=attr)
                 attribute.save()
         '''
-    json_list = json.dumps(indexlist)
-    return render(request, 'phase02.html', {'labels': labels, 'json_list': 'json_list'})
+    json_list = json.dumps(sendArray)
+    # print("Phase 2 json list is: ", json_list)
+    return render(request, 'phase02.html', {'labels': labels, 'json_list': json_list, })
 
 # View for phase3
 @login_required

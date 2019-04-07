@@ -53,7 +53,8 @@ document.addEventListener("dragend", function(event) {
     // Global vars
     var clicks = 0;
     var resultArr = [];
-    
+    var index_list = {{ json_list|safe }}
+    var remainIndex = index_list.pop();
     function addcard() {
         // Add the number of cards
         clicks++;
@@ -88,8 +89,8 @@ document.addEventListener("dragend", function(event) {
         $.post('{% url 'phase02' %}', {
             'newlabels': resultArr, 
             csrfmiddlewaretoken : CSRFtoken,
-               'remainIndex' : 1,
-               'delIndices' : [2, 3, 4]
+               'remainIndex' : remainIndex,
+               'delIndices' : index_list,
         }, function(resultArr){});
         location.reload();
     }
