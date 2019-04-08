@@ -181,6 +181,7 @@ def phase02(request):
         
         # Get the card names as a list from front-end
         newlabels = request.POST.getlist('newlabels[]')
+        print("new labels for storage: ", newlabels)
         
         # remove the prvious manytomany labels and attach new list
         remainIndex = request.POST.get('remainIndex')

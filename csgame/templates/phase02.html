@@ -117,12 +117,12 @@ document.addEventListener("dragend", function(event) {
                     resultArr.push(document.getElementById("div" + k).children[l].children[0].innerHTML);
                 }
             }
-            
+            //post method
             $.post('{% url 'phase02' %}', {
-            'attributes': resultArr, 
+            'newlabels': resultArr, 
             csrfmiddlewaretoken : CSRFtoken,
             'remainIndex' : remainIndex,
-             'delIndices' : index_list,
+            'delIndices' : index_list,
             }, function(resultArr){});
             location.reload();
         } else if (divNum - 6 == 0) { //if empty cards, give an alert
