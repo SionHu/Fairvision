@@ -77,7 +77,17 @@ def delete_file(sender, instance, *args, **kwargs):
     instance.img.delete(save=False)
 
 # Instructions on each phase
-class phase01_instruction(models.Model):
-    inst = models.CharField(max_length=50, primary_key=True)
-    img = models.ImageField(upload_to=get_image_path, blank=True, null=True)
+class Phase01_instruction(models.Model):
+    class Meta:
+        verbose_name = 'Phase01 Instruction'
+        
+    instruction = models.CharField(max_length=50, blank=False, null=True)
+    imglink = models.CharField(max_length=100, blank=False, null=True)
+    order = models.CharField(max_length=10, blank=False, null=True)
+    
+    def get_queryset(self):
+        return Phase01_instruction.objects.all()
+    
+    def __str__(self):
+        return "{0}".format(self.order)
 

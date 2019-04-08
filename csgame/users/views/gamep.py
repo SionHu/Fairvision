@@ -2,8 +2,13 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from users.models import ImageModel, Label, Attribute
+from users.models import ImageModel, Label, Attribute, Phase01_instruction
 from django.http import HttpResponse
+
+from django.shortcuts import render
+from django.apps import apps
+import requests
+from .. import models
 
 # from ..forms import TestForm
 import boto3
@@ -88,7 +93,14 @@ def phase01(request):
         '''
     # form = TestForm()
     json_list = json.dumps(data)
-    return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, })
+    
+    inst = Phase01_instruction.get_queryset(Phase01_instruction)
+    instructions = list()
+    if inst.exists():
+        instructions = inst
+    else: 
+        instructions = ['none']
+    return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, 'instructions': instructions})
 
 # View for phase02
 @login_required
@@ -159,3 +171,5 @@ def phase03(request):
         return HttpResponse(None)
     else:
         return render(request, 'phase03.html', {'attributes': attributes})
+
+
