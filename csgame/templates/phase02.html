@@ -23,7 +23,8 @@ function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");       
     var targetBox = ev.target.id;
-    if (targetBox=="div2" || targetBox=="div3") {
+    //console.log(data);
+    if (targetBox=="div2" || targetBox=="div3" || targetBox=="div5" || targetBox=="div6" || targetBox=="div7" || targetBox=="div8" || targetBox=="div9" || targetBox=="div10" || targetBox=="div11" || targetBox=="div12") {
         ev.target.appendChild(document.getElementById(data));
     }
 }    
@@ -52,6 +53,7 @@ document.addEventListener("dragend", function(event) {
 <script> // Card functions and send
     // Global vars
     var clicks = 0;
+    var divNum = 5; //div number starts at 5 cuz lowest non conflicting number
     var resultArr = [];
     
     function addcard() {
@@ -67,13 +69,17 @@ document.addEventListener("dragend", function(event) {
         } else {
             resultArr.push(name);
         
-      
             // Add aother card
             if (clicks <= 4){
-                $("<div id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div3");
-            
+                $("<div id=\"div"+divNum+"\" style=\"float: left; width: 250; height: 200; margin: 10px; padding: 10px; border: 1px solid black; overflow-y: scroll\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\">"+name+"</div>").insertAfter("#div3");
+                //console.log("added div number " + divNum); //testing
+                divNum++;
             }else if (clicks > 4 && clicks <= 8) {
-                $("<div id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div3");
+                /*
+                $("<div id=\"div2\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" style=\"height: 200; width: 250; overflow-y: scroll\">"+name+"</div>").insertAfter("#div3");*/
+                $("<div id=\"div"+divNum+"\" style=\"float: left; width: 250; height: 200; margin: 10px; padding: 10px; border: 1px solid black; overflow-y: scroll\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\">"+name+"</div>").insertAfter("#div3");
+                //console.log("added div number " + divNum); //testing
+                divNum++;
             }else{
                 window.alert("Too many cards added. Maybe regroup the attributes?");
             }
@@ -84,12 +90,32 @@ document.addEventListener("dragend", function(event) {
         // get the value of CSRF token
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         // console.log(CSRFtoken)
-        //post method 
-        $.post('{% url 'phase02' %}', {
+        //post method
+        var validSubmit = true;
+        var i; //looping variable
+        var j; //looping variable
+        var elemInside;
+        
+        for (i = 5; i < divNum; i++) { //loop through each card
+            elemInside = document.getElementById("div" +i).childElementCount; //count num elements in card
+            //console.log(elemInside); //testing
+            if (elemInside < 2) { //number elements is less than 2
+                validSubmit = false;
+            }
+        }
+        //console.log(divNum);
+        if (validSubmit == true && divNum - 5 > 0) { //check if all cards have at least 2 attributes and at least 1 card
+            $.post('{% url 'phase02' %}', {
             'attributes': resultArr, 
             csrfmiddlewaretoken : CSRFtoken
-        }, function(resultArr){});
-        location.reload();
+            }, function(resultArr){});
+            location.reload();
+        } else if (divNum - 5 == 0) { //if empty cards, give an alert
+            alert("Create at least 1 card!");
+        } else { //alert if not all cards have at least 2 attributes
+            alert("Make sure all cards have at least 2 attributes!");
+        }
+        validSubmit = true; //reset the flag
     }
     
     function remcard() { // Haven't been implemented
