@@ -156,7 +156,7 @@ def phase02(request):
                 pass
             else:
                 attribute = Attribute.objects.create(word=attr)
-                attribute.save()
+                # attribute.save()
                 # print("this is new: ", attr)
     # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
     return render(request, 'phase02.html', {'labels': labels})
