@@ -55,7 +55,8 @@ document.addEventListener("dragend", function(event) {
     var clicks = 0;
     var divNum = 6; //div number starts at 5 cuz lowest non conflicting number
     var resultArr = [];
-    
+    var index_list = {{ json_list|safe }}
+    var remainIndex = index_list.pop();
     function addcard() {
         // Add the number of cards
         clicks++;
@@ -119,7 +120,9 @@ document.addEventListener("dragend", function(event) {
             
             $.post('{% url 'phase02' %}', {
             'attributes': resultArr, 
-            csrfmiddlewaretoken : CSRFtoken
+            csrfmiddlewaretoken : CSRFtoken,
+            'remainIndex' : remainIndex,
+             'delIndices' : index_list,
             }, function(resultArr){});
             location.reload();
         } else if (divNum - 6 == 0) { //if empty cards, give an alert

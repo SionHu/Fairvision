@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from users.models import ImageModel, Label, Attribute, RoundsNum
+from users.models import ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak
 from django.http import HttpResponse
 
 # from ..forms import TestForm
@@ -11,7 +11,7 @@ import botocore
 from botocore.client import Config
 import random
 import json
-from .roundsgenerator import rphase01
+from .roundsgenerator import rphase02
 
 
 @login_required
@@ -31,12 +31,12 @@ def phase01(request):
     else:
         roundsnum = rounds.first().num
     
-    print("I got roundsNUM is: ", roundsnum)
+    # print("I got roundsNUM is: ", roundsnum)
 
-    if roundsnum == int(settings.NUMROUNDS) + 1:
+    if roundsnum >= int(settings.NUMROUNDS) + 1:
         # print("The phase01 stops here")
         # push all to waiting page
-        return render(request, 'home.html', {'phase': 'PHASE 01'})
+        return render(request, 'over.html', {'phase': 'PHASE 01'})
 
     '''
     no random assignment for the images serving anymore. Assume dataset has been randomly cleared
@@ -119,18 +119,51 @@ def phase01(request):
 # View for phase02
 @login_required
 def phase02(request):
+    # First check if phase 2 is finished or not created
+    breaking = PhaseBreak.objects.filter(phase='phase02')
+
+    if not breaking:
+        breaking = PhaseBreak.objects.create(phase='phase02')
+        breaking.save()
+    else:
+        if breaking.first().stop:
+            return redirect(request, 'over.html', {'phase': 'PHASE 02'})
+#        else:
+#            print("not done yet!")
+
+
+
     # external files to get process the 
-    # Get all (We should have at least 4)
-    hello = ImageModel.objects.exclude(label=None)
-
-    # Generate 3 random unique image number based on available entries
-    data = random.sample(range(0, len(hello)), 3)
+    # Get the index array model from database 
     
-    KEYS = list()
-    for d in data:
-        KEYS.append(hello[d])
+    listarr = listArray.objects.filter(phase='phase02')
+    # print("I got the existing index list: ", listarr.first().attrlist)
+    
+    if not listarr:
+        # print("No list array exists, create a new one")
+        listarr = rphase02(int(settings.NUMROUNDS))
+        # print("listarr new is: ", listarr)
+        # Create Model Instance and save
+        p2list = listArray.objects.create(attrlist=listarr)
+        p2list.save()
+        indexlist = listarr
+    else:
+        indexlist = listarr.first().attrlist
+    
+            
+    # Generate 3 random unique image number based on available entries
+    data = random.sample(range(0, len(indexlist)), 4)
+    sendArray = list()
 
-    # print("I got image list: ", KEYS)
+    KEY = "airplanes/image_"
+    KEYS = [KEY] * 4
+    for x in range(0, 4):
+        KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
+        sendArray.append(indexlist[data[x]])
+
+    print("Sendarray: ", sendArray)
+    # print("KEYS: ", KEYS)
+
     labels = list()
 
     for key in  KEYS:
@@ -142,24 +175,52 @@ def phase02(request):
         else:
             # else if there is nothing  
             pass
-    # Fetch the attributes and make new attributes
+        
+    # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
     if request.method == 'POST':
+        
+        # Get the card names as a list from front-end
+        newlabels = request.POST.getlist('newlabels[]')
+        
+        # remove the prvious manytomany labels and attach new list
+        remainIndex = request.POST.get('remainIndex')
+        delIndices = request.POST.getlist('delIndices[]')
+        
+        print("I got remain index: ", remainIndex)
+        print("I got delete indices: ", delIndices)
+        
 
-        attributes = request.POST.getlist('attributes[]')
-        print("I got attributes: ", attributes)
-        for attr in attributes:
+        # Update the label lists of one of the image model in database 
+        ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
+        print("Updateing image: ", ukey)
+        imageup = ImageModel.objects.filter(img=ukey)
+        if imageup:
+            print("I got the image, updating...")
+        else:
+            print("wtf Error")
+
+        # Remove the delIndices from the current list
+        old_i_list = listArray.objects.get(phase='phase02')
+        old_index = old_i_list.attrlist
+        for di in delIndices:
+            old_index.remove(int(di))
+        print("New index is: ", old_index)
+        # old_index.update(attrlist=old_index)
+
+        # If the array list is already empty, redirect players to wait
+        
+        '''
             attribute = Attribute.objects.filter(word=attr).first()
             if attribute:
                 # Not save the same name of the attribute twice
-
-                # print("the attr exists: ", attribute)
                 pass
             else:
                 attribute = Attribute.objects.create(word=attr)
-                # attribute.save()
-                # print("this is new: ", attr)
-    # In template use 1 for loop to print 3 label sets of 3 different images, and 1 more for loop to add elements into <li> element, change to phase02.html
-    return render(request, 'phase02.html', {'labels': labels})
+                attribute.save()
+        '''
+    json_list = json.dumps(sendArray)
+    # print("Phase 2 json list is: ", json_list)
+    return render(request, 'phase02.html', {'labels': labels, 'json_list': json_list, })
 
 # View for phase3
 @login_required
