@@ -181,14 +181,14 @@ def phase02(request):
         
         # Get the card names as a list from front-end
         newlabels = request.POST.getlist('newlabels[]')
-        print("new labels for storage: ", newlabels)
+        # print("new labels for storage: ", newlabels)
         
         # remove the prvious manytomany labels and attach new list
         remainIndex = request.POST.get('remainIndex')
         delIndices = request.POST.getlist('delIndices[]')
         
-        print("I got remain index: ", remainIndex)
-        print("I got delete indices: ", delIndices)
+        # print("I got remain index: ", remainIndex)
+        # print("I got delete indices: ", delIndices)
         
 
         # Update the label lists of one of the image model in database 
