@@ -83,6 +83,7 @@ document.addEventListener("dragend", function(event) {
                 divNum++;
             } else{
                 window.alert("Too many cards added. Maybe regroup the attributes?");
+                clicks--;
             }
         }
     }
@@ -139,8 +140,12 @@ document.addEventListener("dragend", function(event) {
     }
     
     function remcard() { // Haven't been implemented
-        document.getElementById("div2").remove();
-        clicks--;
+        if (divNum > 7) { //greater than since adding a card will increase count from 7 to 8
+            document.getElementById("div" + (divNum - 1)).remove();
+            //console.log(clicks);
+            clicks--;
+            divNum--;
+        }
     }
 </script>
 
@@ -186,8 +191,11 @@ document.addEventListener("dragend", function(event) {
     <button class="btn btn-primary mr-3" onclick="addcard()" style="width: 100">
         Add Card
     </button>
-    <button type="button" class="btn btn-success" onclick="send()" style="width: 100">
+    <button type="button" class="btn btn-success mr-3" onclick="send()" style="width: 100">
         Submit
+    </button>
+    <button type="button" class="btn btn-primary mr-3" onclick="remcard()" style="width: 160">
+        Remove Last Card
     </button>
     
 </div>
