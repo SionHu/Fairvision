@@ -90,4 +90,32 @@ class Phase01_instruction(models.Model):
     
     def __str__(self):
         return "{0}".format(self.order)
+    
+class Phase02_instruction(models.Model):
+    class Meta:
+        verbose_name = 'Phase02 Instruction'
+        
+    instruction = models.CharField(max_length=50, blank=False, null=True)
+    imglink = models.CharField(max_length=100, blank=False, null=True)
+    order = models.CharField(max_length=10, blank=False, null=True)
+    
+    def get_queryset(self):
+        return Phase02_instruction.objects.all()
+    
+    def __str__(self):
+        return "{0}".format(self.order)
+
+class Phase03_instruction(models.Model):
+    class Meta:
+        verbose_name = 'Phase03 Instruction'
+        
+    instruction = models.CharField(max_length=50, blank=False, null=True)
+    imglink = models.CharField(max_length=100, blank=False, null=True)
+    order = models.CharField(max_length=10, blank=False, null=True)
+    
+    def get_queryset(self):
+        return Phase03_instruction.objects.all()
+    
+    def __str__(self):
+        return "{0}".format(self.order)
 
