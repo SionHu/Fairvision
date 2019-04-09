@@ -97,4 +97,4 @@ class PhaseBreak(models.Model):
     phase = models.CharField(max_length=10, default='phase02')
     stop = models.BooleanField(default=False)
     def __str__(self):
-        return self.phase02
+        return self.phase

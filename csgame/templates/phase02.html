@@ -117,6 +117,7 @@ document.addEventListener("dragend", function(event) {
                     resultArr.push(document.getElementById("div" + k).children[l].children[0].innerHTML);
                 }
             }
+            console.log(resultArr)
             //post method
             $.post('{% url 'phase02' %}', {
             'newlabels': resultArr, 
