@@ -109,9 +109,11 @@
     
 <hr> <!--  Divider line  -->
     
-{% for attr in attributes %}
-<div class="d-flex justify-content-center">
+{% for attr in attributes %}    
+    
+   <div class="d-flex justify-content-center">
     <h4>Do you think <font color="red"><b>{{ attr.word }}</b></font> is a meaningful attribute to describe an image of airplane?</h4>
+    
     <form action="/phase03.html" id="bias">
     <div class="ml-3 mt-1 form-check-inline">
         <label class="form-check-label" for="exampleRadios1">
@@ -125,7 +127,7 @@
     </div>
     </form>
     
-</div>
+    </div>
 <hr> <!--  Divider line  -->
 {% endfor %}
 
