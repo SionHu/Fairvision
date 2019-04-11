@@ -119,7 +119,59 @@ def phase01(request):
 # View for phase02
 @login_required
 def phase02(request):
-    # First check if phase 2 is finished or not created
+        # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
+    if request.method == 'POST':
+        
+        # Get the card names as a list from front-end
+        newlabels = request.POST.getlist('newlabels[]')
+        # print("new labels for storage: ", newlabels)
+        
+        # remove the prvious manytomany labels and attach new list
+        remainIndex = request.POST.get('remainIndex')
+        delIndices = request.POST.getlist('delIndices[]')
+        
+        # print("I got remain index: ", remainIndex)
+        # print("I got delete indices: ", delIndices)
+        
+
+        # Update the label lists of one of the image model in database 
+        ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
+        print("Updateing image: ", ukey)
+        imageup = ImageModel.objects.filter(img=ukey)
+        if imageup:
+            # Update the image set
+            print("I got the image, updating...")
+            imageup.first().label.clear()
+            
+            for newlb in newlabels:
+                existlb = Label.objects.filter(name=newlb)
+                if existlb:
+                    # Existing lb, only set is Taboo = True
+                    existlb.update(isTaboo=True)
+                    imageup.first().label.add(existlb.first())
+                else:
+                    # Create new and add into the 
+                    newlabel = Label.objects.create(name=newlb, isTaboo=True)
+                    newlabel.save()
+                    imageup.first().label.add(newlabel)
+        else:
+            print("wtf Error")
+
+        # Remove the delIndices from the current list
+        old_i_list = listArray.objects.get(phase='phase02')
+        old_index = old_i_list.attrlist
+        for di in delIndices:
+            old_index.remove(int(di))
+        print("New index is: ", old_index)
+        old_i_list.attrlist=old_index
+        old_i_list.save()
+        if len(old_index) <= 2:
+            print("Time to stop again")
+            breaking = PhaseBreak.objects.get(phase='phase02')
+            breaking.stop = True
+            breaking.save()
+    
+    # For GET, first check if phase 2 is finished or not created
     breaking = PhaseBreak.objects.filter(phase='phase02')
 
     if not breaking:
@@ -127,7 +179,7 @@ def phase02(request):
         breaking.save()
     else:
         if breaking.first().stop:
-            return redirect(request, 'over.html', {'phase': 'PHASE 02'})
+            return render(request, 'over.html', {'phase': 'PHASE 02'})
 #        else:
 #            print("not done yet!")
 
@@ -176,40 +228,7 @@ def phase02(request):
             # else if there is nothing  
             pass
         
-    # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
-    if request.method == 'POST':
-        
-        # Get the card names as a list from front-end
-        newlabels = request.POST.getlist('newlabels[]')
-        # print("new labels for storage: ", newlabels)
-        
-        # remove the prvious manytomany labels and attach new list
-        remainIndex = request.POST.get('remainIndex')
-        delIndices = request.POST.getlist('delIndices[]')
-        
-        # print("I got remain index: ", remainIndex)
-        # print("I got delete indices: ", delIndices)
-        
-
-        # Update the label lists of one of the image model in database 
-        ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
-        print("Updateing image: ", ukey)
-        imageup = ImageModel.objects.filter(img=ukey)
-        if imageup:
-            print("I got the image, updating...")
-        else:
-            print("wtf Error")
-
-        # Remove the delIndices from the current list
-        old_i_list = listArray.objects.get(phase='phase02')
-        old_index = old_i_list.attrlist
-        for di in delIndices:
-            old_index.remove(int(di))
-        print("New index is: ", old_index)
-        # old_index.update(attrlist=old_index)
-
-        # If the array list is already empty, redirect players to wait
-        
+        # If the array list reaches the threhold (2), then set the breaking to be true.
         '''
             attribute = Attribute.objects.filter(word=attr).first()
             if attribute:
@@ -226,7 +245,15 @@ def phase02(request):
 # View for phase3
 @login_required
 def phase03(request):
-
+    img = ImageModel.objects.get(img='airplanes/image_0009.jpg')
+    img.label.clear()
+    data = ['right sided', 'old plane', 'grass']
+    
+    for d in data:
+        label = Label.objects.get(name=d)
+        img.label.add(label)
+        img.save()
+    
     attr = Attribute.objects.all()
     attributes = list()
 

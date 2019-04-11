@@ -45,9 +45,8 @@ class ImageModelForm(forms.ModelForm):
 class ImageModelAdmin(admin.ModelAdmin):
     model = ImageModel
     form = ImageModelForm
-    fields = ['img', 'label']
     list_display = ('img', 'allLabel')
-
+    list_display_links = ('img', 'allLabel')
 class LabelAdmin(admin.ModelAdmin):
     list_filter=('isTaboo', 'name')
 
