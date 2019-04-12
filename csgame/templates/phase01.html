@@ -135,10 +135,14 @@
     <!-- END INPUT BAR -->
         
     <!--  History of typed in attributes  -->
-    <div class="card" style="width: 118%; height: 58.8%"> <!-- height was 62% -->
+    <div class="card" style="width: 118%; height: 50.5%"> <!-- height was 62% -->
         <div class="card-content">
             <ul id="list"></ul>
         </div>
+    </div>
+        <button id="delete" class="btn btn-success">Delete Last Attribute</button>
+    <div>
+        
     </div>
         
     </div>
@@ -209,6 +213,17 @@
                 numAttributes = 0;
             }
         })
+    
+        //delete button listener
+        $('#delete').click(function(event){
+            // alert("New Images Inbound!")
+            var arrlen = document.getElementById("list").childNodes.length;
+            var attrlist = document.getElementById("list");
+            if (arrlen != 0) {
+                attrlist.removeChild(attrlist.childNodes[arrlen - 1]);
+            }
+        })
+    
 	$(function() {
         
     // Consider remove it
