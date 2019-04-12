@@ -135,7 +135,7 @@ def phase01(request):
 @login_required
 def phase02(request):
     # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
-    
+    showbutton = False
     if request.method == 'POST':
         
         # Get the card names as a list from front-end
@@ -179,10 +179,12 @@ def phase02(request):
 #        print("New index is: ", old_index)
         old_i_list.attrlist=old_index
         old_i_list.save()
-        # Tentative solution less than or equal to 2
-        if len(old_index) <= 2:
+        
+        # If the length of the objects is less than 4, need to ask about "not same" vote from everyone once
+        if len(old_index) <= 4:
+            showbutton = True
             breaking = PhaseBreak.objects.get(phase='phase02')
-            breaking.stop = True
+            # breaking.stop = True
             breaking.save()
 
      # For GET, first check if phase 2 is finished or not created
@@ -223,8 +225,11 @@ def phase02(request):
         indexlist = listarr.first().attrlist
     
             
-    # Generate 3 random unique image number based on available entries
-    data = random.sample(range(0, len(indexlist)), 4)
+    # Generate 4 random unique image number based on available entries
+    if len(indexlist) > 4:
+        data = random.sample(range(0, len(indexlist)), 4)
+    else:
+        data = indexlist
     sendArray = list()
 
     KEY = "airplanes/image_"
@@ -272,7 +277,7 @@ def phase02(request):
         instructions = inst
     else: 
         instructions = ['none']
-    return render(request, 'phase02.html', {'labels': labels, 'instructions': instructions, 'json_list': json_list,})
+    return render(request, 'phase02.html', {'labels': labels, 'instructions': instructions, 'json_list': json_list, 'showbutton' : showbutton})
 
 
 # View for phase3
