@@ -135,7 +135,7 @@ def phase01(request):
 @login_required
 def phase02(request):
     # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
-    
+    showbutton = False
     if request.method == 'POST':
         
         # Get the card names as a list from front-end
@@ -179,10 +179,14 @@ def phase02(request):
 #        print("New index is: ", old_index)
         old_i_list.attrlist=old_index
         old_i_list.save()
-        # Tentative solution less than or equal to 2
-        if len(old_index) <= 2:
+        
+        # If the length of the objects is less than 4, need to ask about "not same" vote from everyone once
+        if len(old_index) <= 4:
+            
+            # Let the font end show the "Not Same" Button
+            showbutton = True
             breaking = PhaseBreak.objects.get(phase='phase02')
-            breaking.stop = True
+            # breaking.stop = True
             breaking.save()
 
      # For GET, first check if phase 2 is finished or not created
@@ -194,12 +198,16 @@ def phase02(request):
     else:
         if breaking.first().stop:
             # save all the labels as attributes
-            labelsets = Label.objects.filter(isTaboo=True)
-            for lbs in labelsets:
-                attribute = Attribute.objects.filter(word=lbs.name)
-                if not attribute:
-                    attribute =     Attribute.objects.create(word=lbs.name)
-                    attribute.save()
+            remainArray = listArray.objects.get(phase='phase02')
+            for rI in remainArray.attrlist:
+                key = "airplanes/image_" + "{:04d}".format(rI) + ".jpg"
+                attrimg = ImageModel.objects.get(img=key)
+                labelsets = attrimg.label.all()
+                for lbs in labelsets:
+                    attribute = Attribute.objects.filter(word=lbs.name)
+                    if not attribute:
+                        attribute =     Attribute.objects.create(word=lbs.name)
+                        attribute.save()
             return render(request, 'over.html', {'phase': 'PHASE 02'})
     # external files to get process the 
     # Get the index array model from database 
@@ -219,15 +227,20 @@ def phase02(request):
         indexlist = listarr.first().attrlist
     
             
-    # Generate 3 random unique image number based on available entries
-    data = random.sample(range(0, len(indexlist)), 4)
+    # Generate 4 random unique image number based on available entries
+    if len(indexlist) > 4:
+        data = random.sample(range(0, len(indexlist)), 4)
+    else:
+        data = list(range(0, len(indexlist)))
     sendArray = list()
 
     KEY = "airplanes/image_"
-    KEYS = [KEY] * 4
-    for x in range(0, 4):
+    KEYS = [KEY] * len(data)
+    print("Kprint ", KEYS)
+    for x in range(0, len(data)):
         KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
         sendArray.append(indexlist[data[x]])
+        print("Keyis : ", KEYS[x])
 
     # print("Sendarray: ", sendArray)
 
@@ -268,7 +281,7 @@ def phase02(request):
         instructions = inst
     else: 
         instructions = ['none']
-    return render(request, 'phase02.html', {'labels': labels, 'instructions': instructions, 'json_list': json_list,})
+    return render(request, 'phase02.html', {'labels': labels, 'instructions': instructions, 'json_list': json_list, 'showbutton' : showbutton})
 
 
 # View for phase3
