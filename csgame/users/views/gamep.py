@@ -194,12 +194,16 @@ def phase02(request):
     else:
         if breaking.first().stop:
             # save all the labels as attributes
-            labelsets = Label.objects.filter(isTaboo=True)
-            for lbs in labelsets:
-                attribute = Attribute.objects.filter(word=lbs.name)
-                if not attribute:
-                    attribute =     Attribute.objects.create(word=lbs.name)
-                    attribute.save()
+            remainArray = listArray.objects.get(phase='phase02')
+            for rI in remainArray.attrlist:
+                key = "airplanes/image_" + "{:04d}".format(rI) + ".jpg"
+                attrimg = ImageModel.objects.get(img=key)
+                labelsets = attrimg.label.all()
+                for lbs in labelsets:
+                    attribute = Attribute.objects.filter(word=lbs.name)
+                    if not attribute:
+                        attribute =     Attribute.objects.create(word=lbs.name)
+                        attribute.save()
             return render(request, 'over.html', {'phase': 'PHASE 02'})
     # external files to get process the 
     # Get the index array model from database 
