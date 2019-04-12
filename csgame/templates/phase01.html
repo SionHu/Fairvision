@@ -205,7 +205,7 @@
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){});
                 // reload the webpage to set new images
-                location.reload();
+                setTimeout(function(){location.reload()}, 5000);
                 numAttributes = 0;
             }
         })

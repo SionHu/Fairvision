@@ -76,6 +76,7 @@ def delete_file(sender, instance, *args, **kwargs):
     """ Deletes image files on `post_delete` """
     instance.img.delete(save=False)
 
+
 # Instructions on each phase
 class Phase01_instruction(models.Model):
     class Meta:
@@ -118,4 +119,12 @@ class Phase03_instruction(models.Model):
     
     def __str__(self):
         return "{0}".format(self.order)
+
+
+# Rounds Number for phase01
+class RoundsNum(models.Model):
+    num = models.IntegerField(default=0)
+    phase = models.CharField(max_length=10, primary_key=True, default='phase01')
+    def __str__(self):
+        return self.phase
 
