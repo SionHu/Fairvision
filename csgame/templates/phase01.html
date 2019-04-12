@@ -7,18 +7,17 @@
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-
 {% endblock %}
+
 
 {% block content %}
 <div class="container">
-
+    
 <div class="row">
     <h2>Phase 01: Collect attributes
         <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>
     </h2>    
 </div>
-    
     
 <!--  Used to test the admin Phase01_instruction model  -->
 {% for inst in instructions %}
@@ -86,7 +85,7 @@
 <div class="row">
         
     <!-- IMAGES -->
-        <div class="col-md-9">
+        <div class="col-md-9" id="bg-image">
         <div class="row mt-3">
             <div class="card col" style="height: 35%;">
                 <div class="card-body">
@@ -115,7 +114,10 @@
         </div>
         </div>
     <!-- END IMAGES -->
-    
+    <div class="col-md-9" style="display: none; position: absolute" id="loading-image" alt="Loading..." >
+        <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="margin-left: 150px; margin-top: 30px"/>
+    </div>
+        
     <br>
     
     <div class="col-md-3 mt-3">
@@ -140,13 +142,13 @@
             <ul id="list"></ul>
         </div>
     </div>
-        <button id="delete" class="btn btn-success">Delete Last Attribute</button>
+        <button id="delete" class="btn btn-danger mt-2">Revoke</button>
     <div>
         
     </div>
         
     </div>
-
+    
     <form>
         {% csrf_token %}
     </form>
@@ -208,8 +210,20 @@
                     'img_list' : image_list, 
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){});
+                
                 // reload the webpage to set new images
-                setTimeout(function(){location.reload()}, 5000);
+                var countdown = 3000;  // your countdown in milliseconds
+
+                setTimeout(function() {
+                    // hide your loading image after "countdown" milliseconds
+                    document.getElementById("loading-image").setAttribute("style","display:none");
+                    document.getElementById("bg-image").setAttribute("style", "display:block");
+                }, countdown);
+        
+                // show your loading image
+                document.getElementById("loading-image").setAttribute("style","display:block");
+                document.getElementById("bg-image").setAttribute("style", "display:none");
+                
                 numAttributes = 0;
             }
         })
@@ -235,11 +249,11 @@
         }
     });
 }); 
+    
 </script>
-    <!-- END SCRIPT -->
 
     <!-- add attributes to the list -->
-    <script>
+<script>
         function addLi() {
             var txtVal = document.getElementById("id_test").value.toLowerCase(),
                 listNode = document.getElementById('list'),

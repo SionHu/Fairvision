@@ -271,14 +271,14 @@ def phase02(request):
 # View for phase3
 @login_required
 def phase03(request):
-    img = ImageModel.objects.get(img='airplanes/image_0009.jpg')
-    img.label.clear()
-    data = ['right sided', 'old plane', 'grass']
-    
-    for d in data:
-        label = Label.objects.get(name=d)
-        img.label.add(label)
-        img.save()
+#    img = ImageModel.objects.get(img='airplanes/image_0009.jpg')
+#    img.label.clear()
+#    data = ['right sided', 'old plane', 'grass']
+#    
+#    for d in data:
+#        label = Label.objects.get(name=d)
+#        img.label.add(label)
+#        img.save()
     
     attr = Attribute.objects.all()
     attributes = list()
