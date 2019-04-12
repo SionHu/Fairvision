@@ -73,11 +73,57 @@ class ImageModel(models.Model):
     def allLabel(self):
         return "\n".join([l.name for l in self.label.all()])
 
+
 # Delete the file on S3 at the same time delete model on Django
 @receiver(models.signals.post_delete, sender=ImageModel)
 def delete_file(sender, instance, *args, **kwargs):
     """ Deletes image files on `post_delete` """
     instance.img.delete(save=False)
+
+
+# Instructions on each phase
+class Phase01_instruction(models.Model):
+    class Meta:
+        verbose_name = 'Phase01 Instruction'
+        
+    instruction = models.CharField(max_length=50, blank=False, null=True)
+    imglink = models.CharField(max_length=100, blank=False, null=True)
+    order = models.CharField(max_length=10, blank=False, null=True)
+    
+    def get_queryset(self):
+        return Phase01_instruction.objects.all()
+    
+    def __str__(self):
+        return "{0}".format(self.order)
+    
+class Phase02_instruction(models.Model):
+    class Meta:
+        verbose_name = 'Phase02 Instruction'
+        
+    instruction = models.CharField(max_length=50, blank=False, null=True)
+    imglink = models.CharField(max_length=100, blank=False, null=True)
+    order = models.CharField(max_length=10, blank=False, null=True)
+    
+    def get_queryset(self):
+        return Phase02_instruction.objects.all()
+    
+    def __str__(self):
+        return "{0}".format(self.order)
+
+class Phase03_instruction(models.Model):
+    class Meta:
+        verbose_name = 'Phase03 Instruction'
+        
+    instruction = models.CharField(max_length=50, blank=False, null=True)
+    imglink = models.CharField(max_length=100, blank=False, null=True)
+    order = models.CharField(max_length=10, blank=False, null=True)
+    
+    def get_queryset(self):
+        return Phase03_instruction.objects.all()
+    
+    def __str__(self):
+        return "{0}".format(self.order)
+
 
 # Rounds Number for phase01
 class RoundsNum(models.Model):
@@ -85,6 +131,7 @@ class RoundsNum(models.Model):
     phase = models.CharField(max_length=10, primary_key=True, default='phase01')
     def __str__(self):
         return self.phase
+
 
 # Array indices for recursion list of phase02
 class listArray(models.Model):
@@ -98,3 +145,4 @@ class PhaseBreak(models.Model):
     stop = models.BooleanField(default=False)
     def __str__(self):
         return self.phase
+
