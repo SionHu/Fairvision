@@ -182,6 +182,8 @@ def phase02(request):
         
         # If the length of the objects is less than 4, need to ask about "not same" vote from everyone once
         if len(old_index) <= 4:
+            
+            # Let the font end show the "Not Same" Button
             showbutton = True
             breaking = PhaseBreak.objects.get(phase='phase02')
             # breaking.stop = True
@@ -229,14 +231,16 @@ def phase02(request):
     if len(indexlist) > 4:
         data = random.sample(range(0, len(indexlist)), 4)
     else:
-        data = indexlist
+        data = list(range(0, len(indexlist)))
     sendArray = list()
 
     KEY = "airplanes/image_"
-    KEYS = [KEY] * 4
-    for x in range(0, 4):
+    KEYS = [KEY] * len(data)
+    print("Kprint ", KEYS)
+    for x in range(0, len(data)):
         KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
         sendArray.append(indexlist[data[x]])
+        print("Keyis : ", KEYS[x])
 
     # print("Sendarray: ", sendArray)
 
