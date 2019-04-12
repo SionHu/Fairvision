@@ -23,3 +23,7 @@
   display: inline-block;
   width: 100%;
 }
+
+.modal.and.carousel {
+  position: fixed; // Needed because the carousel overrides the position property
+}
