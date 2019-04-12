@@ -67,6 +67,8 @@ def phase01(request):
                     if label:
                     #    print("The exsiting label is: ", label)
                         # check if the image model contains that label
+                        label.isTaboo = False
+                        label.save()
                         lb = model.label.filter(name=d).first()
                         if lb:
                             pass
@@ -119,7 +121,8 @@ def phase01(request):
 # View for phase02
 @login_required
 def phase02(request):
-        # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
+    # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
+    
     if request.method == 'POST':
         
         # Get the card names as a list from front-end
@@ -136,11 +139,9 @@ def phase02(request):
 
         # Update the label lists of one of the image model in database 
         ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
-        print("Updateing image: ", ukey)
         imageup = ImageModel.objects.filter(img=ukey)
         if imageup:
             # Update the image set
-            print("I got the image, updating...")
             imageup.first().label.clear()
             
             for newlb in newlabels:
@@ -162,16 +163,16 @@ def phase02(request):
         old_index = old_i_list.attrlist
         for di in delIndices:
             old_index.remove(int(di))
-        print("New index is: ", old_index)
+#        print("New index is: ", old_index)
         old_i_list.attrlist=old_index
         old_i_list.save()
+        # Tentative solution less than or equal to 2
         if len(old_index) <= 2:
-            print("Time to stop again")
             breaking = PhaseBreak.objects.get(phase='phase02')
             breaking.stop = True
             breaking.save()
-    
-    # For GET, first check if phase 2 is finished or not created
+
+     # For GET, first check if phase 2 is finished or not created
     breaking = PhaseBreak.objects.filter(phase='phase02')
 
     if not breaking:
@@ -179,12 +180,14 @@ def phase02(request):
         breaking.save()
     else:
         if breaking.first().stop:
+            # save all the labels as attributes
+            labelsets = Label.objects.filter(isTaboo=True)
+            for lbs in labelsets:
+                attribute = Attribute.objects.filter(word=lbs.name)
+                if not attribute:
+                    attribute =     Attribute.objects.create(word=lbs.name)
+                    attribute.save()
             return render(request, 'over.html', {'phase': 'PHASE 02'})
-#        else:
-#            print("not done yet!")
-
-
-
     # external files to get process the 
     # Get the index array model from database 
     
@@ -213,8 +216,7 @@ def phase02(request):
         KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
         sendArray.append(indexlist[data[x]])
 
-    print("Sendarray: ", sendArray)
-    # print("KEYS: ", KEYS)
+    # print("Sendarray: ", sendArray)
 
     labels = list()
 
@@ -238,6 +240,7 @@ def phase02(request):
                 attribute = Attribute.objects.create(word=attr)
                 attribute.save()
         '''
+    
     json_list = json.dumps(sendArray)
     # print("Phase 2 json list is: ", json_list)
     return render(request, 'phase02.html', {'labels': labels, 'json_list': json_list, })
@@ -245,14 +248,7 @@ def phase02(request):
 # View for phase3
 @login_required
 def phase03(request):
-    img = ImageModel.objects.get(img='airplanes/image_0009.jpg')
-    img.label.clear()
-    data = ['right sided', 'old plane', 'grass']
-    
-    for d in data:
-        label = Label.objects.get(name=d)
-        img.label.add(label)
-        img.save()
+
     
     attr = Attribute.objects.all()
     attributes = list()

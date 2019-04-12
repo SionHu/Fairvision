@@ -24,7 +24,7 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");       
     var targetBox = ev.target.id;
     //console.log(data);
-    if (targetBox=="div7" || targetBox=="div8" || targetBox=="div9" || targetBox=="div10" || targetBox=="div11" || targetBox=="div12" || targetBox=="div13" || targetBox=="div14") {
+    if (targetBox=="div1" || targetBox=="div2" || targetBox=="div3" || targetBox=="div4" || targetBox=="div7" || targetBox=="div8" || targetBox=="div9" || targetBox=="div10" || targetBox=="div11" || targetBox=="div12" || targetBox=="div13" || targetBox=="div14") {
         ev.target.appendChild(document.getElementById(data));
     }
 }    
@@ -119,17 +119,14 @@ document.addEventListener("dragend", function(event) {
                 }
             }
             
-            //TEST PRINT LOOP
-            for (i = 0; i < resultArr.length; i++) {
-                console.log(resultArr[i]);
-            }
+            //post method
             $.post('{% url 'phase02' %}', {
             'newlabels': resultArr, 
             csrfmiddlewaretoken : CSRFtoken,
             'remainIndex' : remainIndex,
             'delIndices' : index_list,
             }, function(resultArr){});
-            location.reload();
+            setTimeout(function(){location.reload()}, 5000);
         } else if (divNum - 7 == 0) { //if empty cards, give an alert
             alert("Create at least 1 card!");
         } else { //alert if not all cards have at least 2 attributes
