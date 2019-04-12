@@ -213,11 +213,12 @@
                 
                 // reload the webpage to set new images
                 var countdown = 3000;  // your countdown in milliseconds
-
+                
                 setTimeout(function() {
                     // hide your loading image after "countdown" milliseconds
                     document.getElementById("loading-image").setAttribute("style","display:none");
                     document.getElementById("bg-image").setAttribute("style", "display:block");
+                    location.reload();
                 }, countdown);
         
                 // show your loading image

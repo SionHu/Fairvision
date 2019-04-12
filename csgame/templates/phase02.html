@@ -124,13 +124,23 @@ document.addEventListener("dragend", function(event) {
             'remainIndex' : remainIndex,
             'delIndices' : index_list,
             }, function(resultArr){});
-            setTimeout(function(){location.reload()}, 5000);
+            setTimeout(function(){
+                document.getElementById("loading-image").setAttribute("style","display:none");
+                document.getElemensendtById("bg-image").setAttribute("style", "display:block");
+                location.reload()
+            
+            }, 5000);
+            
+            document.getElementById("loading-image").setAttribute("style","display:block");
+            document.getElementById("bg-image").setAttribute("style", "display:none");
+            
         } else if (divNum - 7 == 0) { //if empty cards, give an alert
             alert("Create at least 1 card!");
         } else { //alert if not all cards have at least 2 attributes
             alert("Make sure all cards have at least 2 attributes!");
         }
         validSubmit = true; //reset the flag
+                
     }
     
     function remcard() { // Haven't been implemented
@@ -146,7 +156,12 @@ document.addEventListener("dragend", function(event) {
 {% endblock %}
 
 {% block content %}
-<div class="container">
+
+<div class="container" style="display: none; position: absolute" id="loading-image" alt="Loading..." >
+    <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="margin-left: 150px; margin-top: 30px"/>
+</div>
+
+<div class="container" id="bg-image">
 
 <div class="row">
     <div class="col-8">
@@ -260,6 +275,8 @@ document.addEventListener("dragend", function(event) {
 
 </div>
     
+</div>
+
 
 
 
