@@ -24,8 +24,7 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");       
     var targetBox = ev.target.id;
     //console.log(data);
-    if (targetBox=="div1" || targetBox=="div2" || targetBox=="div3" || targetBox=="div4" || targetBox=="div7" || targetBox=="div8" || targetBox=="div9" || targetBox=="div10" || targetBox=="div11" || targetBox=="div12" || targetBox=="div13" || targetBox=="div14" ||
-       targetBox=="div100") {
+    if (targetBox=="div1" || targetBox=="div2" || targetBox=="div3" || targetBox=="div4" || targetBox=="div7" || targetBox=="div8" || targetBox=="div9" || targetBox=="div10" || targetBox=="div11" || targetBox=="div12" || targetBox=="div13" || targetBox=="div14" || targetBox=="div100") {
         ev.target.appendChild(document.getElementById(data));
     }
 }    
@@ -72,11 +71,11 @@ document.addEventListener("dragend", function(event) {
             resultArr.push(name);
         
             // Add aother card
-            if (clicks <= 4){
+            if (clicks <= 3){
                 $("<div id=\"div"+divNum+"\" style=\"float: left; width: 250; height: 200; margin: 10px; padding: 10px; margin-bottom: 30px; border: 1px solid black; overflow-y: scroll\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\">"+name+"</div>").insertAfter("#div5");
                 //console.log("added div number " + divNum); //testing
                 divNum++;
-            } else if (clicks > 4 && clicks <= 8) {
+            } else if (clicks > 3 && clicks <= 7) {
                 $("<div id=\"div"+divNum+"\" style=\"float: left; width: 250; height: 200; margin: 10px; padding: 10px; margin-bottom: 30px; border: 1px solid black; overflow-y: scroll\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\">"+name+"</div>").insertAfter("#div5");
                 //console.log("added div number " + divNum); //testing
                 divNum++;
@@ -128,6 +127,7 @@ document.addEventListener("dragend", function(event) {
             'remainIndex' : remainIndex,
             'delIndices' : index_list,
             }, function(resultArr){});
+            
             setTimeout(function(){
                 document.getElementById("loading-image").setAttribute("style","display:none");
                 document.getElementById("bg-image").setAttribute("style", "display:block");
@@ -145,7 +145,7 @@ document.addEventListener("dragend", function(event) {
         validSubmit = true; //reset the flag 
     }
     
-    function remcard() { // Haven't been implemented
+    function remcard() { 
         if (divNum > 7) { //greater than since adding a card will increase count from 7 to 8
             var i; //looping variable
             var numInList = document.getElementById("div" + (divNum - 1)).childElementCount; //number of attributes in list to delete
@@ -181,6 +181,11 @@ document.addEventListener("dragend", function(event) {
             divNum--;
         }
     }
+    
+    function allsame() {
+        
+    }
+    
 </script>
 
 {% endblock %}
@@ -195,7 +200,7 @@ document.addEventListener("dragend", function(event) {
 
 <div class="row">
     <div class="col-8">
-        <h2>Phase 02: Reduce redundancy 
+        <h2>Phase 02: Reduce Redundancy 
             <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>
         </h2>
     </div>
@@ -285,10 +290,12 @@ document.addEventListener("dragend", function(event) {
     <button type="button" class="btn btn-success mr-3" onclick="send()" style="width: 100">
         Submit
     </button>
-    <button type="button" class="btn btn-primary mr-3" onclick="remcard()" style="width: 160">
-        Remove Last Card
+    <button type="button" class="btn btn-danger mr-3" onclick="remcard()" style="width: auto">
+        Revoke Card
     </button>
-    
+    <button type="button" class="btn btn-warning mr-3" onclick="allsame()" style="width: auto; display: none">
+        All Same
+    </button>
 </div>
 
     
@@ -297,7 +304,12 @@ document.addEventListener("dragend", function(event) {
     </form>
 
 <div class="row">
-    <div id="div5"></div>
+    <div id="div5">
+        <!--  There always is a trash can on the page for garbage labels  -->
+        <div id="div100" style="float: left; width: 250; height: 200; margin: 10px; padding: 10px; margin-bottom: 30px; border: 2px solid indianred; overflow-y: scroll" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <a style="color: red"><b>Trash Can</b></a>
+        </div>
+    </div>
 </div>
     
 <div class="row pb-5 ">
