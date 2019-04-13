@@ -86,7 +86,7 @@ class Phase01_instruction(models.Model):
     class Meta:
         verbose_name = 'Phase01 Instruction'
         
-    instruction = models.CharField(max_length=50, blank=False, null=True)
+    instruction = models.CharField(max_length=150, blank=False, null=True)
     imglink = models.CharField(max_length=100, blank=False, null=True)
     order = models.CharField(max_length=10, blank=False, null=True)
     
@@ -100,7 +100,7 @@ class Phase02_instruction(models.Model):
     class Meta:
         verbose_name = 'Phase02 Instruction'
         
-    instruction = models.CharField(max_length=50, blank=False, null=True)
+    instruction = models.CharField(max_length=150, blank=False, null=True)
     imglink = models.CharField(max_length=100, blank=False, null=True)
     order = models.CharField(max_length=10, blank=False, null=True)
     
@@ -114,7 +114,7 @@ class Phase03_instruction(models.Model):
     class Meta:
         verbose_name = 'Phase03 Instruction'
         
-    instruction = models.CharField(max_length=50, blank=False, null=True)
+    instruction = models.CharField(max_length=150, blank=False, null=True)
     imglink = models.CharField(max_length=100, blank=False, null=True)
     order = models.CharField(max_length=10, blank=False, null=True)
     
