@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from users.models import ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
+from users.models import Player, CustomUser, ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
+
+from django.contrib.auth.admin import UserAdmin
 
 from django.http import HttpResponse
 
@@ -138,58 +140,65 @@ def phase02(request):
     showbutton = False
     if request.method == 'POST':
         
-        # Get the card names as a list from front-end
-        newlabels = request.POST.getlist('newlabels[]')
-        # print("new labels for storage: ", newlabels)
+        # get the not-same button from the user
+        notsamebutton = False
         
-        # remove the prvious manytomany labels and attach new list
-        remainIndex = request.POST.get('remainIndex')
-        delIndices = request.POST.getlist('delIndices[]')
-        
-        # print("I got remain index: ", remainIndex)
-        # print("I got delete indices: ", delIndices)
-        
-
-        # Update the label lists of one of the image model in database 
-        ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
-        imageup = ImageModel.objects.filter(img=ukey)
-        if imageup:
-            # Update the image set
-            imageup.first().label.clear()
-            
-            for newlb in newlabels:
-                existlb = Label.objects.filter(name=newlb)
-                if existlb:
-                    # Existing lb, only set is Taboo = True
-                    existlb.update(isTaboo=True)
-                    imageup.first().label.add(existlb.first())
-                else:
-                    # Create new and add into the 
-                    newlabel = Label.objects.create(name=newlb, isTaboo=True)
-                    newlabel.save()
-                    imageup.first().label.add(newlabel)
+        # if someoneclick the button, which means player think they are unique, then do nothing and leave them in the same page.
+        if notsamebutton:
+            # Count the number of player not 
+            totalplayer = CustomUser.objects.all().exclude(is_superuser=True)
         else:
-            print("wtf Error")
-
-        # Remove the delIndices from the current list
-        old_i_list = listArray.objects.get(phase='phase02')
-        old_index = old_i_list.attrlist
-        for di in delIndices:
-            old_index.remove(int(di))
-#        print("New index is: ", old_index)
-        old_i_list.attrlist=old_index
-        old_i_list.save()
+            # Get the card names as a list from front-end
+            newlabels = request.POST.getlist('newlabels[]')
+            # print("new labels for storage: ", newlabels)
         
-        # If the length of the objects is less than 4, need to ask about "not same" vote from everyone once
-        if len(old_index) <= 4:
-            
-            # Let the font end show the "Not Same" Button
-            showbutton = True
-            breaking = PhaseBreak.objects.get(phase='phase02')
-            # breaking.stop = True
-            breaking.save()
+            # remove the prvious manytomany labels and attach new list
+            remainIndex = request.POST.get('remainIndex')
+            delIndices = request.POST.getlist('delIndices[]')
+        
+            # print("I got remain index: ", remainIndex)
+            # print("I got delete indices: ", delIndices)
+        
+            # Update the label lists of one of the image model in database 
+            ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
+            imageup = ImageModel.objects.filter(img=ukey)
+            if imageup:
+                # Update the image set
+                imageup.first().label.clear()
+                
+                for newlb in newlabels:
+                    existlb = Label.objects.filter(name=newlb)
+                    if existlb:
+                        # Existing lb, only set is Taboo = True
+                        existlb.update(isTaboo=True)
+                        imageup.first().label.add(existlb.first())
+                    else:
+                        # Create new and add into the 
+                        newlabel = Label.objects.create(name=newlb, isTaboo=True)
+                        newlabel.save()
+                        imageup.first().label.add(newlabel)
+            else:
+                print("wtf Error")
 
-     # For GET, first check if phase 2 is finished or not created
+            # Remove the delIndices from the current list
+            old_i_list = listArray.objects.get(phase='phase02')
+            old_index = old_i_list.attrlist
+            for di in delIndices:
+                old_index.remove(int(di))
+#           print("New index is: ", old_index)
+            old_i_list.attrlist=old_index
+            old_i_list.save()
+        
+            # If the length of the objects is less than 4, need to ask about "not same" vote from everyone once
+            if len(old_index) <= 4:
+                # Let the front-end show the "Not Same" Button
+                showbutton = True
+                # Generate a thing that starts counts  
+                breaking = PhaseBreak.objects.get(phase='phase02')
+                # breaking.stop = True
+                breaking.save()
+            
+    # For GET, first check if phase 2 is finished or not created
     breaking = PhaseBreak.objects.filter(phase='phase02')
 
     if not breaking:
