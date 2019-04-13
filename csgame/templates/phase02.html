@@ -183,7 +183,12 @@ document.addEventListener("dragend", function(event) {
     }
     
     function allsame() {
-        
+        var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        //post method
+        $.post('{% url 'phase02' %}', {
+            "data": "1",
+            csrfmiddlewaretoken : CSRFtoken,
+        }, function(data){});
     }
     
 </script>
@@ -293,9 +298,12 @@ document.addEventListener("dragend", function(event) {
     <button type="button" class="btn btn-danger mr-3" onclick="remcard()" style="width: auto">
         Revoke Card
     </button>
-    <button type="button" class="btn btn-warning mr-3" onclick="allsame()" style="width: auto; display: none">
+    
+    {% if showbutton %}
+    <button type="button" class="btn btn-warning mr-3" onclick="allsame()" style="width: auto;">
         All Same
     </button>
+    {% endif %}
 </div>
 
     

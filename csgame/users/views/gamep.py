@@ -137,24 +137,29 @@ def phase01(request):
 @login_required
 def phase02(request):
     # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
-    showbutton = False
+    showbutton = True
     print("Current user is: ", request.user.email)
     if request.method == 'POST':
         
-        # get the not-same button from the user
-        notsamebutton = False
+        if request.POST.get("data") is "1":
+            print("LAAÁ")
+            notsamebutton = True
+        else: 
+            # get the not-same button from the user
+            notsamebutton = False
         
         # if someoneclick the button, which means player think they are unique, then do nothing and leave them in the same page.
         if notsamebutton:
             # This is the solution for April celecbration, not the final design for Amazon Turk
             # Count the number of players that are not superuser
             totalplayer = CustomUser.objects.all().exclude(is_superuser=True)
-            threshold = int(float(totalplayer) * 0.8)
+            threshold = int(float(len(totalplayer)) * 0.8)
             
             # stop if the threshold are met by the number of votes
-            voteNum = NotSameVote.objects.all()
+            voteNum = NotSameVote.objects.all().first()
             if not voteNum:
-                voteNum = NoteSameVote.objects.create()
+                votelist = [request.user.email]
+                voteNum = NotSameVote.objects.create(email=votelist, vote=1)
                 voteNum.save()
             else:
                 playerlist = voteNum.email
@@ -167,6 +172,7 @@ def phase02(request):
             if voteNum.vote >= threshold:
                 print("Generate stop instance")
                 phasebreak = PhaseBreak.objects.create()
+                phasebreak.stop = False
                 phasebreak.save()
             
         else:
