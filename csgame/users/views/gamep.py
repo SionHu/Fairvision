@@ -169,11 +169,13 @@ def phase02(request):
                     playerlist.append(request.user.email)
                     voteNum.vote += 1
                     voteNum.save()
+            print("Current number of vote: ", voteNum.vote)
             if voteNum.vote >= threshold:
                 print("Generate stop instance")
-                phasebreak = PhaseBreak.objects.create()
-                phasebreak.stop = False
+                phasebreak = PhaseBreak.objects.get(phase='phase02')
+                phasebreak.stop = True
                 phasebreak.save()
+                print("Finish Setting break phase now")
             
         else:
             # Get the card names as a list from front-end
@@ -221,34 +223,36 @@ def phase02(request):
             if len(old_index) <= 4:
                 # Let the front-end show the "Not Same" Button
                 showbutton = True
-                # Generate a thing that starts counts  
-                breaking = PhaseBreak.objects.get(phase='phase02')
-                # breaking.stop = True
-                breaking.save()
             
     # For GET, first check if phase 2 is finished or not created
     breaking = PhaseBreak.objects.filter(phase='phase02')
 
     if not breaking:
+        print("generate phase break for phase02")
         breaking = PhaseBreak.objects.create(phase='phase02')
         breaking.save()
     else:
+        print("exist, check if needed to stop")
         if breaking.first().stop:
             # save all the labels as attributes
+            print("Stop here now")
             remainArray = listArray.objects.get(phase='phase02')
             for rI in remainArray.attrlist:
                 key = "airplanes/image_" + "{:04d}".format(rI) + ".jpg"
+                print("Set up attribute for image: ", key)
                 attrimg = ImageModel.objects.get(img=key)
                 labelsets = attrimg.label.all()
                 for lbs in labelsets:
                     attribute = Attribute.objects.filter(word=lbs.name)
                     if not attribute:
-                        attribute =     Attribute.objects.create(word=lbs.name)
+                        attribute = Attribute.objects.create(word=lbs.name)
                         attribute.save()
-            return render(request, 'over.html', {'phase': 'PHASE 02'})
+                print("Done over here!")
+            return render(request, 'over.html')
     # external files to get process the 
     # Get the index array model from database 
     
+    print("Nothing should be here after stop")
     listarr = listArray.objects.filter(phase='phase02')
     # print("I got the existing index list: ", listarr.first().attrlist)
     
@@ -263,7 +267,7 @@ def phase02(request):
     else:
         indexlist = listarr.first().attrlist
     
-            
+    
     # Generate 4 random unique image number based on available entries
     if len(indexlist) > 4:
         data = random.sample(range(0, len(indexlist)), 4)

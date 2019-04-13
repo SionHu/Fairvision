@@ -109,7 +109,7 @@ document.addEventListener("dragend", function(event) {
         }
         
         //console.log(divNum);
-        if (validSubmit == true && divNum - 7 > 0) { //check if all cards have at least 2 attributes and at least 1 card
+        if (validSubmit == true && divNum - 7 > 0 || divNum - 7 == 0) { //check if all cards have at least 2 attributes and at least 1 card
             for (k = 1; k <= 4; k++) {//get remaining ungrouped variables
                 var myEl = document.getElementById("div" + k);
                 if(myEl) {
@@ -137,9 +137,10 @@ document.addEventListener("dragend", function(event) {
             document.getElementById("loading-image").setAttribute("style","display:block");
             document.getElementById("bg-image").setAttribute("style", "display:none");
             
-        } else if (divNum - 7 == 0) { //if empty cards, give an alert
+        } else if (divNum - 7 == 0) { 
             alert("Create at least 1 card!");
-        } else { //alert if not all cards have at least 2 attributes
+            
+        } else if (validSubmit == false && divNum -7 > 0) { //alert if not all cards have at least 2 attributes
             alert("Make sure all cards have at least 2 attributes!");
         }
         validSubmit = true; //reset the flag 
@@ -182,13 +183,20 @@ document.addEventListener("dragend", function(event) {
         }
     }
     
-    function allsame() {
+    function alldifferent() {
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         //post method
         $.post('{% url 'phase02' %}', {
             "data": "1",
             csrfmiddlewaretoken : CSRFtoken,
         }, function(data){});
+        setTimeout(function(){
+            document.getElementById("loading-image").setAttribute("style","display:none");
+            document.getElementById("bg-image").setAttribute("style", "display:block");
+            location.href='../over';
+        }, 5000);
+        document.getElementById("loading-image").setAttribute("style","display:block");
+        document.getElementById("bg-image").setAttribute("style", "display:none");
     }
     
 </script>
@@ -197,8 +205,10 @@ document.addEventListener("dragend", function(event) {
 
 {% block content %}
 
-<div class="container" style="display: none; position: absolute" id="loading-image" alt="Loading..." >
-    <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="margin-left: 150px; margin-top: 30px"/>
+<div class="container " style="display: none;" id="loading-image" alt="Loading..." >
+    <div class="row h-100 align-items-cente justify-content-center">
+        <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="height: 70%" />
+    </div>
 </div>
 
 <div class="container" id="bg-image">
@@ -296,12 +306,12 @@ document.addEventListener("dragend", function(event) {
         Submit
     </button>
     <button type="button" class="btn btn-danger mr-3" onclick="remcard()" style="width: auto">
-        Revoke Card
+        Undo Card
     </button>
     
     {% if showbutton %}
-    <button type="button" class="btn btn-warning mr-3" onclick="allsame()" style="width: auto;">
-        All Same
+    <button type="button" class="btn btn-warning mr-3" onclick="alldifferent()" style="width: auto;">
+        <a style="color: white">All Different</a>
     </button>
     {% endif %}
 </div>
