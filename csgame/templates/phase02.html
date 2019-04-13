@@ -111,9 +111,12 @@ document.addEventListener("dragend", function(event) {
         //console.log(divNum);
         if (validSubmit == true && divNum - 7 > 0) { //check if all cards have at least 2 attributes and at least 1 card
             for (k = 1; k <= 4; k++) {//get remaining ungrouped variables
-                for (l = 0; l < document.getElementById("div" + k).childElementCount; l++) {
-                    //console.log(document.getElementById("div" + k).children[l].children[0].innerHTML);
-                    resultArr.push(document.getElementById("div" + k).children[l].children[0].innerHTML);
+                var myEl = document.getElementById("div" + k);
+                if(myEl) {
+                    for (l = 0; l < document.getElementById("div" + k).childElementCount; l++) { //each card in the card body
+                        //console.log(document.getElementById("div" + k).children[l].children[0].innerHTML);
+                        resultArr.push(document.getElementById("div" + k).children[l].children[0].innerHTML);
+                    }
                 }
             }
             
@@ -127,7 +130,7 @@ document.addEventListener("dragend", function(event) {
             
             setTimeout(function(){
                 document.getElementById("loading-image").setAttribute("style","display:none");
-                document.getElemensendtById("bg-image").setAttribute("style", "display:block");
+                document.getElementById("bg-image").setAttribute("style", "display:block");
                 location.reload();
             }, 5000);
             
@@ -139,12 +142,39 @@ document.addEventListener("dragend", function(event) {
         } else { //alert if not all cards have at least 2 attributes
             alert("Make sure all cards have at least 2 attributes!");
         }
-        validSubmit = true; //reset the flag
-                
+        validSubmit = true; //reset the flag 
     }
     
     function remcard() { 
         if (divNum > 7) { //greater than since adding a card will increase count from 7 to 8
+            var i; //looping variable
+            var numInList = document.getElementById("div" + (divNum - 1)).childElementCount; //number of attributes in list to delete
+            var delList = document.getElementById("div" + (divNum - 1)); //list element to be deleted
+            
+            //first find the list with the lowest count of attributes
+            var lowestNumCards = document.getElementById("div1").childElementCount; //initialize to div1
+            var lowestDiv = 1; //initialize to div1
+            for (i = 1; i < 4; i++) {
+                var myEle = document.getElementById("div" + i);
+                if(myEle) {
+                    //console.log("current card div " + i);
+                    var numCards = document.getElementById("div" + i).childElementCount;
+                    //console.log("number of cards is " + numCards);
+                    //console.log("current lowest number cards is " + lowestNumCards);
+                    if (numCards < lowestNumCards) {
+                        lowestNumCards = numCards;
+                        lowestDiv = i;
+                        //console.log("lowest div num is " + lowestDiv);
+                    }
+                }
+            }
+            
+            //first place the cards in the list to be deleted back into one of the original boxes
+            for (i = numInList; i >= 1; i--) { //goes to 1 since the card label should not be included
+                document.getElementById("div" + lowestDiv).appendChild(delList.childNodes[i]);
+            }
+            
+            //then remove everythingin the card
             document.getElementById("div" + (divNum - 1)).remove();
             //console.log(clicks);
             clicks--;
