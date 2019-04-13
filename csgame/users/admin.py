@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Label, ImageModel, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
+from .models import CustomUser, Label, ImageModel, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, NotSameVote
 
 
 from django import forms
@@ -85,7 +85,7 @@ admin.site.register(RoundsNum)
 
 admin.site.register(listArray)
 admin.site.register(Attribute, AttributeAdmin)
-#admin.site.register(Attribute)
+admin.site.register(NotSameVote)
 admin.site.register(ImageModel, ImageModelAdmin)
 
 admin.site.register(Phase01_instruction)
