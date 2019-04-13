@@ -193,7 +193,8 @@ document.addEventListener("dragend", function(event) {
         setTimeout(function(){
             document.getElementById("loading-image").setAttribute("style","display:none");
             document.getElementById("bg-image").setAttribute("style", "display:block");
-            location.href='../over';
+//            location.href='../over';
+            location.reload();
         }, 5000);
         document.getElementById("loading-image").setAttribute("style","display:block");
         document.getElementById("bg-image").setAttribute("style", "display:none");
@@ -207,7 +208,7 @@ document.addEventListener("dragend", function(event) {
 
 <div class="container " style="display: none;" id="loading-image" alt="Loading..." >
     <div class="row h-100 align-items-cente justify-content-center">
-        <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="height: 70%" />
+        <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="height: 60%;" />
     </div>
 </div>
 
