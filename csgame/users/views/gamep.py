@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from users.models import Player, CustomUser, ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
+from users.models import NotSameVote, CustomUser, ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -138,6 +138,7 @@ def phase01(request):
 def phase02(request):
     # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
     showbutton = False
+    print("Current user is: ", request.user.email)
     if request.method == 'POST':
         
         # get the not-same button from the user
@@ -145,8 +146,29 @@ def phase02(request):
         
         # if someoneclick the button, which means player think they are unique, then do nothing and leave them in the same page.
         if notsamebutton:
-            # Count the number of player not 
+            # This is the solution for April celecbration, not the final design for Amazon Turk
+            # Count the number of players that are not superuser
             totalplayer = CustomUser.objects.all().exclude(is_superuser=True)
+            threshold = int(float(totalplayer) * 0.8)
+            
+            # stop if the threshold are met by the number of votes
+            voteNum = NotSameVote.objects.all()
+            if not voteNum:
+                voteNum = NoteSameVote.objects.create()
+                voteNum.save()
+            else:
+                playerlist = voteNum.email
+                if request.user.email in playerlist:
+                    pass
+                else:
+                    playerlist.append(request.user.email)
+                    voteNum.vote += 1
+                    voteNum.save()
+            if voteNum.vote >= threshold:
+                print("Generate stop instance")
+                phasebreak = PhaseBreak.objects.create()
+                phasebreak.save()
+            
         else:
             # Get the card names as a list from front-end
             newlabels = request.POST.getlist('newlabels[]')

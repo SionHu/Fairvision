@@ -145,9 +145,8 @@ class PhaseBreak(models.Model):
     stop = models.BooleanField(default=False)
     def __str__(self):
         return self.phase
+    
 # phase 2 not same button count for stop the game
-'''
-class NotSameClick(models.Model):
-    count = models.IntegerField(default=0)
-    user = 
-'''
+class NotSameVote(models.Model):
+    email = ArrayField(models.CharField(max_length=30, blank=False, null=False), blank=True)
+    vote = models.IntegerField(default=0)
