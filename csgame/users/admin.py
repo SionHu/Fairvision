@@ -49,9 +49,6 @@ class ImageModelAdmin(admin.ModelAdmin):
     form = ImageModelForm
     list_display = ('img', 'allLabel')
     list_display_links = ('img', 'allLabel')
-class LabelAdmin(admin.ModelAdmin):
-    list_filter=('isTaboo', 'name')
-
 
 def export_csv(self, request, queryset):
     # https://docs.djangoproject.com/en/1.11/howto/outputting-csv/
@@ -72,8 +69,31 @@ def export_csv(self, request, queryset):
     for obj in queryset:
         writer.writerow([getattr(obj, field) for field in field_names])
     return response
+
 export_csv.short_description = "Export selected attributes as csv"
 
+def export_csv_label(self, request, queryset): # For "Labels" generated from Phase 01
+    # setup csv writer
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;filename=phase1-labels.csv'
+    writer = csv.writer(response)
+
+    required_field_names = ['name']
+    field_names = required_field_names.copy()
+    
+    writer.writerow(field_names)
+
+    # output data 
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    return response
+
+export_csv_label.short_description = "Export selected labels as csv"
+
+class LabelAdmin(admin.ModelAdmin):
+    list_filter=('isTaboo', 'name')
+    actions = [export_csv_label]
+    
 class AttributeAdmin(admin.ModelAdmin):
     actions = [export_csv]
     
