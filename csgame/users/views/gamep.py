@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect
 from django.conf import settings
-from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
 from users.models import NotSameVote, CustomUser, ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
 
 from django.contrib.auth.admin import UserAdmin
@@ -9,9 +8,6 @@ from django.contrib.auth.admin import UserAdmin
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from django.apps import apps
-import requests
-from .. import models
 
 # from ..forms import TestForm
 import boto3
@@ -21,6 +17,7 @@ import random
 import json
 from .roundsgenerator import rphase02
 
+KEY = "airplanes/image_{:04d}.jpg"
 
 @login_required
 def phase01(request):
@@ -94,43 +91,14 @@ def phase01(request):
             print("the name of each image is: ", i.img.name)
         '''
     data = [4 * roundsnum - 3, 4 * roundsnum - 2, 4 * roundsnum - 1, 4 * roundsnum - 0]
-    # print("4 random numbers are", data)
     
-    KEY = "media/airplanes/image_"
-    KEYS = [KEY] * 4
-    for x in range(0, 4):
-        KEYS[x] += "{:04d}".format(data[x]) + ".jpg"
+    KEYS = map(KEY.format, data)
 
-    print("KEYS: ", KEYS)
+    urls = [default_storage.url(KEY.format(id)) for id in data]
 
-    urls = list()
-
-    for k in KEYS:
-        # connect to s3
-        s3 = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                      config=Config(s3={'addressing_style': 'path'}), region_name='us-east-2')
-        try:
-            url = s3.generate_presigned_url('get_object',
-                                        Params={
-                                            'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
-                                            'Key': k,
-                                        },                                  
-                                        ExpiresIn=300)
-        except botocore.exceptions.ClientError as e:
-            if e.response['Error']['Code'] == "404":
-                print("The object does not exist.")
-            else:
-                raise
-        urls.append(url)
-    # form = TestForm()
+    instructions = Phase01_instruction.get_queryset(Phase01_instruction) or ['none']
     json_list = json.dumps(data)
     
-    inst = Phase01_instruction.get_queryset(Phase01_instruction)
-    instructions = list()
-    if inst.exists():
-        instructions = inst
-    else: 
-        instructions = ['none']
     return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, 'instructions': instructions})
 
 # View for phase02
@@ -141,12 +109,8 @@ def phase02(request):
     print("Current user is: ", request.user.email)
     if request.method == 'POST':
         
-        if request.POST.get("data") is "1":
-            print("LAAÁ")
-            notsamebutton = True
-        else: 
-            # get the not-same button from the user
-            notsamebutton = False
+        # get the not-same button from the user
+        notsamebutton = request.POST.get("data") == "1"
         
         # if someoneclick the button, which means player think they are unique, then do nothing and leave them in the same page.
         if notsamebutton:
@@ -269,21 +233,8 @@ def phase02(request):
     
     
     # Generate 4 random unique image number based on available entries
-    if len(indexlist) > 4:
-        data = random.sample(range(0, len(indexlist)), 4)
-    else:
-        data = list(range(0, len(indexlist)))
-    sendArray = list()
-
-    KEY = "airplanes/image_"
-    KEYS = [KEY] * len(data)
-    print("Kprint ", KEYS)
-    for x in range(0, len(data)):
-        KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
-        sendArray.append(indexlist[data[x]])
-        print("Keyis : ", KEYS[x])
-
-    # print("Sendarray: ", sendArray)
+    sendArray = random.sample(indexlist, 4) if len(indexlist) > 4 else indexlist
+    KEYS = map(KEY.format, sendArray)
 
     labels = list()
 

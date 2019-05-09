@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.contrib.postgres.fields import ArrayField
+from django.core.files.storage import default_storage
 
 class CustomUser(AbstractUser):
     # bools to keep track of types of users
@@ -65,13 +66,18 @@ class Attribute(models.Model):
     count = models.IntegerField(default=0)
 
 class ImageModel(models.Model):
+    def get_upload_path(instance, filename):
+        ''' Construct the of the path '''
+        default_storage.upload_lock.count += 1
+        return default_storage.upload_lock.key.format(default_storage.upload_lock.count)
     # name = models.CharField(max_length=64, primary_key=True)
-    img = models.ImageField(upload_to="airplanes/")
+    img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True)
     label = models.ManyToManyField(Label, related_name='labels', blank=True)
     def __str__(self):
         return self.img.name
+    @property
     def allLabel(self):
-        return "\n".join([l.name for l in self.label.all()])
+        return ", ".join(l.name for l in self.label.all())
 
 
 # Delete the file on S3 at the same time delete model on Django

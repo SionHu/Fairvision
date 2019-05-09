@@ -10,10 +10,3 @@ def over(request):
 
 def about(request):
     return render(request, 'about.html')
-
-
-def phase02(request):
-    return render(request, 'phase02.html')
-
-def phase03(request):
-    return render(request, 'phase03.html')
