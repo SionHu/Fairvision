@@ -3,7 +3,7 @@ from botocore.client import Config
 from botocore.exceptions import ClientError
 from django.conf import settings
 from storages.backends.s3boto3 import S3Boto3Storage
-from threading import Lock
+from threading import RLock
 import os
 
 class MediaStorage(S3Boto3Storage):
@@ -55,10 +55,10 @@ class _UploadLock:
 
     Usage:
     with default_storage.upload_lock(dataset, object):
-        pass
+        ImageModel.objects.create(img=file)
 
     All 'ImageModel.objects.create' statements within the with block will upload to the correct folder.
-    The default folder is 'unknown' and 'unknown'.
+    The default folder is 'unknown/unknown'.
 
     The folder that is being uploaded to can be accessed at default_storage.upload_lock.key.
     The highest indexed image in the folder can be accessed via default_storage.upload_lock.count.
@@ -66,7 +66,7 @@ class _UploadLock:
     _key_stack = []
     _count_stack = []
     def __init__(self):
-        self._lock = Lock()
+        self._lock = RLock()
         self('unknown', 'unknown')
     def __enter__(self):
         self._lock.__enter__()
