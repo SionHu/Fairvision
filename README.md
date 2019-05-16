@@ -5,7 +5,7 @@ This training project is aimed to make new members be more familiar with web dev
 ### General Task
 
 * Create a Heroku deployed website that looks like this: 
-![Alt Text](https://github.com/PurdueCAM2Project/Crowdsourcing/blob/training/Crowdsourcing_training/instruction.gif)
+![Alt Text](https://github.com/PurdueCAM2Project/Crowdsourcing/blob/training/instruction.gif)
 
 * The training branch has a skeleton folder. You should copy this folder to your own GitHub repository. 
 
