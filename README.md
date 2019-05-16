@@ -5,4 +5,3 @@ This training project is aimed to make new members more familiar with web develo
 ### General task
 
 Create a Heroku deployed website that looks like this: 
-![alt text](https://github.com/Crowdsourcing/Crowdsourcing_training/ "Logo Title Text 1")
