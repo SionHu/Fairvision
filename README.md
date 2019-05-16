@@ -9,7 +9,6 @@ This training project is aimed to make new members be more familiar with web dev
 
 * The training branch has a skeleton folder. You should copy this folder to your own GitHub repository. 
 
-### Breakdown Task
-
+#### Note: 
 There are many ways to create a website looks like this. Use your imagination and Google to make your website funcitonal and look the same. 
 
