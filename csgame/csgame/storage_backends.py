@@ -13,25 +13,6 @@ class MediaStorage(S3Boto3Storage):
     s3 = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
                       config=Config(s3={'addressing_style': 'path'}), region_name='us-east-2')
 
-    #to make storage system closer in functionality to os module: https://gist.github.com/btimby/2175107
-    def walk(self, top='', topdown=True, onerror=None):
-        """An implementation of os.walk() which uses the Django storage for
-        listing directories."""
-        try:
-            dirs, nondirs = self.listdir(top)
-        except os.error as err:
-            if onerror is not None:
-                onerror(err)
-            return
-
-        if topdown:
-            yield top, dirs, nondirs
-        for name in dirs:
-            new_path = os.path.join(top, name)
-            yield from self.walk(new_path, topdown, onerror)
-        if not topdown:
-            yield top, dirs, nondirs
-
     #for some reason, this method is flawed in Django Storages, so this just reimplements it correctly
     def url(self, name, parameters=None, expire=300):
         try:
@@ -62,20 +43,33 @@ class _UploadLock:
 
     The folder that is being uploaded to can be accessed at default_storage.upload_lock.key.
     The highest indexed image in the folder can be accessed via default_storage.upload_lock.count.
+
+    This also contains an RLock that could shared with multiple threads.
+
     '''
+
+    #_key_steck is the list of mutiple images ame
     _key_stack = []
+
+    #Count stack that 
     _count_stack = []
+    # Instance initialization
     def __init__(self):
         self._lock = RLock()
         self('unknown', 'unknown')
+
+    # 
     def __enter__(self):
         self._lock.__enter__()
         self._key_stack.append(self.key)
         self._count_stack.append(self.count)
+
+    # Handle case if file upload fail
     def __exit__(self, exc_type, exc_value, tb):
         self.key = self._key_stack.pop()
         self.count = self._count_stack.pop()
         self._lock.__exit__(exc_type, exc_value, tb)
+
     def __call__(self, dataset, object):
         folder = '%s/%s' % (dataset, object)
         _, files = default_storage.listdir(folder)

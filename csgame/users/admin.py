@@ -30,7 +30,7 @@ class ImageModelForm(forms.ModelForm):
     
     class Meta:
         Model = ImageModel
-        fields = ('img', 'label')
+        fields = ('img', 'label', 'dataset', 'obj')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,7 +41,7 @@ class ImageModelForm(forms.ModelForm):
             self.fields['set'].required = False
             self.fields['object'].required = False
 
-            #get image preview
+            # get image preview, works now
             self.url = default_storage.url(self.instance.img.name)
         else:
             self.fields['label'].widget = forms.HiddenInput()
@@ -64,11 +64,17 @@ class ImageModelForm(forms.ModelForm):
             with transaction.atomic(), default_storage.upload_lock(self.cleaned_data['set'], self.cleaned_data['object']):
                 file_list = natsorted(self.files.getlist('img'.format(self.prefix)), key=lambda file: file.name)
                 self.instance.img = file_list[0]
+                self.instance.dataset = self.cleaned_data['set']
+                self.instance.obj = self.cleaned_data['object']
                 output = super().save(*args, **kwargs)
+
+                # save the rest of the images to the instances
                 for index, file in enumerate(file_list[1:]):
                     print("I got file: ", file)
                     ImageModel.objects.create(
                         img=file,
+                        dataset=self.cleaned_data['set'],
+                        obj=self.cleaned_data['object'],
                     )
             return output
         else:
@@ -78,9 +84,8 @@ class ImageModelForm(forms.ModelForm):
 class ImageModelAdmin(admin.ModelAdmin):
     form = ImageModelForm
     fields = ('img', 'label', 'set', 'object')
-    list_display = ('img', 'allLabel')
-    list_display_links = ('img', 'allLabel')
-    filter_horizontal = ('label',)
+    list_display = ('img', 'allLabel', 'showdataset')
+    # filter_horizontal = ('label',)
     def get_readonly_fields(self, request, obj=None):
         return [] if obj is None else ['img']
 
