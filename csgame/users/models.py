@@ -68,8 +68,11 @@ class Attribute(models.Model):
 class ImageModel(models.Model):
     def get_upload_path(instance, filename):
         ''' Construct the of the path '''
+        print("I got the instance of " + str(instance) + "and filename: " + filename)
+        real_path = default_storage.upload_lock.key + filename
+        print("Real file is: " + real_path)
         default_storage.upload_lock.count += 1
-        return default_storage.upload_lock.key.format(default_storage.upload_lock.count)
+        return real_path
     # name = models.CharField(max_length=64, primary_key=True)
     img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True)
     label = models.ManyToManyField(Label, related_name='labels', blank=True)

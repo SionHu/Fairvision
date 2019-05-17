@@ -48,32 +48,24 @@ class _UploadLock:
 
     '''
 
-    #_key_steck is the list of mutiple images ame
-    _key_stack = []
-
-    #Count stack that 
-    _count_stack = []
     # Instance initialization
     def __init__(self):
         self._lock = RLock()
         self('unknown', 'unknown')
+        print("Start new instance !!!!")
 
     # 
     def __enter__(self):
         self._lock.__enter__()
-        self._key_stack.append(self.key)
-        self._count_stack.append(self.count)
 
-    # Handle case if file upload fail
     def __exit__(self, exc_type, exc_value, tb):
-        self.key = self._key_stack.pop()
-        self.count = self._count_stack.pop()
         self._lock.__exit__(exc_type, exc_value, tb)
 
+    # Call function that will be called in admin.py
     def __call__(self, dataset, object):
         folder = '%s/%s' % (dataset, object)
         _, files = default_storage.listdir(folder)
         self.count = int(files[-1][-8:-4]) if files else 0
-        self.key = folder+"/image_{:04d}.jpg"
+        self.key = folder+"/"
         return self
 default_storage.upload_lock = _UploadLock()

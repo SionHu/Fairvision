@@ -53,6 +53,7 @@ class ImageModelForm(forms.ModelForm):
                 if dataset is not 'unknown':
                     setChoices.append(dataset)
                     objChoices.extend(object for object in default_storage.listdir(dataset)[0] if object is not 'unknown')
+            # auto suggestions that pop up when typing in input text field of set or object
             self.fields['set'].widget=ListTextInput(natsorted(setChoices), 'set')
             self.fields['object'].widget=ListTextInput(sort_uniq(objChoices), 'object')
             self.url = None
