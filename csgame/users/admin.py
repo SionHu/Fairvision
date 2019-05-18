@@ -74,8 +74,6 @@ class ImageModelForm(forms.ModelForm):
                     print("I got file: ", file)
                     ImageModel.objects.create(
                         img=file,
-                        dataset=self.cleaned_data['set'],
-                        obj=self.cleaned_data['object'],
                     )
             return output
         else:
@@ -85,8 +83,9 @@ class ImageModelForm(forms.ModelForm):
 class ImageModelAdmin(admin.ModelAdmin):
     form = ImageModelForm
     fields = ('img', 'label', 'set', 'object')
-    list_display = ('img', 'allLabel', 'showdataset')
-    # filter_horizontal = ('label',)
+    list_display = ('img', 'allLabel')
+    filter_horizontal = ('label',)
+    
     def get_readonly_fields(self, request, obj=None):
         return [] if obj is None else ['img']
 

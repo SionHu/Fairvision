@@ -73,10 +73,6 @@ class ImageModel(models.Model):
     # name = models.CharField(max_length=64, primary_key=True)
     img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True)
     label = models.ManyToManyField(Label, related_name='labels', blank=True)
-    # The dataset that it belongs to
-    dataset = models.CharField(max_length=64, default="unknown", blank=False, null=False)
-    # The object category of the image dataset
-    obj = models.CharField(max_length=64, default="unknown", blank=False, null=False)
     def __str__(self):
         return self.img.name
     # Show all the labels
