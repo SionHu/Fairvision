@@ -52,8 +52,6 @@ class _UploadLock:
     def __init__(self):
         self._lock = RLock()
         self('unknown', 'unknown')
-        print("Start new instance !!!!")
-
     # 
     def __enter__(self):
         self._lock.__enter__()
