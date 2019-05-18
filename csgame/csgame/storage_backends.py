@@ -48,22 +48,24 @@ class _UploadLock:
 
     '''
 
+    _key_stack = []
     # Instance initialization
     def __init__(self):
         self._lock = RLock()
         self('unknown', 'unknown')
     # 
     def __enter__(self):
-        self._lock.__enter__()
+        self._lock.acquire()
 
     def __exit__(self, exc_type, exc_value, tb):
-        self._lock.__exit__(exc_type, exc_value, tb)
+        self._key_stack.pop()
+        self.key = self._key_stack[-1]
+        self._lock.release()
 
     # Call function that will be called in admin.py
     def __call__(self, dataset, object):
         folder = '%s/%s' % (dataset, object)
-        _, files = default_storage.listdir(folder)
-        self.count = int(files[-1][-8:-4]) if files else 0
         self.key = folder+"/"
+        self._key_stack.append(self.key)
         return self
 default_storage.upload_lock = _UploadLock()

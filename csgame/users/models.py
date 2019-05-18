@@ -3,7 +3,9 @@ from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.contrib.postgres.fields import ArrayField
+from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
+import os
 
 class CustomUser(AbstractUser):
     # bools to keep track of types of users
@@ -67,11 +69,18 @@ class Attribute(models.Model):
 
 class ImageModel(models.Model):
     def get_upload_path(instance, filename):
-        ''' Construct the of the path '''
-        real_path = default_storage.upload_lock.key + filename
-        return real_path
+        ''' Construct the upload path of the file '''
+        count = int(filename[-8:-4])
+        return default_storage.upload_lock.key.format(default_storage.upload_lock.count)
+    def validate_file_extension(value):
+        ''' Check if file was named correctly '''
+        ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+        if ext.lower() != '.jpg':
+            raise ValidationError(u'Unsupported file extension.')
+        if isinstance(value.name[-8:-4], int):
+            raise ValidationError(u'No ID found on filename. Please give a name in the `image_####.jpg` format')
     # name = models.CharField(max_length=64, primary_key=True)
-    img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True)
+    img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True, validators=[validate_file_extension])
     label = models.ManyToManyField(Label, related_name='labels', blank=True)
     def __str__(self):
         return self.img.name
@@ -82,8 +91,17 @@ class ImageModel(models.Model):
     
     #show the detailed dataset
     @property
-    def showdataset(self):
-        return self.dataset + "/" + self.obj
+    def dataset(self):
+        return self.img.name.split("/")[0]
+    @property
+    def obj(self):
+        return self.img.name.split("/")[1]
+    @property
+    def imgid(self):
+        return self.img.name[-8:-4]
+    @property
+    def datafolder(self):
+        return self.img.name.rsplit("/", 1)[0]
     
 # Delete the file on S3 at the same time delete model on Django
 @receiver(models.signals.post_delete, sender=ImageModel)

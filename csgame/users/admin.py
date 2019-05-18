@@ -23,14 +23,24 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
 
+def getFolderChoices():
+    #calculate the options for the folder
+    setChoices = []
+    objChoices = []
+    for dataset in default_storage.listdir('')[0]:
+        if dataset is not 'unknown':
+            setChoices.append(dataset)
+            objChoices.extend(object for object in default_storage.listdir(dataset)[0] if object is not 'unknown')
+    return natsorted(setChoices), sort_uniq(objChoices)
+
 class ImageModelForm(forms.ModelForm):
-    img = forms.ImageField(label='Image', widget=forms.FileInput(attrs={'multiple': True}), help_text=('Images to upload to S3 (2.5 MB or less)'), required=True)
+    img = forms.ImageField(label='Image', widget=forms.FileInput(attrs={'multiple': True}), help_text=('Images to upload to S3 (2.5 MB or less). We only allow JPG files.'), required=True)
     set = forms.CharField(required=True)
     object = forms.CharField(required=True)
     
     class Meta:
         Model = ImageModel
-        fields = ('img', 'label', 'dataset', 'obj')
+        fields = ('img', 'label')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -46,16 +56,10 @@ class ImageModelForm(forms.ModelForm):
         else:
             self.fields['label'].widget = forms.HiddenInput()
 
-            #calculate the options for the folder
-            setChoices = []
-            objChoices = []
-            for dataset in default_storage.listdir('')[0]:
-                if dataset is not 'unknown':
-                    setChoices.append(dataset)
-                    objChoices.extend(object for object in default_storage.listdir(dataset)[0] if object is not 'unknown')
+            setChoices, objChoices = getFolderChoices()
             # auto suggestions that pop up when typing in input text field of set or object
-            self.fields['set'].widget=ListTextInput(natsorted(setChoices), 'set')
-            self.fields['object'].widget=ListTextInput(sort_uniq(objChoices), 'object')
+            self.fields['set'].widget=ListTextInput(setChoices, 'set')
+            self.fields['object'].widget=ListTextInput(objChoices, 'object')
             self.url = None
         
     def save(self, *args, **kwargs):
@@ -63,27 +67,44 @@ class ImageModelForm(forms.ModelForm):
             # multiple file upload
             # NB: does not respect 'commit' kwarg
             with transaction.atomic(), default_storage.upload_lock(self.cleaned_data['set'], self.cleaned_data['object']):
-                file_list = natsorted(self.files.getlist('img'.format(self.prefix)), key=lambda file: file.name)
+                file_list = natsorted(self.files.getlist('img'.format(self.prefix)), key=operator.attrgetter('name'))
                 self.instance.img = file_list[0]
-                self.instance.dataset = self.cleaned_data['set']
-                self.instance.obj = self.cleaned_data['object']
                 output = super().save(*args, **kwargs)
 
                 # save the rest of the images to the instances
-                for index, file in enumerate(file_list[1:]):
-                    print("I got file: ", file)
-                    ImageModel.objects.create(
-                        img=file,
-                    )
+                ImageModel.objects.bulk_create([
+                    ImageModel(img=file) for file in file_list[1:]
+                ])
             return output
         else:
             return super().save(*args, **kwargs)
 
+class ImageModelDatasetListFilter(admin.SimpleListFilter):
+    title = 'dataset'
+    parameter_name = 'dataset'
+    def lookups(self, request, model_admin):
+        ''' Get list of all datasets in the database '''
+        return [(name, name) for name in getFolderChoices()[0]]
+    def queryset(self, request, queryset):
+        val = self.value()
+        return queryset.filter(img__contains=val+'/') if val else queryset
+
+class ImageModelObjectListFilter(admin.SimpleListFilter):
+    title = 'object'
+    parameter_name = 'object'
+    def lookups(self, request, model_admin):
+        ''' Get list of all object types in the database '''
+        return [(name, name) for name in getFolderChoices()[1]]
+    def queryset(self, request, queryset):
+        val = self.value()
+        return queryset.filter(img__contains='/'+val+'/') if val else queryset
 
 class ImageModelAdmin(admin.ModelAdmin):
     form = ImageModelForm
     fields = ('img', 'label', 'set', 'object')
     list_display = ('img', 'allLabel')
+    list_display_links = ('img', 'allLabel')
+    list_filter = (ImageModelDatasetListFilter, ImageModelObjectListFilter)
     filter_horizontal = ('label',)
     
     def get_readonly_fields(self, request, obj=None):

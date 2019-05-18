@@ -11,19 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='imagemodel',
-            name='dataset',
-            field=models.CharField(default='unknown', max_length=64),
-        ),
-        migrations.AddField(
-            model_name='imagemodel',
-            name='obj',
-            field=models.CharField(default='unknown', max_length=64),
-        ),
         migrations.AlterField(
             model_name='imagemodel',
             name='img',
-            field=models.ImageField(unique=True, upload_to=users.models.ImageModel.get_upload_path, verbose_name='Image'),
+            field=models.ImageField(unique=True, upload_to=users.models.ImageModel.get_upload_path, validators=[users.models.ImageModel.validate_file_extension], verbose_name='Image'),
         ),
     ]
