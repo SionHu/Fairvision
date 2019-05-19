@@ -79,6 +79,8 @@ class ImageModelForm(forms.ModelForm):
         else:
             return super().save(*args, **kwargs)
 
+
+# Filter for dataset folder
 class ImageModelDatasetListFilter(admin.SimpleListFilter):
     title = 'dataset'
     parameter_name = 'dataset'
@@ -89,6 +91,7 @@ class ImageModelDatasetListFilter(admin.SimpleListFilter):
         val = self.value()
         return queryset.filter(img__contains=val+'/') if val else queryset
 
+# Filter for object folder
 class ImageModelObjectListFilter(admin.SimpleListFilter):
     title = 'object'
     parameter_name = 'object'

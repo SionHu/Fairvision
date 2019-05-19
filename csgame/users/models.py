@@ -69,9 +69,10 @@ class Attribute(models.Model):
 
 class ImageModel(models.Model):
     def get_upload_path(instance, filename):
-        ''' Construct the upload path of the file '''
-        count = int(filename[-8:-4])
-        return default_storage.upload_lock.key.format(default_storage.upload_lock.count)
+        ''' Construct the upload path of the file, including the filename itself'''
+        real_path = default_storage.upload_lock.key + filename
+        return real_path
+
     def validate_file_extension(value):
         ''' Check if file was named correctly '''
         ext = os.path.splitext(value.name)[1]  # [0] returns path+filename

@@ -1,2 +1,0 @@
-Image_001 1(positive)
-Image_002 -1(negative)
