@@ -71,7 +71,6 @@ class ImageModelForm(forms.ModelForm):
                 file_list = natsorted(self.files.getlist('img'.format(self.prefix)), key=operator.attrgetter('name'))
                 self.instance.img = file_list[0]
                 output = super().save(*args, **kwargs)
-
                 # save the rest of the images to the instances
                 ImageModel.objects.bulk_create([
                     ImageModel(img=file) for file in file_list[1:]

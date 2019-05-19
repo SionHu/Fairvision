@@ -58,7 +58,6 @@ class _UploadLock:
 
     def __exit__(self, exc_type, exc_value, tb):
         self._lock.release()
-        self('unknown', 'unknown')
 
     # Call function that will be called in admin.py
     def __call__(self, dataset, object):
