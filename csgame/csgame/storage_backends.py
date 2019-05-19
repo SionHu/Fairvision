@@ -3,7 +3,7 @@ from botocore.client import Config
 from botocore.exceptions import ClientError
 from django.conf import settings
 from storages.backends.s3boto3 import S3Boto3Storage
-from threading import RLock
+from threading import Lock
 import os
 
 class MediaStorage(S3Boto3Storage):
@@ -50,7 +50,7 @@ class _UploadLock:
 
     # Instance initialization
     def __init__(self):
-        self._lock = RLock()
+        self._lock = Lock()
         self('unknown', 'unknown')
     # 
     def __enter__(self):
@@ -58,6 +58,7 @@ class _UploadLock:
 
     def __exit__(self, exc_type, exc_value, tb):
         self._lock.release()
+        self('unknown', 'unknown')
 
     # Call function that will be called in admin.py
     def __call__(self, dataset, object):

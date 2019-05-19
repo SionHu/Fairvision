@@ -9,7 +9,6 @@ from django.http import HttpResponse
 
 from django.shortcuts import render
 
-# from ..forms import TestForm
 import boto3
 import botocore
 from botocore.client import Config
@@ -17,29 +16,15 @@ import random
 import json
 from .roundsgenerator import rphase02
 
-KEY = "airplanes/image_{:04d}.jpg"
+KEY = settings.KEY
+NUMROUNDS = settings.NUMROUNDS
 
 @login_required
 def phase01(request):
-    # Some test
-    # idk = ImageModel.objects.get(img='airplanes/image_0053.jpg')
-    # print(idk.label.all())
-    
-    # number of rounds for image display
-    rounds = RoundsNum.objects.filter(phase='phase01')
-    
-    if not rounds:
-        # print('There is nothing, need to create new one')
-        rounds = RoundsNum.objects.create(num=1)
-        rounds.save()
-        roundsnum = 1
-    else:
-        roundsnum = rounds.first().num
-    
-    # print("I got roundsNUM is: ", roundsnum)
+    rounds, _ = RoundsNum.objects.get_or_create(phase='phase01', defaults={'num': 1})
+    roundsnum = rounds.num
 
-    if roundsnum >= int(settings.NUMROUNDS) + 1:
-        # print("The phase01 stops here")
+    if roundsnum > NUMROUNDS:
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01'})
 
@@ -47,8 +32,6 @@ def phase01(request):
     no random assignment for the images serving anymore. Assume dataset has been randomly cleared
     data = random.sample(range(1, 121), 4)
     '''
-    
-    # print("Url is: ", urls)
 
     if request.method == 'POST':
         roundsnum = RoundsNum.objects.filter(phase='phase01').first().num + 1
@@ -57,10 +40,9 @@ def phase01(request):
 #        print("I got data: ", data)
         img_list = request.POST.getlist('img_list[]')
 #        print("I got the image num: ", img_list)
-        key = "airplanes/image_"
         # Search fo r 
         for il in img_list:
-            update_img = key + "{:04d}".format(int(il)) + ".jpg"
+            update_img = KEY.format(int(il))
             # print("the label need to be stored in: ", update_img)
             model = ImageModel.objects.filter(img=update_img).first()
             if model:
@@ -91,15 +73,13 @@ def phase01(request):
             print("the name of each image is: ", i.img.name)
         '''
     data = [4 * roundsnum - 3, 4 * roundsnum - 2, 4 * roundsnum - 1, 4 * roundsnum - 0]
-    
-    KEYS = map(KEY.format, data)
 
     urls = [default_storage.url(KEY.format(id)) for id in data]
 
     instructions = Phase01_instruction.get_queryset(Phase01_instruction) or ['none']
     json_list = json.dumps(data)
     
-    return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, 'instructions': instructions})
+    return render(request, 'phase01.html',{ 'urls': urls, 'json_list': json_list, 'instructions': instructions})
 
 # View for phase02
 @login_required
@@ -154,7 +134,7 @@ def phase02(request):
             # print("I got delete indices: ", delIndices)
         
             # Update the label lists of one of the image model in database 
-            ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
+            ukey = KEY.format(int(remainIndex))
             imageup = ImageModel.objects.filter(img=ukey)
             if imageup:
                 # Update the image set
@@ -202,7 +182,7 @@ def phase02(request):
             print("Stop here now")
             remainArray = listArray.objects.get(phase='phase02')
             for rI in remainArray.attrlist:
-                key = "airplanes/image_" + "{:04d}".format(rI) + ".jpg"
+                key = KEY.format(rI)
                 print("Set up attribute for image: ", key)
                 attrimg = ImageModel.objects.get(img=key)
                 labelsets = attrimg.label.all()
@@ -222,7 +202,7 @@ def phase02(request):
     
     if not listarr:
         # print("No list array exists, create a new one")
-        listarr = rphase02(int(settings.NUMROUNDS))
+        listarr = rphase02(NUMROUNDS)
         # print("listarr new is: ", listarr)
         # Create Model Instance and save
         p2list = listArray.objects.create(attrlist=listarr)

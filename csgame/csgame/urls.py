@@ -41,3 +41,5 @@ urlpatterns = [
     url(r'^phase03/$', gamep.phase03, name='phase03'),
 ]
 
+handler404 = 'csgame.views.handler404'
+handler500 = 'csgame.views.handler500'

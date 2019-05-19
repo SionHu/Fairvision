@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
@@ -34,7 +35,7 @@ def getFolderChoices():
     return natsorted(setChoices), sort_uniq(objChoices)
 
 class ImageModelForm(forms.ModelForm):
-    img = forms.ImageField(label='Image', widget=forms.FileInput(attrs={'multiple': True}), help_text=('Images to upload to S3 (2.5 MB or less). We only allow JPG files.'), required=True)
+    img = forms.ImageField(label='Image', widget=forms.FileInput(attrs={'multiple': True}), help_text=('Images to upload to S3 (%.1f MB or less). We only allow JPG files.' % (settings.DATA_UPLOAD_MAX_MEMORY_SIZE / 1048576,)), required=True)
     set = forms.CharField(required=True)
     object = forms.CharField(required=True)
     
