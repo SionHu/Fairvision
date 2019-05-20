@@ -3,8 +3,10 @@
 {% for inline_admin_formset in inline_admin_formsets %}
     {% include inline_admin_formset.opts.template %}
 {% endfor %}
+{% if adminform.form.url is not None %}
 <fieldset class="module">
-  <h2>Upload Photos</h2>
-  <input name="photos_multiple" type="file" multiple />
+  <h2>Image Preview</h2><br>
+  <img src="{{ adminform.form.url }}">
 </fieldset>
+{% endif %}
 {% endblock %}

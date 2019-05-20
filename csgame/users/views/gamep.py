@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect
 from django.conf import settings
-from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
 from users.models import NotSameVote, CustomUser, ImageModel, Label, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
 
 from django.contrib.auth.admin import UserAdmin
@@ -9,11 +8,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from django.apps import apps
-import requests
-from .. import models
 
-# from ..forms import TestForm
 import boto3
 import botocore
 from botocore.client import Config
@@ -21,28 +16,15 @@ import random
 import json
 from .roundsgenerator import rphase02
 
+KEY = settings.KEY
+NUMROUNDS = settings.NUMROUNDS
 
 @login_required
 def phase01(request):
-    # Some test
-    # idk = ImageModel.objects.get(img='airplanes/image_0053.jpg')
-    # print(idk.label.all())
-    
-    # number of rounds for image display
-    rounds = RoundsNum.objects.filter(phase='phase01')
-    
-    if not rounds:
-        # print('There is nothing, need to create new one')
-        rounds = RoundsNum.objects.create(num=1)
-        rounds.save()
-        roundsnum = 1
-    else:
-        roundsnum = rounds.first().num
-    
-    # print("I got roundsNUM is: ", roundsnum)
+    rounds, _ = RoundsNum.objects.get_or_create(phase='phase01', defaults={'num': 1})
+    roundsnum = rounds.num
 
-    if roundsnum >= int(settings.NUMROUNDS) + 1:
-        # print("The phase01 stops here")
+    if roundsnum > NUMROUNDS:
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01'})
 
@@ -50,8 +32,6 @@ def phase01(request):
     no random assignment for the images serving anymore. Assume dataset has been randomly cleared
     data = random.sample(range(1, 121), 4)
     '''
-    
-    # print("Url is: ", urls)
 
     if request.method == 'POST':
         roundsnum = RoundsNum.objects.filter(phase='phase01').first().num + 1
@@ -60,10 +40,9 @@ def phase01(request):
 #        print("I got data: ", data)
         img_list = request.POST.getlist('img_list[]')
 #        print("I got the image num: ", img_list)
-        key = "airplanes/image_"
         # Search fo r 
         for il in img_list:
-            update_img = key + "{:04d}".format(int(il)) + ".jpg"
+            update_img = KEY.format(int(il))
             # print("the label need to be stored in: ", update_img)
             model = ImageModel.objects.filter(img=update_img).first()
             if model:
@@ -94,44 +73,13 @@ def phase01(request):
             print("the name of each image is: ", i.img.name)
         '''
     data = [4 * roundsnum - 3, 4 * roundsnum - 2, 4 * roundsnum - 1, 4 * roundsnum - 0]
-    # print("4 random numbers are", data)
-    
-    KEY = "media/airplanes/image_"
-    KEYS = [KEY] * 4
-    for x in range(0, 4):
-        KEYS[x] += "{:04d}".format(data[x]) + ".jpg"
 
-    print("KEYS: ", KEYS)
+    urls = [default_storage.url(KEY.format(id)) for id in data]
 
-    urls = list()
-
-    for k in KEYS:
-        # connect to s3
-        s3 = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                      config=Config(s3={'addressing_style': 'path'}), region_name='us-east-2')
-        try:
-            url = s3.generate_presigned_url('get_object',
-                                        Params={
-                                            'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
-                                            'Key': k,
-                                        },                                  
-                                        ExpiresIn=300)
-        except botocore.exceptions.ClientError as e:
-            if e.response['Error']['Code'] == "404":
-                print("The object does not exist.")
-            else:
-                raise
-        urls.append(url)
-    # form = TestForm()
+    instructions = Phase01_instruction.get_queryset(Phase01_instruction) or ['none']
     json_list = json.dumps(data)
     
-    inst = Phase01_instruction.get_queryset(Phase01_instruction)
-    instructions = list()
-    if inst.exists():
-        instructions = inst
-    else: 
-        instructions = ['none']
-    return render(request, 'phase01.html',{ 'url1': urls[0], 'url2': urls[1], 'url3': urls[2], 'url4': urls[3], 'json_list': json_list, 'instructions': instructions})
+    return render(request, 'phase01.html',{ 'urls': urls, 'json_list': json_list, 'instructions': instructions})
 
 # View for phase02
 @login_required
@@ -141,12 +89,8 @@ def phase02(request):
     print("Current user is: ", request.user.email)
     if request.method == 'POST':
         
-        if request.POST.get("data") is "1":
-            print("LAAÁ")
-            notsamebutton = True
-        else: 
-            # get the not-same button from the user
-            notsamebutton = False
+        # get the not-same button from the user
+        notsamebutton = request.POST.get("data") == "1"
         
         # if someoneclick the button, which means player think they are unique, then do nothing and leave them in the same page.
         if notsamebutton:
@@ -190,7 +134,7 @@ def phase02(request):
             # print("I got delete indices: ", delIndices)
         
             # Update the label lists of one of the image model in database 
-            ukey = "airplanes/image_" + "{:04d}".format(int(remainIndex)) + ".jpg"
+            ukey = KEY.format(int(remainIndex))
             imageup = ImageModel.objects.filter(img=ukey)
             if imageup:
                 # Update the image set
@@ -238,7 +182,7 @@ def phase02(request):
             print("Stop here now")
             remainArray = listArray.objects.get(phase='phase02')
             for rI in remainArray.attrlist:
-                key = "airplanes/image_" + "{:04d}".format(rI) + ".jpg"
+                key = KEY.format(rI)
                 print("Set up attribute for image: ", key)
                 attrimg = ImageModel.objects.get(img=key)
                 labelsets = attrimg.label.all()
@@ -258,7 +202,7 @@ def phase02(request):
     
     if not listarr:
         # print("No list array exists, create a new one")
-        listarr = rphase02(int(settings.NUMROUNDS))
+        listarr = rphase02(NUMROUNDS)
         # print("listarr new is: ", listarr)
         # Create Model Instance and save
         p2list = listArray.objects.create(attrlist=listarr)
@@ -269,21 +213,8 @@ def phase02(request):
     
     
     # Generate 4 random unique image number based on available entries
-    if len(indexlist) > 4:
-        data = random.sample(range(0, len(indexlist)), 4)
-    else:
-        data = list(range(0, len(indexlist)))
-    sendArray = list()
-
-    KEY = "airplanes/image_"
-    KEYS = [KEY] * len(data)
-    print("Kprint ", KEYS)
-    for x in range(0, len(data)):
-        KEYS[x] += "{:04d}".format(indexlist[data[x]]) + ".jpg"
-        sendArray.append(indexlist[data[x]])
-        print("Keyis : ", KEYS[x])
-
-    # print("Sendarray: ", sendArray)
+    sendArray = random.sample(indexlist, 4) if len(indexlist) > 4 else indexlist
+    KEYS = map(KEY.format, sendArray)
 
     labels = list()
 
