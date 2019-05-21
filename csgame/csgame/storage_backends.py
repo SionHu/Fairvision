@@ -40,12 +40,6 @@ class _UploadLock:
 
     All 'ImageModel.objects.create' statements within the with block will upload to the correct folder.
     The default folder is 'unknown/unknown'.
-
-    The folder that is being uploaded to can be accessed at default_storage.upload_lock.key.
-    The highest indexed image in the folder can be accessed via default_storage.upload_lock.count.
-
-    This also contains an RLock that could shared with multiple threads.
-
     '''
 
     # Instance initialization

@@ -7,7 +7,7 @@ from django.db import transaction
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Label, ImageModel, Attribute, RoundsNum, listArray, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, NotSameVote
+from .models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
 
 
 from django import forms
@@ -105,10 +105,9 @@ class ImageModelObjectListFilter(admin.SimpleListFilter):
 class ImageModelAdmin(admin.ModelAdmin):
     form = ImageModelForm
     fields = ('img', 'label', 'set', 'object')
-    list_display = ('img', 'allLabel')
-    list_display_links = ('img', 'allLabel')
+    list_display = ('img',)
+    list_display_links = ('img',)
     list_filter = (ImageModelDatasetListFilter, ImageModelObjectListFilter)
-    filter_horizontal = ('label',)
     
     def get_readonly_fields(self, request, obj=None):
         return [] if obj is None else ['img']
@@ -135,20 +134,13 @@ def export_csv(filename, field_names):
 class AttributeAdmin(admin.ModelAdmin):
     actions = [export_csv('phase3-attributes.csv', ['word','count'])]
 
-class LabelAdmin(admin.ModelAdmin):
-    list_filter=('isTaboo', 'name')
-    actions = [export_csv('phase1-labels.csv', ['name'])]
-
     
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
-admin.site.register(Label, LabelAdmin)
 admin.site.register(PhaseBreak)
 admin.site.register(RoundsNum)
 
-admin.site.register(listArray)
 admin.site.register(Attribute, AttributeAdmin)
-admin.site.register(NotSameVote)
 admin.site.register(ImageModel, ImageModelAdmin)
 
 admin.site.register(Phase01_instruction)

@@ -14,7 +14,7 @@ class CustomUser(AbstractUser):
     
     def __str__(self):
         return self.email
-    
+
 class Player(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
     score = models.IntegerField(default=0)
@@ -30,14 +30,6 @@ class Requester(models.Model):
     occupation = models.CharField(verbose_name='Occupation(Optional)', max_length=50, blank=True, null=True)
 '''
 
-# Label that returns to the user
-class Label(models.Model):
-    name = models.CharField(max_length=20, primary_key=True)
-    # Treat isTaboo as is cardname = True
-    isTaboo = models.BooleanField(default=False)
-    # taboo = model.ForeignKey(ImageModel)
-    def __str__(self):
-        return self.name
 
 # Class not needed right now, but potentially needed to be used in the future
 '''
@@ -82,13 +74,9 @@ class ImageModel(models.Model):
             raise ValidationError(u'No ID found on filename. Please give a name in the `image_####.jpg` format')
     # name = models.CharField(max_length=64, primary_key=True)
     img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True, validators=[validate_file_extension])
-    label = models.ManyToManyField(Label, related_name='labels', blank=True)
+
     def __str__(self):
         return self.img.name
-    # Show all the labels
-    @property
-    def allLabel(self):
-        return ", ".join(l.name for l in self.label.all())
     
     #show the detailed dataset
     @property
@@ -155,13 +143,12 @@ class Phase03_instruction(models.Model):
         return "{0}".format(self.order)
 
 
-# Rounds Number for phase01
+# Global variable of round number for phase01 and phase02
 class RoundsNum(models.Model):
     num = models.IntegerField(default=0)
     phase = models.CharField(max_length=10, primary_key=True, default='phase01')
     def __str__(self):
         return self.phase
-
 
 # Array indices for recursion list of phase02
 class listArray(models.Model):
@@ -170,13 +157,29 @@ class listArray(models.Model):
     def __str__(self):
         return self.phase
 
+# breaking sign for when to stop the game phase
 class PhaseBreak(models.Model):
     phase = models.CharField(max_length=10, default='phase02')
     stop = models.BooleanField(default=False)
     def __str__(self):
         return self.phase
-    
-# phase 2 not same button count for stop the game
-class NotSameVote(models.Model):
-    email = ArrayField(models.CharField(max_length=30, blank=False, null=False), blank=True)
-    vote = models.IntegerField(default=0)
+
+# New design, QA pairs for phase 1 that will be collected from the crowd workers
+# It could be redundant, so count will be number of the merged ones after merging (we could make a script to create the models updating)
+class Question(models.Model):
+    text = models.CharField(max_length=64, primary_key=True, blank=False, null=False)
+    # Boolean telling where this is the final questions for the rest of the phases
+    isFinal = models.BooleanField(default=False)
+    # Count is the nunber of same/redundant Questions count (we will not remove the redundant attrbutes)
+    count = models.IntegerField(default=1)
+    # Question for which belongs to which image, by default 1 question will be corresponding to 1 image(ID)
+    imageID = models.CharField(max_length=64)
+    # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
+    skipCount = models.IntegerField(default=0)
+
+class Answer(models.Model):
+    text = models.CharField(max_length=64, blank=False, null=False)
+    isFinal = models.BooleanField(default=False)
+    count = models.IntegerField(default=1)
+    # on_delete set to cascade because we would not delete django models until we export and finalize the data and save.
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)

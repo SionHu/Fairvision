@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import configparser
+# Tricky lib to convert string to boolean directly in python.
 from distutils.util import strtobool
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -38,10 +39,13 @@ try:
     AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
     IS_PRODUCTION_SITE = strtobool(my_env['IS_PRODUCTION_SITE'])
     TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
+    # Set up database url
     DATABASE_URL = my_env.get('DATABASE_URL', None) or (
         'postgres://cam2crowdsourcing:%s@cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com:8080/cam2cds'
         % (my_env['POSTGRESQLPASS'],))
     NUMROUNDS = int(my_env.get('NUMROUNDS', '5'))
+
+    # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
     KEY = my_env.get('KEY', 'airplanes/image_{:04d}.jpg')
 
 except KeyError as e:

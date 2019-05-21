@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 
-from users.models import Player, CustomUser, Label
+from users.models import Player, CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -57,10 +57,6 @@ class PlayerChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email')
-
-
-class TestForm(forms.Form):
-    test = forms.CharField(label='test', max_length=100)
 
 '''
 class RequesterSignUpForm(UserCreationForm):
