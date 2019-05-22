@@ -172,6 +172,8 @@ class Question(models.Model):
     isFinal = models.BooleanField(default=False)
     # Count is the nunber of same/redundant Questions count (we will not remove the redundant attrbutes)
     count = models.IntegerField(default=1)
+    # ID for reference which questions are for which image
+    imageID = models.CharField(max_length=20, default='airplanes/image_0001.jpg')
     # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
     skipCount = models.IntegerField(default=0)
 

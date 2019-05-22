@@ -35,18 +35,38 @@ def phase01a(request):
     # Need to check 
     if request.method == 'POST':
 
-        # Get the Q and Ans for the current question
-        question = request.POST.get('Question')
-        answer = request.POST.get('Answer')
-        new_Ans = Answer.objects.create(text=answer)
+        # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
+        new_questions = request.POST.getlist('New_Questions')
+        new_answers = request.POST.getlist('New_Answers')
+
+        # retrieve the json data for updating skip count for the previous questions
+        dictionary = json.loads(request.POST['data[dict]'])
+        for d in dictionary:
+            # print("key: ", d, " value: ", dictionary[d])
+            old_Q = Question.objects.get(word=d)
+            old_Q.skipCount += dictionary[d]
+            old.save()
+
+
+        # put the old answer in the existing databases, check if people rate it is useful
+
+        # Query list for the old data in the table
+        old_Q_list = Question.objects.values_list('text', 'id')
+        print("I got old_Q_list: ")
+        print(old_Q_list)
+
+        new_Qs = []
+        for que in questions:
+            new_Q = Question.objects.create(text=que, isFinal=False)
+            new_Qs.append([new_Q.text, new_Q.id])
+        print("I got all the new_Q list: ", new_Qs)
+
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
-        old_Q = Question.objects.all()
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        back_result, exist_q = send_result(question, old_Q)
-        if back_result:
-            # if the new question get merged
+        back_result_query = send_result(question, old_Q)
+        if back_result_query is not none:            # if the new question get merged
             newCount = Question.objects.filter(text=exist_q).first().num + 1
             Question.objects.filter(text=exist_q).update(count=newCount, isFinal=True)
             new_Ans.update(question = Question.objects.filter(text=exist_q).first())
