@@ -22,7 +22,6 @@ class RedundancyRemover:
         """
         # self.file_handle = open(file_path)
         # self.csv_reader = csv.reader(self.file_handle, delimiter=',')
-        self.taboo_list = ["what", "is", "are", "of", "which", "the"]
         self.nlp = model  # spacy.load('en_core_web_md')  # The SpaCy handle to the Language model
         if not isinstance(self.nlp, spacy.lang.en.English):
             raise TypeError("Model given is not of type {}.".format("spacy.lang.en.English"))
@@ -38,38 +37,30 @@ class RedundancyRemover:
         if len(old_ques) == 0:
             warnings.warn("This is the first write no redundancy check is possible.")
             return new_ques
-        # Assuming records already exist
-        all_new = []
-        all_old = []
-        for each in new_ques:
-            all_new.append(each[0])
-        for each in old_ques:
-            all_old.append(each[0])
         # Remove taboo words from the sentence
-        for i in range(0, len(all_new)):
-            words = all_new[i].split()
-            result_words = [word for word in words if word.lower() not in self.taboo_list]
-            result = ' '.join(result_words)
-            all_new[i] = result
-        for i in range(0, len(all_old)):
-            words = all_old[i].split()
-            result_words = [word for word in words if word.lower() not in self.taboo_list]
-            result = ' '.join(result_words)
-            all_old[i] = result
+        all_new = (' '.join(removeTabooWords(question)) for question, _ in new_ques)
+        all_old = (' '.join(removeTabooWords(question)) for question, _ in old_ques)
+        docs_old = list(map(self.nlp, all_old))
 
-        for i_new in range(0, len(all_new)):
-            for j_old in range(0, len(all_old)):
-                doc_new = self.nlp(all_new[i_new])
-                doc_old = self.nlp(all_old[j_old])
+        for i_new, q_new in enumerate(all_new):
+            doc_new = self.nlp(q_new)
+            for doc_old in docs_old:
                 # Uncomment the Prints below to see output. Remove them for production version
+                val = doc_new.similarity(doc_old)
                 print(doc_old.text)
                 print(doc_new.text)
-                print(doc_new.similarity(doc_old))
+                print(val)
                 print("\n_______________________\n")
-                val = doc_new.similarity(doc_old)
                 if val > 0.80:
                     break
-            # If code reaches this point merge the questions
-            old_ques.append(new_ques[i_new])
+            else:
+                # If code reaches this point merge the questions
+                old_ques.append(new_ques[i_new])
+                docs_old.append(doc_new)
 
         return old_ques
+
+def removeTabooWords(question, taboo_list=("what", "is", "are", "of", "which", "the")):
+    for word in question.split():
+        if word.lower() not in taboo_list:
+            yield word
