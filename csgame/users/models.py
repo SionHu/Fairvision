@@ -167,7 +167,6 @@ class PhaseBreak(models.Model):
 # New design, QA pairs for phase 1 that will be collected from the crowd workers
 # It could be redundant, so count will be number of the merged ones after merging (we could make a script to create the models updating)
 class Question(models.Model):
-    id = models.AutoField(null=False, default=0, primary_key=True)
     text = models.CharField(max_length=64, blank=False, null=False)
     # Boolean telling where this is the final questions for the rest of the phases
     isFinal = models.BooleanField(default=False)
