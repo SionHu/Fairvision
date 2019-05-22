@@ -7,6 +7,7 @@ import socket
 import comm as comm
 import csv
 
+
 def send__receive_data(data):
     """
     Method to send the data to the server and get the result from it.
@@ -24,7 +25,8 @@ def send__receive_data(data):
 
     # do something with the result...
     print("result from server:")
-    print(result)
+    for row in result["data received"]:
+        print(row)
 
 
 if __name__ == "__main__":
@@ -33,13 +35,16 @@ if __name__ == "__main__":
     with open('Q & A - Haobo.csv') as test_att_csv:
         csv_reader = csv.reader(test_att_csv, delimiter=',')
         for row in csv_reader:
-            old.append(row[0])
+            old.append(row)
     with open('test_att.csv') as turdy:
         csv_reader = csv.reader(turdy, delimiter=',')
         for row in csv_reader:
-            new.append([row[0]])
-    print(old)
-    print(new)
-    send__receive_data([new, old])
+            new.append(row)
+    try:
+        send__receive_data([new, old])
+
+    except ConnectionRefusedError:
+        print("CHECK IF SERVER IS RUNNING !!")
+
     print("Run complete")
 
