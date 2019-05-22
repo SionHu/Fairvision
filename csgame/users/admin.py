@@ -41,7 +41,7 @@ class ImageModelForm(forms.ModelForm):
     
     class Meta:
         Model = ImageModel
-        fields = ('img', 'label')
+        fields = ('img', )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,7 +55,6 @@ class ImageModelForm(forms.ModelForm):
             # get image preview, works now
             self.url = default_storage.url(self.instance.img.name)
         else:
-            self.fields['label'].widget = forms.HiddenInput()
 
             setChoices, objChoices = getFolderChoices()
             # auto suggestions that pop up when typing in input text field of set or object
@@ -104,7 +103,7 @@ class ImageModelObjectListFilter(admin.SimpleListFilter):
 
 class ImageModelAdmin(admin.ModelAdmin):
     form = ImageModelForm
-    fields = ('img', 'label', 'set', 'object')
+    fields = ('img', 'set', 'object')
     list_display = ('img',)
     list_display_links = ('img',)
     list_filter = (ImageModelDatasetListFilter, ImageModelObjectListFilter)
