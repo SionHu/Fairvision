@@ -96,9 +96,19 @@ def phase01b(request):
         # Update the rounds number for phase 01b
         roundsnum = RoundsNum.objects.filter(phase='phase01b').first().num + 1
         RoundsNum.objects.filter(phase='phase01b ').update(num=roundsnum)
+        # get the dictionary from the front-end back
+        dictionary = json.loads(request.POST['data[dict'])
+        for d in dictionary:
+            if not dictionary[a]:
+                skipc = Question.objects.get(text=d).skipCount
+                Question.objects.filter(text=d).update(skipCount=skipc)
+            else:
+                new_Ans = Answer.objects.create(text=dictionary[d])
+                new_Ans.question = Question.objects.get(text=d)
 
     questions = Question.objects.all()
     return render(request, 'over.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
+    # The NLP server will be updated later?
 
 # Remove what we have for phase02
 @login_required
