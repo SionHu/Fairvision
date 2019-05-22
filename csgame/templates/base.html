@@ -68,6 +68,15 @@
             </ul>
             <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
                 <div class="dropdown">
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="{% url 'logout' %}" style="color: red">Logout</a>
+                    </div>
+                </div>
+                
+<!--                Disabled login function-->
+<!--
+                <div class="dropdown">
+                
                     {% if user.is_authenticated %}
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ user.username }}
@@ -80,6 +89,7 @@
                         <button type="button" onclick="location.href='{% url 'login' %}'" class="btn btn-outline-secondary dropdown" >Login</button>
                     {% endif %}
                 </div>
+-->
             </ul>
         </div>
     </div>
