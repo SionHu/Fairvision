@@ -36,8 +36,8 @@ def phase01a(request):
     if request.method == 'POST':
 
         # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
-        new_questions = request.POST.getlist('New_Questions')
-        new_answers = request.POST.getlist('New_Answers')
+        questions = request.POST.getlist('Questions')
+        answers = request.POST.getlist('Answers')
 
         # retrieve the json data for updating skip count for the previous questions
         dictionary = json.loads(request.POST['data[dict]'])
@@ -45,18 +45,18 @@ def phase01a(request):
             # print("key: ", d, " value: ", dictionary[d])
             old_Q = Question.objects.get(word=d)
             old_Q.skipCount += dictionary[d]
-            old.save()
-
-
-        # put the old answer in the existing databases, check if people rate it is useful
+            old_Q.save()
 
         # Query list for the old data in the table
         old_Q_list = Question.objects.values_list('text', 'id')
         print("I got old_Q_list: ")
         print(old_Q_list)
 
+        answers = Answer.objects.bulk_create([Answer(text=ans) for ans in new_answers])
+        print("Well bulk answer objects", answers)
+
         new_Qs = []
-        for que in questions:
+        for que in new_questions:
             new_Q = Question.objects.create(text=que, isFinal=False)
             new_Qs.append([new_Q.text, new_Q.id])
         print("I got all the new_Q list: ", new_Qs)
@@ -65,15 +65,12 @@ def phase01a(request):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        back_result_query = send_result(question, old_Q)
-        if back_result_query is not none:            # if the new question get merged
-            newCount = Question.objects.filter(text=exist_q).first().num + 1
-            Question.objects.filter(text=exist_q).update(count=newCount, isFinal=True)
-            new_Ans.update(question = Question.objects.filter(text=exist_q).first())
-        else:
-            # If not, create a new Q&A pair in database and put inside
-            new_Q = Question.objects.create(text=question) 
-            new_Q.anwer_set.add(new_Ans)
+        back_result_query = send_result([new_Qs, old_Q_list])
+        if back_result_query is not none:
+            for entry in back_result_query:
+                Question.objects.filter(id=entry[0]).update(isFinal=False)
+                Question.objects.filter(id=entry[1]).updateI(isFinal=True)
+                Question.answer_set.add(answers)
 
 
         # Update the rounds number for phase 01a
@@ -90,7 +87,7 @@ def phase01a(request):
         previous_questions = Question.objects.all()
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
-    return render(request, 'over.html', {'url' : serving_img_url})
+    return render(request, 'over.html', {'url' : serving_img_url, 'questions': previous_questions })
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
