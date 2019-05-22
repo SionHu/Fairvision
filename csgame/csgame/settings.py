@@ -46,7 +46,7 @@ try:
     NUMROUNDS = int(my_env.get('NUMROUNDS', '5'))
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
-    KEY = my_env.get('KEY', 'airplanes/image_{:04d}.jpg')
+    KEY = my_env.get('KEY', 'Caltech101/airplanes/image_{:04d}.jpg')
 
 except KeyError as e:
     exit('Lacking Environment Variables: ' + str(e)) # indicate to the OS that the program has failed

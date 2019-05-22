@@ -7,7 +7,7 @@ from django.db import transaction
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
+from .models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question
 
 
 from django import forms
@@ -145,3 +145,5 @@ admin.site.register(ImageModel, ImageModelAdmin)
 admin.site.register(Phase01_instruction)
 admin.site.register(Phase02_instruction)
 admin.site.register(Phase03_instruction)
+admin.site.register(Question)
+admin.site.register(Answer)

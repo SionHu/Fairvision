@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
-from users.models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction
+from users.models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Question, Answer
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -69,7 +69,7 @@ def phase01a(request):
         if back_result_query is not none:
             for entry in back_result_query:
                 Question.objects.filter(id=entry[0]).update(isFinal=False)
-                Question.objects.filter(id=entry[1]).updateI(isFinal=True)
+                Question.objects.filter(id=entry[1]).update(isFinal=True)
                 Question.answer_set.add(answers)
 
 
@@ -79,12 +79,12 @@ def phase01a(request):
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum))
-    print("roundsnum is: " + roundsnum)
-
+    print(serving_img_url)
     # Previous all question pairs that will be sent to front-end 
-    if roundsnum > 1 and roundsnum <= NUMROUNDS:
+    if roundsnum >= 1 and roundsnum <= NUMROUNDS:
         # Get the previous question 
-        previous_questions = Question.objects.all()
+        previous_questions = Question.objects.all() or ["oh yeah!"]
+        print("previous_questions is: ", previous_questions)
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
     return render(request, 'over.html', {'url' : serving_img_url, 'questions': previous_questions })
