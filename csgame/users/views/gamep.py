@@ -38,11 +38,8 @@ def phase01a(request):
         # Get the Q and Ans for the current question
         question = request.POST.get('Question')
         answer = request.POST.get('Answer')
-        Ans, _ = Answer.objects.get(text=answer)
-        if Ans:
-            Answer.objects.filter(text=answer).update(count=Ans.count+1)
-        else:
-            Ans = Answer.objects.create(text=answer)
+        new_Ans = Answer.objects.create(text=answer)
+
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         old_Q = Question.objects.all()
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
@@ -52,11 +49,11 @@ def phase01a(request):
             # if the new question get merged
             newCount = Question.objects.filter(text=exist_q).first().num + 1
             Question.objects.filter(text=exist_q).update(count=newCount, isFinal=True)
-            Answer.question = Question.objects.filter(text=exist_q).first()
+            new_Ans.update(question = Question.objects.filter(text=exist_q).first())
         else:
             # If not, create a new Q&A pair in database and put inside
             new_Q = Question.objects.create(text=question) 
-            new_Q.anwer_set.add(Answer.objects.get(text=answer))
+            new_Q.anwer_set.add(new_Ans)
 
 
         # Update the rounds number for phase 01a
@@ -86,12 +83,22 @@ def phase01b(request):
     # There should be an array of question that got skipped. Each entry should the final question value
     rounds, _ = RoundsNum.objects.get_or_create(phase='phase01b', defaults={'num': 1})
     roundsnum = rounds.num
-    rounds.save()
 
-    print("Round phase is: ", rounds.phase)
-    if roundsnum > RoundsNum:
+    data = []
+    for i in range(0, 4):
+        data.append(default_storage.url(KEY.format(4 * (roundsnum - 1) + i)))
+
+    if roundsnum > NUMROUNDS:
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
-    return render(request, 'over.html', {'phase': 'PHASE 01b'})
+
+    if request.method == 'POST':
+        # Get the answer array for different 
+        # Update the rounds number for phase 01b
+        roundsnum = RoundsNum.objects.filter(phase='phase01b').first().num + 1
+        RoundsNum.objects.filter(phase='phase01b ').update(num=roundsnum)
+
+    questions = Question.objects.all()
+    return render(request, 'over.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
 
 # Remove what we have for phase02
 @login_required

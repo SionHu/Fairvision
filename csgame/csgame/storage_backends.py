@@ -13,7 +13,7 @@ class MediaStorage(S3Boto3Storage):
     s3 = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
                       config=Config(s3={'addressing_style': 'path'}), region_name='us-east-2')
 
-    #for some reason, this method is flawed in Django Storages, so this just reimplements it correctly
+    #url for getting the image link
     def url(self, name, parameters=None, expire=300):
         try:
             params = parameters.copy() if parameters else {}
