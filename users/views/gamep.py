@@ -22,12 +22,12 @@ from .roundsgenerator import rphase02
 KEY = settings.KEY
 NUMROUNDS = settings.NUMROUNDS
 
+
 old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
 new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
 
 
 from client import send__receive_data
-
 #@login_required
 def phase01a(request):
     rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})

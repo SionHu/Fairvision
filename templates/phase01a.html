@@ -95,25 +95,24 @@
                                 <li>Q: What 's the color of the plane? <br> A: Yellow.
                                 <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
+                                    <input class = "form-check-inline" type="checkbox" id = "wrong1">
                                     Wrong</label>
                                 </li> <hr>
                             <li>Q: What 's the color of the sky? <br> A: Blue.
                             <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
+                                    <input class = "form-check-inline" type="checkbox" id = "wrong2">
                                     Wrong</label>
                             </li> <hr>
                             <li>Q: What 's under the plane? <br> A: Grass.
                             <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Wrong</label>
+                                    <input class = "form-check-inline" type="checkbox" id = "wrong3">
                             </li> <hr>
                             <li>Q: What 's the direction of the plane? <br> A: Right-faced.
                             <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
+                                    <input class = "form-check-inline" type="checkbox" id = "wrong4">
                                     Wrong</label>
                             </li> <hr>
                             </ul>
@@ -136,13 +135,26 @@
             <label style="font-size: x-large">Enter A New Q&A Pair</label>
             <div class="row-md-10" style="font-size:110%">
                 <div class="input-group m-3">
-                    <div class="input-group-prepend">
-                        Q: What is/are <input class="form-control-sm" id="Q1" type="text" name="Q1" maxlength="20"> (of) <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="20">
+                    Q: What 
+                    <div class="input-group-prepend ml-1 mr-1">
+                            <select id="is/are">
+                                <option value="is">is</option>
+                                <option value="are">are</option>  
+                            </select>
                     </div>
+                    <input class="form-control-sm" id="Q1" type="text" name="Q1" maxlength="40">
+                    <div class="input-group-prepend ml-1 mr-1">
+                            <select id="of">
+                                <option value="of">of</option>
+                                <option value=" "></option>  
+                            </select>
+                        </div>
+                    <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="40">
+                    
                 </div>
                 <div class="input-group mb-3 ml-3">
                     <div class="input-group-prepend">
-                        A: <input class="form-control-sm" id="A" type="text" name="A" maxlength="20">
+                        A: <input class="form-control-sm ml-2" id="A" type="text" name="A" maxlength="40">
                     </div>
                 </div>
                 <button id="add" class="btn btn-success ml-3 mb-2" >Add</button>
@@ -153,13 +165,20 @@
 
             <!-- Q&A LIST -->
             <div class="row mt-3">
-                <div class="col-md-9 ml-5">
+                <div class="col-md-12 ml-3">
                     <div class="card" style="width: 100%; height: 50.5%"> <!-- height was 62% -->
                         <div class="card-content">
-                            <ul id="list_q">
-                                <li>Q: New enter question?<br>A: Test.</li>
-                            </ul>
-                            <ul id="list_a"></ul>
+                            <div class="row-md-11">
+                                <!--<div class="col">
+                                    <ul id="list_q" ></ul>
+                                </div>
+                                <div class="col">
+                                    <ul id="list_a"></ul>
+                                </div> -->
+                                <ul><a id="list_all" ></a></ul>
+                                <ul hidden id="list_a" ></ul>
+                                <ul hidden id="list_q" ></ul>
+                            </div>
                         </div>
                     </div>
                     <button id="delete" class="btn btn-danger float-left mt-2">Undo</button>
@@ -173,40 +192,74 @@
         <form>
         {% csrf_token %}
         </form>
-
+        
         <script>
-            //"add" button listener when clicked
+    
+        var dict = {}
+        var resultArr = {
+            "dict" : {"Q: What 's the color of the plane?":0,"Q: What 's the color of the sky?":0,"Q: What 's under the plane? ":0,"Q: What 's the direction of the plane?":0},
+        }    
+        
+
+            function rank(){
+                var i=1;
+                while (i<5) 
+                    {
+                    if(document.getElementById("wrong+{{i}}").checked == true){
+                        resultArr['dict'][i] = 0;
+                    }
+                    else if(document.getElementById("wrong+{{i}}").checked == false){
+                        resultArr['dict'][i] = -1;
+                    }
+                    }
+                resultArr['dict']= JSON.stringify(resultArr['dict']);
+
+                console.log(resultArr);
+            }
+
+</script>
+
+        
+        <script>
+            
+        //"add" button listener when clicked
         numQA = 0;
+        var listNode_q = document.createElement("ul");
+        var listNode_a = document.createElement("ul");
+            
         document.getElementById("add").addEventListener("click", function() {
+            
             //Get the question
-            if (document.getElementById("Q2").value !== "")
-                var qVal = "Q: What is/are "+document.getElementById("Q1").value.toLowerCase()+" (of) "+document.getElementById("Q2").value.toLowerCase() + "?"; //gets inputted string
-            else
-                qVal = "What is/are "+document.getElementById("Q1").value.toLowerCase()+ "?";
-            var element_q = $("#list_q:contains(" + qVal + ")"); //checks if list contains string. returns -1 if not
+            if (document.getElementById("Q1").value !== "") {
+                if (document.getElementById("Q2").value !== "")
+                    var qVal = "Q: What "+document.getElementById("is/are").value+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
+                else
+                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
+            }
+            
             //Get the answer
-            var aVal = "A: "+document.getElementById("A").value.toLowerCase() + ".";
-            if (document.getElementById("A").value !== "" && document.getElementById("Q1").value !== "" && element_q.length <= 0) { //makes sure no empty input and not already inputted
-                var txt_q = qVal.value.toLowerCase(); //inputted text
-                var txt_a = aVal.value.toLowerCase();
-                addLi(); //adds to list
-                console.log(txt_q,txt_a); //puts entered string on console
-                numQA++;
-                if (numQA >= 8) {
-                    setTimeout(alertAttr, 0);
-                }
+            if (document.getElementById("A").value !== "") {
+                var aVal = "A: "+document.getElementById("A").value + ".";
+            }
+            
+            addLi(); //adds to list
+            numQA++;
+            if (numQA >= 8) {
+                setTimeout(alertAttr, 0);
             }
             document.getElementById("Q1").value = ""; //clear entry field
             document.getElementById("Q2").value = ""; //clear entry field
             document.getElementById("A").value = ""; //clear entry field
         });
-        //input bar listener when "enter" is hit
+            
+        //input bar listener when key "enter" is hit
         document.getElementById("A").addEventListener("keyup", function(event) {
             event.preventDefault();
             if (event.keyCode === 13 && document.getElementById("A").value !== "" && document.getElementById("Q1").value !== "") { //make sure space is hit and input box is not empty string
                 document.getElementById("add").click(); //basically calls the button click function
             }
         });
+          
         //next button listener
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
@@ -230,11 +283,14 @@
                 $.post('{% url 'phase01a' %}', {
                     'data_q': questionArray,  // might change due to gamep.py - phase01a
                     'data_a': answerArray,
+                    'validation': resultArr,
                     'img_list' : image_list,
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){});
+                
                 // reload the webpage to set new images
-                var countdown = 3000;  // your countdown in milliseconds
+//                var countdown = 3000;  // your countdown in milliseconds
+                
                 setTimeout(function() {
                     // hide your loading image after "countdown" milliseconds
                     document.getElementById("loading-image").setAttribute("style","display:none");
@@ -247,16 +303,22 @@
                 numQA = 0;
             }
         })
+            
         //delete button listener
         $('#delete').click(function(event){
             // alert("New Images Inbound!")
-            var arrlen = document.getElementById("list_q").childNodes.length;
+            //var arrlen = document.getElementById("list_q").childNodes.length;
             var attrlist_q = document.getElementById("list_q");
             var attrlist_a = document.getElementById("list_a");
+            var arrlen = document.getElementById("list_all").childNodes.length;
+            var attrlist = document.getElementById("list_all");
             if (arrlen != 0) {
+                attrlist.removeChild(attrlist.childNodes[arrlen - 1]);
                 attrlist_q.removeChild(attrlist_q.childNodes[arrlen - 1]);
                 attrlist_a.removeChild(attrlist_a.childNodes[arrlen - 1]);
+                
             }
+            console.log(attrlist_q);
         })
         </script>
 
@@ -265,24 +327,38 @@
             function addLi() {
                 // get the whole question
                 if (document.getElementById("Q2").value !== "")
-                    var qVal = "Q: What is/are "+document.getElementById("Q1").value.toLowerCase()+" (of) "+document.getElementById("Q2").value.toLowerCase() + "?"; //gets inputted string
+                    var qVal = "Q: What "+document.getElementById("is/are").value+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
                 else
-                    qVal = "What is/are "+document.getElementById("Q1").value.toLowerCase() + "?";
+                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
                 // get the whole answer
-                var aVal = "A: "+document.getElementById("A").value.toLowerCase()+".";
-                var txt_q = qVal.value.toLowerCase(); //inputted text
-                var txt_a = aVal.value.toLowerCase();
-                var listNode_q = document.getElementById('list_q'),
+                var aVal = "A: "+document.getElementById("A").value+".";
+                
+                var txt_q = qVal; //inputted text
+                var txt_a = aVal;
+                var txtVal = qVal + ' \n' + aVal;
+                console.log(txtVal);
+                
+                
+               var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI_q"),
                     txtNode_q = document.createTextNode(txt_q);
+                
                 var listNode_a = document.getElementById('list_a'),
                     liNode_a = document.createElement("LI_a"),
                     txtNode_a = document.createTextNode(txt_a);
+                
+                
+                var listNode = document.getElementById('list_all'),
+                    liNode = document.createElement("LI"),
+                    txtNode = document.createTextNode(txtVal);
+                liNode.appendChild(txtNode);
+                listNode.appendChild(liNode);
+                
                 liNode_q.appendChild(txtNode_q);
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
                 listNode_a.appendChild(liNode_a);
-                //console.log(listNode);
+
             }
         function alertAttr() {
             alert("maximum number of images 8 reached. Next images...");
