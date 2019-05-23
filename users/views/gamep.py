@@ -27,7 +27,7 @@ NUMROUNDS = settings.NUMROUNDS
 '''
 
 
-#@login_required
+
 def phase01(request):
     rounds, _ = RoundsNum.objects.get_or_create(phase='phase01', defaults={'num': 1})
     roundsnum = rounds.num
@@ -90,7 +90,6 @@ def phase01(request):
     return render(request, 'phase01.html',{ 'urls': urls, 'json_list': json_list, 'instructions': instructions})
 
 # View for phase02
-#@login_required
 def phase02(request):
     # For post method, modify the labels of imagemodel only, only save models when the index number array runs out
     showbutton = True
@@ -265,7 +264,6 @@ def phase02(request):
 
 
 # View for phase3
-#@login_required
 def phase03(request):
 
     
