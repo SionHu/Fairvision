@@ -21,7 +21,7 @@ from .send_result import send_result
 KEY = settings.KEY
 NUMROUNDS = settings.NUMROUNDS
 
-@login_required
+#@login_required
 def phase01a(request):
     rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
     roundsnum = rounds.num
@@ -126,14 +126,14 @@ def phase01b(request):
     # The NLP server will be updated later?
 
 # Remove what we have for phase02
-@login_required
+#@login_required
 def phase02(request):
 
     return render(request, 'over.html', {'phase' : 'PHASE 02'})
 
 
 # View for phase3
-@login_required
+#@login_required
 def phase03(request):
     attr = Attribute.objects.all()
     attributes = list()
