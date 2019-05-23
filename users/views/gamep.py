@@ -128,7 +128,7 @@ def phase01b(request):
     # The NLP server will be updated later?
 
 # Remove what we have for phase02
-@login_required
+#@login_required
 def phase02(request):
 
     return render(request, 'over.html', {'phase' : 'PHASE 02'})
