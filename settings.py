@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import configparser
-from distutils.util import strtobool
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -23,10 +22,11 @@ BASE_DIR =  os.path.dirname(PROJECT_ROOT)
 my_env = os.environ.copy()
 parser = configparser.ConfigParser({k: v.replace('$', '$$') for k, v in os.environ.items()},
          interpolation=configparser.ExtendedInterpolation())
+def defaultSect(fp): yield '[DEFAULT]\n'; yield from fp
 settingsFile = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(settingsFile):
     with open(settingsFile) as stream:
-        parser.read_file(['[DEFAULT]\n', *stream])
+        parser.read_file(defaultSect(stream))
         for k, v in parser["DEFAULT"].items():
             my_env.setdefault(k.upper(), v)
 
@@ -36,16 +36,14 @@ try:
     AWS_ACCESS_KEY_ID = my_env['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = my_env['AWS_SECRET_ACCESS_KEY']
     AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
-    IS_PRODUCTION_SITE = strtobool(my_env['IS_PRODUCTION_SITE'])
-    TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
-    DATABASE_URL = my_env.get('DATABASE_URL', None) or (
-        'postgres://cam2crowdsourcing:%s@cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com:8080/cam2cds'
-        % (my_env['POSTGRESQLPASS'],))
-    NUMROUNDS = int(my_env.get('NUMROUNDS', '5'))
-    KEY = my_env.get('KEY', 'airplanes/image_{:04d}.jpg')
+    IS_PRODUCTION_SITE = my_env['IS_PRODUCTION_SITE']
+    TEST_HTTP_HANDLING = my_env['TEST_HTTP_HANDLING']
+    SQLPASS = my_env['POSTGRESQLPASS']
+    NUMROUNDS = my_env['NUMROUNDS']
 
 except KeyError as e:
-    exit('Lacking Environment Variables: ' + str(e)) # indicate to the OS that the program has failed
+    print('Lacking Environment Variables: ' + str(e))
+    exit()
 
 
 
@@ -56,12 +54,15 @@ except KeyError as e:
 SECRET_KEY = 'jsl5xrm^in$mx)ftkdeybi0#(uqr)j=e=eer%eg2rxk#h#1l9r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=not(IS_PRODUCTION_SITE or TEST_HTTP_HANDLING)
+if IS_PRODUCTION_SITE or TEST_HTTP_HANDLING:
+    DEBUG=False
+else:
+    DEBUG=True
 
+DEBUG=True
 ALLOWED_HOSTS = [
 	'cdstrain.herokuapp.com',
     '127.0.0.1',
-    'localhost',
     'crowdsourcing-game.herokuapp.com'
 ]
 
@@ -119,8 +120,26 @@ WSGI_APPLICATION = 'csgame.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+in_heroku = False
+if 'DATABASE_URL' in os.environ:
+    in_heroku = True
 import dj_database_url
-DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
+if in_heroku:
+    DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
+else:
+    password = os.environ
+    DATABASES = {
+        'default': {
+#            'ENGINE': 'django.db.backends.sqlite3',
+#            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+            'NAME' : 'cam2cds',
+            'USER' : 'cam2crowdsourcing',
+            'PASSWORD' : SQLPASS,
+            'HOST' : 'cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com',
+            'PORT' : '8080'
+        }
+    }
 
 
 # Password validation
@@ -170,6 +189,10 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+LOGIN_URL='login'
+
+LOGOUT_URL='logout'
 
 LOGIN_REDIRECT_URL = 'home'
 

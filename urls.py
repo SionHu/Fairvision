@@ -38,8 +38,8 @@ urlpatterns = [
 
     url(r'^phase01/$', gamep.phase01, name='phase01'),
     url(r'^phase02/$', gamep.phase02, name='phase02'),
+#    url(r'^phase02/$', views.phase02, name='phase02'),
     url(r'^phase03/$', gamep.phase03, name='phase03'),
+#     url(r'^phase03/$', views.phase03, name='phase03'),
 ]
 
-handler404 = 'csgame.views.handler404'
-handler500 = 'csgame.views.handler500'
