@@ -4,8 +4,7 @@ import RedundancyV1
 import importlib
 import spacy
 # import threading  # Possible need to allow multiple connections if Django does not handle them
-
-
+import en_core_web_md
 def process_connection(sock):
     print("processing transmission from client...")
     print("Running Module Reload...")
@@ -33,7 +32,7 @@ server_sock.listen(5)
 
 # Start loading neural net down here to minimize the risk of dropped requests
 
-nlp = spacy.load('en_core_web_md')  # Single load in memory till killed
+nlp = en_core_web_md.load()  # Single load in memory till killed
 
 print("listening on port {}...".format(comm.server_port))
 try:
