@@ -101,14 +101,14 @@ def phase01a(request):
         RoundsNum.objects.filter(phase='phase01a').update(num=roundsnum)
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
-    serving_img_url = default_storage.url(KEY.format(roundsnum))
+    serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
     # Previous all question pairs that will be sent to front-end 
     if roundsnum >= 1 and roundsnum <= NUMROUNDS:
         # Get the previous question 
         previous_questions = Question.objects.all() or ["What is the name of the object?"]
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
-    return render(request, 'over.html', {'url' : serving_img_url, 'questions': previous_questions })
+    return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
