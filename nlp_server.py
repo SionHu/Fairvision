@@ -2,7 +2,9 @@ import comm as comm
 import socket
 import RedundancyV1
 import importlib
+import spacy
 # import threading  # Possible need to allow multiple connections if Django does not handle them
+
 
 def process_connection(sock):
     print("processing transmission from client...")
@@ -12,8 +14,8 @@ def process_connection(sock):
     data = comm.receive_data(sock)
     # do something with the data # TODO: Add link to main redundancy code.
     reducer = RedundancyV1.RedundancyRemover(nlp)
-    data, merges = reducer.get_reduced_records(*data)  # See CSV file for the format of the data
-    result = {"data received": data, "merged entries": merges}
+    data = reducer.get_reduced_records(*data)  # See CSV file for the format of the data
+    result = {"data received": data}
     print(result)
     # send the result back to the client
     comm.send_data(result, sock)
@@ -30,7 +32,7 @@ server_sock.bind((comm.server_host, comm.server_port))
 server_sock.listen(5)
 
 # Start loading neural net down here to minimize the risk of dropped requests
-import spacy
+
 nlp = spacy.load('en_core_web_md')  # Single load in memory till killed
 
 print("listening on port {}...".format(comm.server_port))

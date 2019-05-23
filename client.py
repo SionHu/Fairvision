@@ -25,8 +25,8 @@ def send__receive_data(data):
 
     # do something with the result...
     print("result from server:")
-    for row in result["data received"]:
-        print(row)
+    for row_rec in result["data received"]:
+        print(row_rec)
 
 
 if __name__ == "__main__":
@@ -42,6 +42,7 @@ if __name__ == "__main__":
             new.append(row)
     try:
         send__receive_data([new, old])
+
 
     except ConnectionRefusedError:
         print("CHECK IF SERVER IS RUNNING !!")
