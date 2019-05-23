@@ -10,16 +10,21 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 import boto3
+import csv, os
 import botocore
 from botocore.client import Config
 import random
 import json
 from .roundsgenerator import rphase02
-from .send_result import send_result
+
 
 # We should set up in backend manually
 KEY = settings.KEY
 NUMROUNDS = settings.NUMROUNDS
+
+old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
+new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
+
 
 from client import send__receive_data
 
@@ -31,6 +36,21 @@ def phase01a(request):
     if roundsnum > NUMROUNDS:
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01a'})
+
+    ''' Test case 
+    old_Q = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
+    new_Q = list(Question.objects.filter(isFinal=False).values_list('text', 'id'))
+
+    result_array, id_merge = send__receive_data([new_Q, old_Q])
+    # print("I got result array: ", result_array)
+    print("I got the merge id: ", id_merge)
+
+    if id_merge:
+            for entry in id_merge:
+                Question.objects.filter(id=id_merge[entry]).update(isFinal=False)
+                Question.objects.filter(id=entry).update(isFinal=True)
+
+    '''
 
     # Need to check 
     if request.method == 'POST':
@@ -48,7 +68,7 @@ def phase01a(request):
             old_Q.save()
 
         # Query list for the old data in the table
-        old_Q_list = Question.objects.values_list('text', 'id')
+        old_Q_list = list(Question.objects.values_list('text', 'id'))
 
         answers = Answer.objects.bulk_create([Answer(text=ans) for ans in new_answers])
         # print("Well bulk answer objects", answers)
@@ -64,12 +84,14 @@ def phase01a(request):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        back_result_query = send__receive_data([new_Qs, old_Q_list])
-        # if the return values are empty, all the new questions are unique
-        if back_result_query:
-            for entry in back_result_query:
-                Question.objects.filter(id=entry[0]).update(isFinal=False)
-                Question.objects.filter(id=entry[1]).update(isFinal=True)
+        result_array, id_merge = send__receive_data([new_Q, old_Q])
+         # print("I got result array: ", result_array)
+        print("I got the merge id: ", id_merge)
+
+        if id_merge:
+            for entry in id_merge:
+                Question.objects.filter(id=id_merge[entry]).update(isFinal=False)
+                Question.objects.filter(id=entry).update(isFinal=True)
                 for ans in answers:
                     Question.answer_set.add(ans) 
 
@@ -84,7 +106,6 @@ def phase01a(request):
     if roundsnum >= 1 and roundsnum <= NUMROUNDS:
         # Get the previous question 
         previous_questions = Question.objects.all() or ["What is the name of the object?"]
-        print("previous_questions is: ", previous_questions)
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
     return render(request, 'over.html', {'url' : serving_img_url, 'questions': previous_questions })
