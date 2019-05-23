@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible fade show fixed-top" role="alert">
+      {% for error in form.non_field_errors %}
+        <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+      {% endfor %}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endif %}
+    
+    <div class="d-flex justify-content-center h-100">
+		<div class="card">
+			<div class="card-header">
+				<h3>Log In</h3>
+<!-- This link will hep: https://wsvincent.com/django-allauth-tutorial-custom-user-model/-->
+{% comment %}
+				<div class="d-flex justify-content-end social_icon">
+					<span><i class="fa fa-github-square"></i></span>
+					<span><i class="fa fa-facebook-square"></i></span>
+					<span><i class="fa fa-google-plus-square"></i></span>
+				</div>
+{% endcomment %}
+			</div>
+			<div class="card-body">
+				<form method="post" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                    
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-user"></i></span>
+						</div>
+                            <input class="form-control" id="{{ field.id_for_label }}" maxlength="20" name="username" value="{{ field.value }}" type="text"> 
+                            {{ field.username }}
+					</div>
+                    
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-key"></i></span>
+						</div>
+				        <input class="form-control" id="{{ field.id_for_label }}" maxlength="30" name="password" value="{{ field.value }}" type="password"> 
+                            {{ field.password }}
+                        
+					</div>
+                    
+                    <button type="submit" class="btn float-right login_btn">Log in</button>
+					
+                    <div class="row align-items-center remember">
+						<input type="checkbox">Remember Me
+					</div>
+                    
+				</form>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex justify-content-center links">
+					Don't have an account?<a href="{% url 'player_signup' %}">Sign Up</a>
+				</div>
+				<div class="d-flex justify-content-center">
+					<a href="{% url 'password_reset' %}">Forgot your password?</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

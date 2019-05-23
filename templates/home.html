@@ -1,0 +1,45 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {% for error in form.non_field_errors %}
+        <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+      {% endfor %}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %}
+    
+    {% if user.is_authenticated %}
+        <div class="row h-100 justify-content-center align-items-center">
+        <center>
+          <h2>Welcome to the Crowdsourcing Game!</h2>
+            <img src="https://media.giphy.com/media/12DXJPoQ9D3VwA/giphy.gif" style="height: 50%">
+          <hr>
+            <a href="{% url 'phase01' %}">
+                <button class="btn btn-lg btn-success"><span><i class="fa fa-gamepad"></i></span> Start the Game</button>
+            </a>
+        </center>
+        </div>
+    
+    {% else %}    
+
+  <div class="row h-100 justify-content-center align-items-center">
+      <center>
+          <hr>
+          <h2>Welcome to the Crowdsourcing Game!</h2>
+          <img src="https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif" style="height: 50%">
+          <hr>
+          <h4 style="color: orange">Please log in to start the game.</h4>
+        </center>
+  </div>
+        
+    {% endif %}
+    
+</div>
+{% endblock %}
