@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center h-75">
+        <div class="card border border-warning" style="box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px; height: auto;">
+            <div class="card-body" style="margin: auto">
+                <div class="row" style="margin: auto">
+                    <p>{% block message %}{% endblock %}</p>
+                </div>
+                <div class="row" style="margin: auto">
+                    {% block button %}<button type="button" class="btn btn-success" onclick='window.location = "/";'>{% block buttonText %}Go Home{% endblock %}</button>{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
