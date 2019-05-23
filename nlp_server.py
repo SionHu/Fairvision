@@ -12,8 +12,8 @@ def process_connection(sock):
     data = comm.receive_data(sock)
     # do something with the data # TODO: Add link to main redundancy code.
     reducer = RedundancyV1.RedundancyRemover(nlp)
-    data = reducer.get_reduced_records(*data)  # See CSV file for the format of the data
-    result = {"data received": data}
+    data, merges = reducer.get_reduced_records(*data)  # See CSV file for the format of the data
+    result = {"data received": data, "merged entries": merges}
     print(result)
     # send the result back to the client
     comm.send_data(result, sock)

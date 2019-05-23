@@ -32,7 +32,8 @@ class RedundancyRemover:
         Method only check questions.
         :param new_ques: List of new questions. [string, id]
         :param old_ques: List of all existing questions from the database
-        :return: List of new questions and merge id list
+        :return: List of new questions and merge id list and a dictionary
+         mapping the new question ids to the old ones for those that are similar
         """
         if len(old_ques) == 0:
             warnings.warn("This is the first write no redundancy check is possible.")
@@ -40,25 +41,27 @@ class RedundancyRemover:
         # Remove taboo words from the sentence
         all_new = (' '.join(removeTabooWords(question)) for question, _ in new_ques)
         all_old = (' '.join(removeTabooWords(question)) for question, _ in old_ques)
+        new_old_pairs = {}
         docs_old = list(map(self.nlp, all_old))
 
-        for i_new, q_new in enumerate(all_new):
+        for qid_new, q_new in zip(new_ques, all_new):
             doc_new = self.nlp(q_new)
-            for doc_old in docs_old:
+            for qid_old, doc_old in zip(old_ques, docs_old):
                 # Uncomment the Prints below to see output. Remove them for production version
                 val = doc_new.similarity(doc_old)
-                print(doc_old.text)
-                print(doc_new.text)
-                print(val)
-                print("\n_______________________\n")
                 if val > 0.80:
+                    #print(doc_old.text)
+                    #print(doc_new.text)
+                    #print(val)
+                    #print("\n_______________________\n")
+                    new_old_pairs[qid_new[1]] = qid_old[1]
                     break
             else:
                 # If code reaches this point merge the questions
-                old_ques.append(new_ques[i_new])
+                old_ques.append(qid_new)
                 docs_old.append(doc_new)
 
-        return old_ques
+        return old_ques, new_old_pairs
 
 def removeTabooWords(question, taboo_list=("what", "is", "are", "of", "which", "the")):
     for word in question.split():
