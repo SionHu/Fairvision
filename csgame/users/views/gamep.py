@@ -26,8 +26,6 @@ def phase01a(request):
     rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
     roundsnum = rounds.num
 
-    print("Round phase is: ", rounds.phase)
-
     if roundsnum > NUMROUNDS:
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01a'})
@@ -49,28 +47,29 @@ def phase01a(request):
 
         # Query list for the old data in the table
         old_Q_list = Question.objects.values_list('text', 'id')
-        print("I got old_Q_list: ")
-        print(old_Q_list)
 
         answers = Answer.objects.bulk_create([Answer(text=ans) for ans in new_answers])
-        print("Well bulk answer objects", answers)
+        # print("Well bulk answer objects", answers)
 
         new_Qs = []
         for que in new_questions:
             new_Q = Question.objects.create(text=que, isFinal=False)
-            new_Qs.append([new_Q.text, new_Q.id])
-        print("I got all the new_Q list: ", new_Qs)
+            for ans in answers:
+                new_Q.answer_set.add(ans)
+            new_Qs.append((new_Q.text, new_Q.id))
 
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
         back_result_query = send_result([new_Qs, old_Q_list])
-        if back_result_query is not none:
+        # if the return values are empty, all the new questions are unique
+        if back_result_query:
             for entry in back_result_query:
                 Question.objects.filter(id=entry[0]).update(isFinal=False)
                 Question.objects.filter(id=entry[1]).update(isFinal=True)
-                Question.answer_set.add(answers)
+                for ans in answers:
+                    Question.answer_set.add(ans) 
 
 
         # Update the rounds number for phase 01a
@@ -79,11 +78,10 @@ def phase01a(request):
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum))
-    print(serving_img_url)
     # Previous all question pairs that will be sent to front-end 
     if roundsnum >= 1 and roundsnum <= NUMROUNDS:
         # Get the previous question 
-        previous_questions = Question.objects.all() or ["oh yeah!"]
+        previous_questions = Question.objects.all() or ["What is the name of the object?"]
         print("previous_questions is: ", previous_questions)
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")

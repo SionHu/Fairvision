@@ -167,16 +167,17 @@ class PhaseBreak(models.Model):
 # New design, QA pairs for phase 1 that will be collected from the crowd workers
 # It could be redundant, so count will be number of the merged ones after merging (we could make a script to create the models updating)
 class Question(models.Model):
-    id = models.AutoField(null=False, default=0, primary_key=True)
     text = models.CharField(max_length=64, blank=False, null=False)
     # Boolean telling where this is the final questions for the rest of the phases
     isFinal = models.BooleanField(default=False)
     # Count is the nunber of same/redundant Questions count (we will not remove the redundant attrbutes)
     count = models.IntegerField(default=1)
     # ID for reference which questions are for which image
-    imageID = models.CharField(max_length=20, default='airplanes/image_0001.jpg')
+    imageID = models.CharField(max_length=64, default='airplanes/image_0001.jpg')
     # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
     skipCount = models.IntegerField(default=0)
+    def __str__(self):
+        return self.text
 
 class Answer(models.Model):
     text = models.CharField(max_length=64, blank=False, null=False)
@@ -184,3 +185,5 @@ class Answer(models.Model):
     count = models.IntegerField(default=1)
     # on_delete set to cascade because we would not delete django models until we export and finalize the data and save.
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.text
