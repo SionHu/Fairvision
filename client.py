@@ -27,7 +27,7 @@ def send__receive_data(data):
     print("result from server:")
     for row_rec in result["data received"]:
         print(row_rec)
-
+    return result["data received"]
 
 if __name__ == "__main__":
     old = []

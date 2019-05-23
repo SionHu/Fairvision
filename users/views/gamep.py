@@ -21,6 +21,8 @@ from .send_result import send_result
 KEY = settings.KEY
 NUMROUNDS = settings.NUMROUNDS
 
+from client import send__receive_data
+
 @login_required
 def phase01a(request):
     rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
@@ -62,7 +64,7 @@ def phase01a(request):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        back_result_query = send_result([new_Qs, old_Q_list])
+        back_result_query = send__receive_data([new_Qs, old_Q_list])
         # if the return values are empty, all the new questions are unique
         if back_result_query:
             for entry in back_result_query:
