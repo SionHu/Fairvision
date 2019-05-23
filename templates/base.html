@@ -70,7 +70,7 @@
                 <div class="dropdown">
                     {% if user.is_authenticated %}
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ user.username }}
+                            Player
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
