@@ -79,7 +79,7 @@
             <div class="row">
                     <div class="card col" style="height: 50%;">
                         <div class="card-body">
-                            <img src="https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif" id="img1" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
+                            <img src="{{ url }}" id="img1" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
                         </div>
                     </div>
             </div>
@@ -108,7 +108,6 @@
                             <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="wrong">
                                     <input class = "form-check-inline" type="checkbox" id = "wrong3">
-                                    Wrong</label>
                             </li> <hr>
                             <li>Q: What 's the direction of the plane? <br> A: Right-faced.
                             <div class="form-check-inline"></div>
@@ -260,7 +259,7 @@
                 document.getElementById("add").click(); //basically calls the button click function
             }
         });
-            
+          
         //next button listener
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
@@ -355,12 +354,11 @@
                 liNode.appendChild(txtNode);
                 listNode.appendChild(liNode);
                 
-                
                 liNode_q.appendChild(txtNode_q);
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
                 listNode_a.appendChild(liNode_a);
-                
+
             }
         function alertAttr() {
             alert("maximum number of images 8 reached. Next images...");

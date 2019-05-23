@@ -180,7 +180,7 @@ class Question(models.Model):
         return self.text
 
 class Answer(models.Model):
-    text = models.CharField(max_length=64, blank=False, null=False)
+    text = models.CharField(max_length=64, blank=False, null=False, unique=False)
     isFinal = models.BooleanField(default=False)
     count = models.IntegerField(default=1)
     # on_delete set to cascade because we would not delete django models until we export and finalize the data and save.
