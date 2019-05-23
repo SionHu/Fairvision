@@ -10,16 +10,20 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 import boto3
+import csv, os
 import botocore
 from botocore.client import Config
 import random
 import json
 from .roundsgenerator import rphase02
-from .send_result import send_result
+
 
 # We should set up in backend manually
 KEY = settings.KEY
 NUMROUNDS = settings.NUMROUNDS
+
+csvPath = os.path.join(settings.BASE_DIR, 'life.csv')
+
 
 from client import send__receive_data
 
