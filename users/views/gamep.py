@@ -23,7 +23,7 @@ NUMROUNDS = settings.NUMROUNDS
 
 from client import send__receive_data
 
-@login_required
+#@login_required
 def phase01a(request):
     rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
     roundsnum = rounds.num
@@ -93,7 +93,7 @@ View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
 POST = me
 '''
-@login_required
+#@login_required
 def phase01b(request):
 
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
@@ -135,7 +135,7 @@ def phase02(request):
 
 
 # View for phase3
-@login_required
+#@login_required
 def phase03(request):
     attr = Attribute.objects.all()
     attributes = list()
