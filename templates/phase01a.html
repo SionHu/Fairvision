@@ -137,12 +137,12 @@
             <div class="row-md-10" style="font-size:110%">
                 <div class="input-group m-3">
                     <div class="input-group-prepend">
-                        Q: What is/are <input class="form-control-sm" id="Q1" type="text" name="Q1" maxlength="20"> (of) <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="20">
+                        Q: What is/are <input class="form-control-sm" id="Q1" type="text" name="Q1" maxlength="40"> (of) <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="40">
                     </div>
                 </div>
                 <div class="input-group mb-3 ml-3">
                     <div class="input-group-prepend">
-                        A: <input class="form-control-sm" id="A" type="text" name="A" maxlength="20">
+                        A: <input class="form-control-sm" id="A" type="text" name="A" maxlength="40">
                     </div>
                 </div>
                 <button id="add" class="btn btn-success ml-3 mb-2" >Add</button>
@@ -153,13 +153,17 @@
 
             <!-- Q&A LIST -->
             <div class="row mt-3">
-                <div class="col-md-9 ml-5">
+                <div class="col-md-12 ml-3">
                     <div class="card" style="width: 100%; height: 50.5%"> <!-- height was 62% -->
                         <div class="card-content">
-                            <ul id="list_q">
-                                <li>Q: New enter question?<br>A: Test.</li>
-                            </ul>
-                            <ul id="list_a"></ul>
+                            <div class="row">
+                                <div class="col">
+                                        <p id="list_q"></p>
+                                </div>
+                                <div class="col">
+                                    <p id="list_q"></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <button id="delete" class="btn btn-danger float-left mt-2">Undo</button>
@@ -174,21 +178,30 @@
         {% csrf_token %}
         </form>
 
+        
         <script>
-            //"add" button listener when clicked
+            
+        //"add" button listener when clicked
         numQA = 0;
         document.getElementById("add").addEventListener("click", function() {
+            
             //Get the question
             if (document.getElementById("Q2").value !== "")
-                var qVal = "Q: What is/are "+document.getElementById("Q1").value.toLowerCase()+" (of) "+document.getElementById("Q2").value.toLowerCase() + "?"; //gets inputted string
+                var qVal = "Q: What is/are "+document.getElementById("Q1").value+" (of) "+document.getElementById("Q2").value + "?"; //gets inputted string
             else
-                qVal = "What is/are "+document.getElementById("Q1").value.toLowerCase()+ "?";
+                qVal = "What is/are "+document.getElementById("Q1").value+ "?";
+            
+//            console.log(qVal); 
+            
             var element_q = $("#list_q:contains(" + qVal + ")"); //checks if list contains string. returns -1 if not
+            
             //Get the answer
-            var aVal = "A: "+document.getElementById("A").value.toLowerCase() + ".";
+            var aVal = "A: "+document.getElementById("A").value + ".";
+//            console.log(aVal);
+            
             if (document.getElementById("A").value !== "" && document.getElementById("Q1").value !== "" && element_q.length <= 0) { //makes sure no empty input and not already inputted
-                var txt_q = qVal.value.toLowerCase(); //inputted text
-                var txt_a = aVal.value.toLowerCase();
+                var txt_q = qVal.value; //inputted text
+                var txt_a = aVal.value;  
                 addLi(); //adds to list
                 console.log(txt_q,txt_a); //puts entered string on console
                 numQA++;
@@ -200,13 +213,15 @@
             document.getElementById("Q2").value = ""; //clear entry field
             document.getElementById("A").value = ""; //clear entry field
         });
-        //input bar listener when "enter" is hit
+            
+        //input bar listener when key "enter" is hit
         document.getElementById("A").addEventListener("keyup", function(event) {
             event.preventDefault();
             if (event.keyCode === 13 && document.getElementById("A").value !== "" && document.getElementById("Q1").value !== "") { //make sure space is hit and input box is not empty string
                 document.getElementById("add").click(); //basically calls the button click function
             }
         });
+            
         //next button listener
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
@@ -233,8 +248,10 @@
                     'img_list' : image_list,
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){});
+                
                 // reload the webpage to set new images
-                var countdown = 3000;  // your countdown in milliseconds
+//                var countdown = 3000;  // your countdown in milliseconds
+                
                 setTimeout(function() {
                     // hide your loading image after "countdown" milliseconds
                     document.getElementById("loading-image").setAttribute("style","display:none");
@@ -247,6 +264,7 @@
                 numQA = 0;
             }
         })
+            
         //delete button listener
         $('#delete').click(function(event){
             // alert("New Images Inbound!")
@@ -265,24 +283,28 @@
             function addLi() {
                 // get the whole question
                 if (document.getElementById("Q2").value !== "")
-                    var qVal = "Q: What is/are "+document.getElementById("Q1").value.toLowerCase()+" (of) "+document.getElementById("Q2").value.toLowerCase() + "?"; //gets inputted string
+                    var qVal = "Q: What is/are "+document.getElementById("Q1").value+" (of) "+document.getElementById("Q2").value + "?"; //gets inputted string
                 else
-                    qVal = "What is/are "+document.getElementById("Q1").value.toLowerCase() + "?";
+                    var qVal = "What is/are "+document.getElementById("Q1").value + "?";
                 // get the whole answer
-                var aVal = "A: "+document.getElementById("A").value.toLowerCase()+".";
-                var txt_q = qVal.value.toLowerCase(); //inputted text
-                var txt_a = aVal.value.toLowerCase();
+                var aVal = "A: "+document.getElementById("A").value+".";
+                
+                var txt_q = qVal; //inputted text
+                var txt_a = aVal;
+                
                 var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI_q"),
                     txtNode_q = document.createTextNode(txt_q);
+                
                 var listNode_a = document.getElementById('list_a'),
                     liNode_a = document.createElement("LI_a"),
                     txtNode_a = document.createTextNode(txt_a);
+                
+                
                 liNode_q.appendChild(txtNode_q);
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
                 listNode_a.appendChild(liNode_a);
-                //console.log(listNode);
             }
         function alertAttr() {
             alert("maximum number of images 8 reached. Next images...");

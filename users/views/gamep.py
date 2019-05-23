@@ -85,7 +85,7 @@ def phase01a(request):
         print("previous_questions is: ", previous_questions)
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
-    return render(request, 'over.html', {'url' : serving_img_url, 'questions': previous_questions })
+    return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
