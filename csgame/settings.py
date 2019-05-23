@@ -66,7 +66,7 @@ ALLOWED_HOSTS = [
 	'cdstrain.herokuapp.com',
     '127.0.0.1',
     'localhost',
-    'crowdsourcing-game.herokuapp.com'
+    'cam2-crowdsourcing.herokuapp.com'
 ]
 
 
