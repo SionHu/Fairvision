@@ -72,26 +72,27 @@ def phase01a(request):
         
         # Query list for the old data in the table
         old_Qs = list(Question.objects.values_list('text', 'id'))
+        print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum)) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
-
-
+        answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])        
+        print(new_Qs)
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
         result_array, id_merge = send__receive_data([new_Qs, old_Qs])
-         # print("I got result array: ", result_array)
+        print("I got result array: ", result_array)
         print("I got the merge id: ", id_merge)
 
-        Question.objects.filter(id__in=[id for _, id in result_array]).update(isFinal=True)
-        ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
+        if id_merge is not None:
+            Question.objects.filter(id__in=[id for _, id in id_merge]).update(isFinal=True)
+            ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
         # Don't think this is necessary. Need to test though
         #for old, new in id_merge.items():
         #    Question.objects.filter(id=old).update(isFinal=False)
         #    Question.objects.filter(id=new).update(isFinal=True)
-
-        answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
+            answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
         # print("Well bulk answer objects", answers)
     else:
         rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
@@ -107,11 +108,13 @@ def phase01a(request):
     # Previous all question pairs that will be sent to front-end 
     if roundsnum > 1 and roundsnum <= NUMROUNDS:
         # Get the previous question of the image with roundID
+        print("roundNum: ", roundsnum)
         previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
-
-    return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
+        return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
+    else:  
+        return render(request, 'phase01a.html', {'url' : serving_img_url, })
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)

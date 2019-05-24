@@ -37,7 +37,7 @@ class RedundancyRemover:
         """
         if len(old_ques) == 0:
             warnings.warn("This is the first write no redundancy check is possible.")
-            return new_ques
+            return new_ques, None
         # Remove taboo words from the sentence
         all_new = (' '.join(removeTabooWords(question)) for question, _ in new_ques)
         all_old = (' '.join(removeTabooWords(question)) for question, _ in old_ques)
