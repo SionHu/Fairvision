@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
+from django.db.models import F
 from users.models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Question, Answer
 
 from django.contrib.auth.admin import UserAdmin
@@ -10,6 +11,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 import boto3
+#from operator import attrgetter, itemgetter
 import csv, os
 import botocore
 from botocore.client import Config
@@ -30,12 +32,6 @@ new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
 from client import send__receive_data
 #@login_required
 def phase01a(request):
-    rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
-    roundsnum = rounds.num
-
-    if roundsnum > NUMROUNDS:
-        # push all to waiting page
-        return render(request, 'over.html', {'phase': 'PHASE 01a'})
 
     ''' Test case 
     old_Q = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
@@ -54,13 +50,16 @@ def phase01a(request):
 
     # Need to check 
     if request.method == 'POST':
+        # Update the rounds number for phase 01a
+        roundsnum = RoundsNum.objects.filter(phase='phase01a').first().num + 1
+        RoundsNum.objects.filter(phase='phase01a').update(num=roundsnum)
 
         # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
         questions = request.POST.getlist('data_q[]')
         answers = request.POST.getlist('data_a[]')
 
-        questions = [s.strip('Q: ') for s in questions]
-        answers = [a.strip('A: ') for a in answers]
+        questions = [s[3:] for s in questions] # strip off 'Q: ' # map(itemgetter(slice(3, None)), questions)
+        answers = [a[3:-1] for a in answers] # strip off 'A: ' and period # map(itemgetter(slice(3, -1)), answers)
         print("I got questions: ", questions)
         print("I got answers: ", answers)
         # retrieve the json data for updating skip count for the previous questions
@@ -68,43 +67,39 @@ def phase01a(request):
         print("the dictionary of life: ", dictionary)
 
         
-        for d in dictionary:
-            old_Q = Question.objects.get(text=d)
-            old_Q.skipCount -= dictionary[d]
-            old_Q.save()
+        for text, count in dictionary.items():
+            Question.objects.filter(text=text).update(skipCount=F('skipCount')-count)
         
         # Query list for the old data in the table
-        old_Q_list = list(Question.objects.values_list('text', 'id'))
+        old_Qs = list(Question.objects.values_list('text', 'id'))
 
-        answers = Answer.objects.bulk_create([Answer(text=ans) for ans in answers])
-        # print("Well bulk answer objects", answers)
-
-        new_Qs = []
-        for que in new_questions:
-            new_Q = Question.objects.create(text=que, isFinal=False)
-            for ans in answers:
-                new_Q.answer_set.add(ans)
-            new_Qs.append((new_Q.text, new_Q.id))
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False) for que in questions])
+        new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
 
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        result_array, id_merge = send__receive_data([new_Q, old_Q])
+        result_array, id_merge = send__receive_data([new_Qs, old_Qs])
          # print("I got result array: ", result_array)
         print("I got the merge id: ", id_merge)
 
-        if id_merge:
-            for entry in id_merge:
-                Question.objects.filter(id=id_merge[entry]).update(isFinal=False)
-                Question.objects.filter(id=entry).update(isFinal=True)
-                for ans in answers:
-                    Question.answer_set.add(ans) 
+        Question.objects.filter(id__in=[id for _, id in result_array]).update(isFinal=True)
+        ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
+        # Don't think this is necessary. Need to test though
+        #for old, new in id_merge.items():
+        #    Question.objects.filter(id=old).update(isFinal=False)
+        #    Question.objects.filter(id=new).update(isFinal=True)
 
+        answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
+        # print("Well bulk answer objects", answers)
+    else:
+        rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
+        roundsnum = rounds.num
 
-        # Update the rounds number for phase 01a
-        roundsnum = RoundsNum.objects.filter(phase='phase01a').first().num + 1
-        RoundsNum.objects.filter(phase='phase01a').update(num=roundsnum)
+    if roundsnum > NUMROUNDS:
+        # push all to waiting page
+        return render(request, 'over.html', {'phase': 'PHASE 01a'})
     
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
@@ -115,6 +110,7 @@ def phase01a(request):
         previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
+
     return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
 '''
 View for phase 01 b
@@ -126,15 +122,6 @@ def phase01b(request):
 
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
     # There should be an array of question that got skipped. Each entry should the final question value
-    rounds, _ = RoundsNum.objects.get_or_create(phase='phase01b', defaults={'num': 1})
-    roundsnum = rounds.num
-
-    data = []
-    for i in range(0, 4):
-        data.append(default_storage.url(KEY.format(4 * (roundsnum - 1) + i)))
-
-    if roundsnum > NUMROUNDS:
-        return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     if request.method == 'POST':
         # Get the answer array for different 
@@ -143,13 +130,20 @@ def phase01b(request):
         RoundsNum.objects.filter(phase='phase01b ').update(num=roundsnum)
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST['data[dict'])
-        for d in dictionary:
-            if not dictionary[a]:
-                skipc = Question.objects.get(text=d).skipCount
-                Question.objects.filter(text=d).update(skipCount=skipc)
+        for question, answer in dictionary.items():
+            if answer:
+                new_Ans = Answer.objects.create(text=answer)
+                new_Ans.question = Question.objects.get(text=question)
             else:
-                new_Ans = Answer.objects.create(text=dictionary[d])
-                new_Ans.question = Question.objects.get(text=d)
+                Question.objects.filter(text=question).update(skipCount=F('skipCount'))
+    else:
+        rounds, _ = RoundsNum.objects.get_or_create(phase='phase01b', defaults={'num': 1})
+        roundsnum = rounds.num
+
+    if roundsnum > NUMROUNDS:
+        return render(request, 'over.html', {'phase' : 'PHASE 01b'})
+
+    data = [default_storage.url(KEY.format(4 * (roundsnum - 1) + i)) for i in range(0, 4)]
 
     questions = Question.objects.all()
     return render(request, 'over.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
@@ -165,30 +159,15 @@ def phase02(request):
 # View for phase3
 #@login_required
 def phase03(request):
-    attr = Attribute.objects.all()
-    attributes = list()
-
-    if attr.exists():
-        attributes = attr
-    else:
-        # just send only none
-        attributes = ['none']
-    
-    inst = Phase03_instruction.get_queryset(Phase03_instruction)
-    instructions = list()
-    if inst.exists():
-        instructions = inst
-    else: 
-        instructions = ['none']
+    attributes = Attribute.objects.all() or ['none']
+    instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
     
     # Update count
     if request.method == 'POST':
         dictionary = json.loads(request.POST['data[dict]'])
-        for d in dictionary:
-            # print("key: ", d, " value: ", dictionary[d])
-            at = Attribute.objects.get(word=d)
-            at.count += dictionary[d]
-            at.save()
+        for word, count in dictionary.items():
+            # print("key: ", word, " value: ", count)
+            Attribute.objects.filter(word=word).update(count=F('count')+count)
             
         return HttpResponse(None)
     else:
