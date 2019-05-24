@@ -74,7 +74,7 @@ def phase01a(request):
         old_Qs = list(Question.objects.values_list('text', 'id'))
         print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum)) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum - 1)) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])        
         print(new_Qs)
@@ -109,6 +109,7 @@ def phase01a(request):
     if roundsnum > 1 and roundsnum <= NUMROUNDS:
         # Get the previous question of the image with roundID
         print("roundNum: ", roundsnum)
+        print("key format: ", KEY.format(roundsnum-1))
         previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
