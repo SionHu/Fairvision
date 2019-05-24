@@ -16,3 +16,7 @@ def handler404(request, *args, **argv):
 
 def handler500(request, *args, **argv):
     return render(request, '500.html')
+
+def phase01b(request):
+    return render(request, 'phase01b.html')
+

@@ -73,7 +73,7 @@
 
     <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-md-6" id="bg-image">
 
             <!-- IMAGE -->
             <div class="row">
@@ -122,25 +122,25 @@
             <div class="row-md-10" style="font-size:110%">
                 <div class="input-group m-3">
                     Q: What 
-                    <div class="input-group-prepend ml-1 mr-1">
+                    <div class="input-group-prepend ml-2 mr-2">
                             <select id="is/are">
                                 <option value="is">is</option>
                                 <option value="are">are</option>  
                             </select>
                     </div>
-                    <input class="form-control-sm" id="Q1" type="text" name="Q1" maxlength="40">
-                    <div class="input-group-prepend ml-1 mr-1">
+                    <input class="form-control-sm mr-2" id="Q1" type="text" name="Q1" maxlength="40">?
+                    <!--<div class="input-group-prepend ml-1 mr-1">
                             <select id="of">
                                 <option value="of">of</option>
                                 <option value=" "></option>  
                             </select>
                         </div>
-                    <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="40">
+                    <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="40">-->
                     
                 </div>
                 <div class="input-group mb-3 ml-3">
                     <div class="input-group-prepend">
-                        A: <input class="form-control-sm ml-2" id="A" type="text" name="A" maxlength="40">
+                        A: <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40">.
                     </div>
                 </div>
                 <button id="add" class="btn btn-success ml-3 mb-2" >Add</button>
@@ -212,26 +212,35 @@
         document.getElementById("add").addEventListener("click", function() {
             
             //Get the question
-            if (document.getElementById("Q1").value !== "") {
-                if (document.getElementById("Q2").value !== "")
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
-                else
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
+            if(document.getElementById("Q1").value == ""){
+                alert("Please enter the question!");
             }
-            
-            //Get the answer
-            if (document.getElementById("A").value !== "") {
-                var aVal = "A: "+document.getElementById("A").value + ".";
+            else if(document.getElementById("A").value == ""){
+                alert("Please enter the answer of the question!");
             }
-            
-            addLi(); //adds to list
-            numQA++;
-            if (numQA >= 8) {
-                setTimeout(alertAttr, 0);
-            }
-            document.getElementById("Q1").value = ""; //clear entry field
-            document.getElementById("Q2").value = ""; //clear entry field
-            document.getElementById("A").value = ""; //clear entry field
+            else{
+                
+                if (document.getElementById("Q1").value !== "") {
+                    //if (document.getElementById("Q2").value !== "")
+                       // var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
+                   // else
+                        var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
+                }
+
+                //Get the answer
+                if (document.getElementById("A").value !== "") {
+                    var aVal = "A: "+document.getElementById("A").value + ".";
+                }
+
+                addLi(); //adds to list
+                numQA++;
+                if (numQA >= 8) {
+                    setTimeout(alertAttr, 0);
+                }
+                document.getElementById("Q1").value = ""; //clear entry field
+                //document.getElementById("Q2").value = ""; //clear entry field
+                document.getElementById("A").value = ""; //clear entry field
+                }
         });
             
         //input bar listener when key "enter" is hit
@@ -287,6 +296,9 @@
                 document.getElementById("bg-image").setAttribute("style", "display:none");
                 numQA = 0;
             }
+            else{
+                alert("Please enter at least one Q&A pair!");
+            }
             
         })
             
@@ -312,9 +324,9 @@
         <script>
             function addLi() {
                 // get the whole question
-                if (document.getElementById("Q2").value !== "")
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
-                else
+                //if (document.getElementById("Q2").value !== "")
+                //    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
+                //else
                     var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
                 // get the whole answer
                 var aVal = "A: "+document.getElementById("A").value+".";
