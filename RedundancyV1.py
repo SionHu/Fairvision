@@ -54,7 +54,8 @@ class RedundancyRemover:
                     #print(doc_new.text)
                     #print(val)
                     #print("\n_______________________\n")
-                    new_old_pairs[qid_new[1]] = qid_old[1]
+                    id = qid_old[1]
+                    new_old_pairs[qid_new[1]] = new_old_pairs.get(id, id)
                     break
             else:
                 # If code reaches this point merge the questions
