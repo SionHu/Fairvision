@@ -56,11 +56,12 @@ def phase01a(request):
     if request.method == 'POST':
 
         # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
-        questions = request.POST.getlist('Questions')
-        answers = request.POST.getlist('Answers')
+        questions = request.POST.getlist('questionArray')
+        answers = request.POST.getlist('answerArray')
 
         # retrieve the json data for updating skip count for the previous questions
         dictionary = json.loads(request.POST['data[dict]'])
+        '''
         for d in dictionary:
             # print("key: ", d, " value: ", dictionary[d])
             old_Q = Question.objects.get(word=d)
@@ -99,13 +100,14 @@ def phase01a(request):
         # Update the rounds number for phase 01a
         roundsnum = RoundsNum.objects.filter(phase='phase01a').first().num + 1
         RoundsNum.objects.filter(phase='phase01a').update(num=roundsnum)
-
+    '''
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
+    print("I got: ", serving_img_url)
     # Previous all question pairs that will be sent to front-end 
     if roundsnum >= 1 and roundsnum <= NUMROUNDS:
         # Get the previous question 
-        previous_questions = Question.objects.all() or ["What is the name of the object?"]
+        previous_questions = Question.objects.all()
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
     return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
