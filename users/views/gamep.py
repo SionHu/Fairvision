@@ -104,11 +104,13 @@ def phase01a(request):
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
     print("I got: ", serving_img_url)
-    # Previous all question pairs that will be sent to front-end
-    # Get the previous question
-    previous_questions = Question.objects.all()
-    if not previous_questions:
-        print("The previous images does not have any question which is wired")
+    # Previous all question pairs that will be sent to front-end 
+    if roundsnum > 1 and roundsnum <= NUMROUNDS:
+        # Get the previous question of the image with roundID
+        previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
+        if not previous_questions:
+            raise Exception("The previous images does not have any question which is wired")
+
     return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
 '''
 View for phase 01 b
