@@ -127,13 +127,6 @@
                             </select>
                     </div>
                     <input class="form-control-sm mr-2" id="Q1" type="text" name="Q1" maxlength="40">?
-                    <!--<div class="input-group-prepend ml-1 mr-1">
-                            <select id="of">
-                                <option value="of">of</option>
-                                <option value=" "></option>  
-                            </select>
-                        </div>
-                    <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="40">-->
                     
                 </div>
                 <div class="input-group mb-3 ml-3">
@@ -178,7 +171,6 @@
         var resultArr = {
             "dict" : {},
         }    
-        
 
             function rank(){
                 {% for q in questions %}
@@ -206,17 +198,13 @@
             
             //Get the question
             if(document.getElementById("Q1").value == ""){
-                //alert("Please enter the question!");
                 document.getElementById("alrt").innerHTML = "Please enter the question!";
             }
             else if(document.getElementById("A").value == ""){
-                //alert("Please enter the answer of the question!");
                 document.getElementById("alrt").innerHTML = "Please enter the answer of the question!";
             }
             else{
-                    //if (document.getElementById("Q2").value !== "")
-                       // var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
-                   // else
+                    
                  var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
 
                 //Get the answer
@@ -227,7 +215,6 @@
                 addLi(); //adds to list
                 numQA++;
                 document.getElementById("Q1").value = ""; //clear entry field
-                //document.getElementById("Q2").value = ""; //clear entry field
                 document.getElementById("A").value = ""; //clear entry field
                 }
         });
@@ -319,10 +306,7 @@
         <script>
             function addLi() {
                 // get the whole question
-                //if (document.getElementById("Q2").value !== "")
-                //    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
-                //else
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
+                var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
                 // get the whole answer
                 var aVal = "A: "+document.getElementById("A").value+".";
                 
