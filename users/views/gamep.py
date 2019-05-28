@@ -36,16 +36,13 @@ def phase01a(request):
     ''' Test case 
     old_Q = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
     new_Q = list(Question.objects.filter(isFinal=False).values_list('text', 'id'))
-
     result_array, id_merge = send__receive_data([new_Q, old_Q])
     # print("I got result array: ", result_array)
     print("I got the merge id: ", id_merge)
-
     if id_merge:
             for entry in id_merge:
                 Question.objects.filter(id=id_merge[entry]).update(isFinal=False)
                 Question.objects.filter(id=entry).update(isFinal=True)
-
     '''
 
     # Need to check 
@@ -71,24 +68,29 @@ def phase01a(request):
             Question.objects.filter(text=text).update(skipCount=F('skipCount')-count)
         
         # Query list for the old data in the table
-        old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
+        old_Qs = list(Question.objects.values_list('text', 'id'))
+        print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum - 1)) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
-
-
-        # Call the NLP function and get back with a list of accepted questions (which are dissimilar from the
-        # previous questions) and a dictionary of how the rejected questions map onto the old questions
-        # This call assumes that the first person enters dissimilar questions.
-        result_array, id_merge = send__receive_data(new_Qs, old_Qs) if old_Qs else (new_Qs, {})
-         # print("I got result array: ", result_array)
+        answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])        
+        print(new_Qs)
+        # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
+        # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
+        # exist_q should be telling which new question got merged into
+        result_array, id_merge = send__receive_data([new_Qs, old_Qs])
+        print("I got result array: ", result_array)
         print("I got the merge id: ", id_merge)
 
-        # Update database to add accepted new questions
-        Question.objects.filter(id__in=result_array).update(isFinal=True)
-        # If a question was accepted, add its answers to it. If it was rejected, add the answers to the first
-        # found similar accepted question (dictated by id_merge).
-        Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans) for que, ans in zip(questions, answers)])
+        if id_merge is not None:
+            Question.objects.filter(id__in=[id for _, id in id_merge]).update(isFinal=True)
+            ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
+        # Don't think this is necessary. Need to test though
+        #for old, new in id_merge.items():
+        #    Question.objects.filter(id=old).update(isFinal=False)
+        #    Question.objects.filter(id=new).update(isFinal=True)
+            answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
+        # print("Well bulk answer objects", answers)
     else:
         rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
         roundsnum = rounds.num
@@ -101,11 +103,16 @@ def phase01a(request):
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
     print("I got: ", serving_img_url)
     # Previous all question pairs that will be sent to front-end 
-    # Get the previous question of the image with roundID
-    previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
-    assert roundsnum == 1 or previous_questions.exists(), "The previous images does not have any question which is weird."
-
-    return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
+    if roundsnum > 1 and roundsnum <= NUMROUNDS:
+        # Get the previous question of the image with roundID
+        print("roundNum: ", roundsnum)
+        print("key format: ", KEY.format(roundsnum-1))
+        previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
+        if not previous_questions:
+            raise Exception("The previous images does not have any question which is wired")
+        return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
+    else:  
+        return render(request, 'phase01a.html', {'url' : serving_img_url, })
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
@@ -166,5 +173,3 @@ def phase03(request):
         return HttpResponse(None)
     else:
         return render(request, 'phase03.html', {'attributes': attributes, 'instructions': instructions})
-
-
