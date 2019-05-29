@@ -363,58 +363,6 @@
         })
         </script>
 
-        <!-- add attributes to the question and answer lists -->
-<!--
-        <script>
-            function addLi() {
-                //Get the question            
-                var ques = document.getElementById("Q").value;
-                var ans = document.getElementById("A").value;
-                
-                // get the whole question
-                if (ques !== "" && ans !== "") {
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+ques+"?"; //gets inputted string
-                    var aVal = "A: "+ans + ".";
-                }
-                
-                var txt_q = qVal; //inputted text
-                var txt_a = aVal;
-                var txtVal = qVal + ' \n' + aVal;
-                //console.log(txtVal);
-                
-                
-               var listNode_q = document.getElementById('list_q'),
-                    liNode_q = document.createElement("LI"),
-                    txtNode_q = document.createTextNode(txt_q);
-                
-                var listNode_a = document.getElementById('list_a'),
-                    liNode_a = document.createElement("LI"),
-                    txtNode_a = document.createTextNode(txt_a);
-                
-                
-                
-                var listNode = document.getElementById('list_all'),
-                    liNode = document.createElement("LI"),
-                    txtNode = document.createTextNode(txtVal);
-                liNode.appendChild(txtNode);
-                listNode.appendChild(liNode);
-                
-                
-                liNode_q.appendChild(txtNode_q);
-                listNode_q.appendChild(liNode_q);
-                liNode_a.appendChild(txtNode_a);
-                listNode_a.appendChild(liNode_a);
-                
-                console.log(listNode_q);
-                
-            }
-        function alertAttr() {
-            alert("maximum number of images 8 reached. Next images...");
-            document.getElementById("nextbtn").click();
-        }
-    </script>
--->
-
     </div> <!-- Row -->
 
     </div> <!-- Container-->
