@@ -163,25 +163,10 @@
             function rank(){
                 {% for q in questions %}
                     if(document.getElementById("skip{{ forloop.counter }}").checked == true){
-                        resultArr['dict']["{{ q.text }}"] = -1;
+                        resultArr['dict']["{{ q.text }}"] = " ";
                     }
                     else if(document.getElementById("skip{{ forloop.counter }}").checked == false){
-                        resultArr['dict']["{{ q.text }}"] = 0;
-                        //add the answer into the list
-                        if(document.getElementById("newA{{ forloop.counter }}").value == ""){
-                            document.getElementById("alrt").innerHTML = "Please enter the NO.{{ forloop.counter }} answer!";
-                        }
-                        else{
-                            var aVal = document.getElementById("newA{{ forloop.counter }}").value;
-                            var listNode = document.getElementById('list_answer'),
-                                liNode = document.createElement("LI"),
-                                txtNode = document.createTextNode(txtVal);
-                
-                            liNode.appendChild(txtNode);
-                            listNode.appendChild(liNode);
-                
-                            console.log(listNode);
-                        }
+                        resultArr['dict']["{{ q.text }}"] = document.getElementById("newA{{ forloop.counter }}").value;
                     }
                 {% endfor %}
             resultArr['dict']= JSON.stringify(resultArr['dict']);
@@ -194,22 +179,11 @@
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
             rank();
-            var answerArray = [];
-            if (document.getElementById("list_answer").getElementsByTagName("LI").length !== 0) {
-                //retrieve the values and store it                
-                $('#list_answer LI').each(function(){
-                    answerArray.push($(this).text());
-                });
-                console.log(answerArray,resultArr);
-                
-                //remove the list
-                $('li').remove();
                 // get the value of CSRF token
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
                 
                 //post method
                 $.post('{% url 'phase01b' %}', {
-                    'data_a': answerArray,
                     'validation': resultArr,
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){});
