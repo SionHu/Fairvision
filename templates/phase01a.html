@@ -73,7 +73,7 @@
 
     <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-md-6" id="bg-image">
 
             <!-- IMAGE -->
             <div class="row">
@@ -98,7 +98,7 @@
                                 <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="wrong">
                                     <input class = "form-check-inline" type="checkbox" id = "wrong{{ forloop.counter }}">
-                                    Wrong</label>
+                                    Nonsense</label>
                                 </li> <hr>
                                 {% endfor %}
                             </ul>
@@ -108,10 +108,8 @@
             </div>
         </div>
 
-
-
         <div class="col-md-6" style="display: none; position: absolute" id="loading-image" alt="Loading..." >
-            <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="margin-left: 150px; margin-top: 30px"/>
+            <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="margin-left: 60px; margin-top: 30px"/>
         </div>
 
 
@@ -122,28 +120,22 @@
             <div class="row-md-10" style="font-size:110%">
                 <div class="input-group m-3">
                     Q: What 
-                    <div class="input-group-prepend ml-1 mr-1">
+                    <div class="input-group-prepend ml-2 mr-2">
                             <select id="is/are">
                                 <option value="is">is</option>
                                 <option value="are">are</option>  
                             </select>
                     </div>
-                    <input class="form-control-sm" id="Q1" type="text" name="Q1" maxlength="40">
-                    <div class="input-group-prepend ml-1 mr-1">
-                            <select id="of">
-                                <option value="of">of</option>
-                                <option value=" "></option>  
-                            </select>
-                        </div>
-                    <input class="form-control-sm" id="Q2" type="text" name="Q2" maxlength="40">
+                    <input class="form-control-sm mr-2" id="Q1" type="text" name="Q1" maxlength="40">?
                     
                 </div>
                 <div class="input-group mb-3 ml-3">
                     <div class="input-group-prepend">
-                        A: <input class="form-control-sm ml-2" id="A" type="text" name="A" maxlength="40">
+                        A: <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40">.
                     </div>
                 </div>
                 <button id="add" class="btn btn-success ml-3 mb-2" >Add</button>
+                <div id="alrt"></div>
             </div>
             <!-- END INPUT BAR -->
 
@@ -155,12 +147,6 @@
                     <div class="card" style="width: 100%; height: 50.5%"> <!-- height was 62% -->
                         <div class="card-content">
                             <div class="row-md-11">
-                                <!--<div class="col">
-                                    <ul id="list_q" ></ul>
-                                </div>
-                                <div class="col">
-                                    <ul id="list_a"></ul>
-                                </div> -->
                                 <ul><a id="list_all" ></a></ul>
                                 <ul hidden id="list_a" ></ul>
                                 <ul hidden id="list_q" ></ul>
@@ -185,7 +171,6 @@
         var resultArr = {
             "dict" : {},
         }    
-        
 
             function rank(){
                 {% for q in questions %}
@@ -212,26 +197,26 @@
         document.getElementById("add").addEventListener("click", function() {
             
             //Get the question
-            if (document.getElementById("Q1").value !== "") {
-                if (document.getElementById("Q2").value !== "")
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
-                else
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
+            if(document.getElementById("Q1").value == ""){
+                document.getElementById("alrt").innerHTML = "Please enter the question!";
             }
-            
-            //Get the answer
-            if (document.getElementById("A").value !== "") {
-                var aVal = "A: "+document.getElementById("A").value + ".";
+            else if(document.getElementById("A").value == ""){
+                document.getElementById("alrt").innerHTML = "Please enter the answer of the question!";
             }
-            
-            addLi(); //adds to list
-            numQA++;
-            if (numQA >= 8) {
-                setTimeout(alertAttr, 0);
-            }
-            document.getElementById("Q1").value = ""; //clear entry field
-            document.getElementById("Q2").value = ""; //clear entry field
-            document.getElementById("A").value = ""; //clear entry field
+            else{
+                    
+                 var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
+
+                //Get the answer
+                if (document.getElementById("A").value !== "") {
+                    var aVal = "A: "+document.getElementById("A").value + ".";
+                }
+
+                addLi(); //adds to list
+                numQA++;
+                document.getElementById("Q1").value = ""; //clear entry field
+                document.getElementById("A").value = ""; //clear entry field
+                }
         });
             
         //input bar listener when key "enter" is hit
@@ -276,16 +261,27 @@
                // reload the webpage to set new images
                 var countdown = 3000;  // your countdown in milliseconds
                 
-                setTimeout(function() {
+                //catch the error when the reloading process crashes
+                try{
+                    setTimeout(function() {
                     // hide your loading image after "countdown" milliseconds
                     document.getElementById("loading-image").setAttribute("style","display:none");
                     document.getElementById("bg-image").setAttribute("style", "display:block");
                     location.reload();
-                }, countdown);
-                // show your loading image
-                document.getElementById("loading-image").setAttribute("style","display:block");
-                document.getElementById("bg-image").setAttribute("style", "display:none");
+                    }, countdown);
+                    // show your loading image
+                    document.getElementById("loading-image").setAttribute("style","display:block");
+                    document.getElementById("bg-image").setAttribute("style", "display:none");
+                }
+                catch(err){
+                    alert(err.message);
+                }
+                
                 numQA = 0;
+            }
+            else{
+                //alert("Please enter at least one Q&A pair!");
+                document.getElementById("alrt").innerHTML = "Please enter at least one Q&A pair!";
             }
             
         })
@@ -301,10 +297,8 @@
             if (arrlen != 0) {
                 attrlist.removeChild(attrlist.childNodes[arrlen - 1]);
                 attrlist_q.removeChild(attrlist_q.childNodes[arrlen - 1]);
-                attrlist_a.removeChild(attrlist_a.childNodes[arrlen - 1]);
-                
+                attrlist_a.removeChild(attrlist_a.childNodes[arrlen - 1]); 
             }
-            //console.log(attrlist_q);
         })
         </script>
 
@@ -312,19 +306,15 @@
         <script>
             function addLi() {
                 // get the whole question
-                if (document.getElementById("Q2").value !== "")
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ " "+document.getElementById("of").value+" "+document.getElementById("Q2").value + "?"; //gets inputted string
-                else
-                    var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
+                var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
                 // get the whole answer
                 var aVal = "A: "+document.getElementById("A").value+".";
                 
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
                 var txtVal = qVal + ' \n' + aVal;
-                //console.log(txtVal);
                 
-                
+                //put Q&A into seperate lists (for back-end storage) and a generate list (for front-end show up)
                var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI"),
                     txtNode_q = document.createTextNode(txt_q);
@@ -333,15 +323,12 @@
                     liNode_a = document.createElement("LI"),
                     txtNode_a = document.createTextNode(txt_a);
                 
-                
-                
                 var listNode = document.getElementById('list_all'),
                     liNode = document.createElement("LI"),
                     txtNode = document.createTextNode(txtVal);
+                
                 liNode.appendChild(txtNode);
                 listNode.appendChild(liNode);
-                
-                
                 liNode_q.appendChild(txtNode_q);
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
@@ -350,10 +337,7 @@
                 console.log(listNode_q);
                 
             }
-        function alertAttr() {
-            alert("maximum number of images 8 reached. Next images...");
-            document.getElementById("nextbtn").click();
-        }
+        
     </script>
 
     </div> <!-- Row -->
