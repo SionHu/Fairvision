@@ -167,15 +167,22 @@
             resultArr['dict']= JSON.stringify(resultArr['dict']);
         }
 
-        //next button listener
-        $('#nextbtn').click(function(event){
-            // alert("New Images Inbound!")
+        function checkEmpty(){
             {% for q in questions %}
+                console.log(q);
                 if(document.getElementById("skip{{ forloop.counter }}").checked == false && document.getElementById("newA{{ forloop.counter }}").value==""){
                     flag = 1;
                     console.log("Empty answer!");
                 }
             {% endfor %}
+        }
+
+        //next button listener
+        $('#nextbtn').click(function(event){
+            //alert("New Images Inbound!")
+
+            checkEmpty();
+            console.log(flag);
             if (flag == 0){
                 rank();
                 // get the value of CSRF token
@@ -211,6 +218,7 @@
             else{
                  document.getElementById("alrt").innerHTML = "Please answer the questions!";
             }
+
         })
         </script>
 
