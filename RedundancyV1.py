@@ -34,8 +34,14 @@ class RedundancyRemover:
         :return: List of the IDs of the dissimilar questions and merge id list and a dictionary
          mapping the new question ids to the old ones for those that are similar
         """
-        new_old_pairs = {}
-        accepted_ids = []
+
+        if len(old_ques) == 0:
+            warnings.warn("This is the first write no redundancy check is possible.")
+            return new_ques, None
+        # Remove taboo words from the sentence
+        all_new = (' '.join(removeTabooWords(question)) for question, _ in new_ques)
+        all_old = (' '.join(removeTabooWords(question)) for question, _ in old_ques)
+
 
         # Remove taboo words from the sentences and accept the ones that are dissimilar to old sentences
         all_old = [(self.nlp(' '.join(removeTabooWords(question))), id) for question, id in old_ques]
