@@ -123,8 +123,8 @@
                         <div class="card-content">
                             <ul id="pre-list">
                                 <br>
-                                {% for preq in questions%}
-                                <li>Q: {{ preq.text }}?<br>
+                                {% for preq in quetion_list %}
+                                <li>Q: {{ preq.text }}<br>
                                 <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="skip">
                                     <input class = "form-check-inline" type="checkbox" id = "skip{{ forloop.counter }}">
@@ -211,8 +211,6 @@
                 //alert("Please enter at least one Q&A pair!");
                 document.getElementById("alrt").innerHTML = "Please answer the questions!";
             }
-            
-        })
         </script>
 
     </div> <!-- Row -->

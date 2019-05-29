@@ -145,14 +145,16 @@ def phase01b(request):
     else:
         rounds, _ = RoundsNum.objects.get_or_create(phase='phase01b', defaults={'num': 1})
         roundsnum = rounds.num
+        print("Round num for 1b: ", roundsnum)
+        print("The total rounds for 1b: NUMROUNDSb")
 
     if roundsnum > NUMROUNDSb:
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     # sending 4 images at a time
-    data = [default_storage.url(KEY.format(4 * (roundsnum - 1) + i)) for i in range(0, 4)]
+    data = [default_storage.url(KEY.format(4 * (roundsnum - 1) + i)) for i in range(1, 5)]
     questions = Question.objects.all()
-    return render(request, 'over.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
     # The NLP server will be updated later?
 
 # function does not the 
