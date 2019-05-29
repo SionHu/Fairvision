@@ -119,45 +119,25 @@
             <div class="row">
                 <div class="col mt-3 ml-3">
                     <label style="font-size: x-large">Questions List</label>
-                    <div class="card" style="width: 100%; height: 50.5%"> <!-- height was 62% -->
+                    <div class="card" style="width: 100%; height: 50.5%; overflow-y: auto"> <!-- height was 62% -->
                         <div class="card-content">
                             <ul id="pre-list">
-                                <li>Q: What 's the color of the plane?
+                                <br>
+                                {% for preq in questions%}
+                                <li>Q: {{ preq.text }}?<br>
                                 <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                                </li><hr>
-                            <li>Q: What 's the color of the sky?
-                            <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                            </li> <hr>
-                            <li>Q: What 's under the plane?
-                            <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                            </li> <hr>
-                            <li>Q: What 's the direction of the plane?
-                            <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                            </li> <hr>
+                                <label class = "form-check-label" for="skip">
+                                    <input class = "form-check-inline" type="checkbox" id = "skip{{ forloop.counter }}">
+                                    Skip</label><br>
+                                A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter }}" type="text" maxlength="30">
+                                </li> <hr>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
+                    <ul hidden id="list_answer" ></ul>
                     <button id="nextbtn" class="btn btn-warning float-right mt-2" >Next</button>
+                    <div id="alrt"></div>
                 </div>
             </div>
 
@@ -170,7 +150,70 @@
         <form>
         {% csrf_token %}
         </form>
+        
+        <script>
+    
+            var dict = {}
+            var resultArr = {
+                "dict" : {},
+            }    
+        
+            function rank(){
+                {% for q in questions %}
+                    if(document.getElementById("skip{{ forloop.counter }}").checked == true){
+                        resultArr['dict']["{{ q.text }}"] = " ";
+                    }
+                    else if(document.getElementById("skip{{ forloop.counter }}").checked == false){
+                        resultArr['dict']["{{ q.text }}"] = document.getElementById("newA{{ forloop.counter }}").value;
+                    }
+                {% endfor %}
+            resultArr['dict']= JSON.stringify(resultArr['dict']);
+            }
 
+        </script>
+
+        <script>
+        //next button listener
+        $('#nextbtn').click(function(event){
+            // alert("New Images Inbound!")
+            rank();
+                // get the value of CSRF token
+                var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+                
+                //post method
+                $.post('{% url 'phase01b' %}', {
+                    'validation': resultArr,
+                    csrfmiddlewaretoken : CSRFtoken
+                }, function(data){});
+                
+               // reload the webpage to set new images
+                var countdown = 3000;  // your countdown in milliseconds
+                
+                //catch the error when the reloading process crashes
+                try{
+                    setTimeout(function() {
+                    // hide your loading image after "countdown" milliseconds
+                    document.getElementById("loading-image").setAttribute("style","display:none");
+                    document.getElementById("bg-image").setAttribute("style", "display:block");
+                    location.reload();
+                    }, countdown);
+                    // show your loading image
+                    document.getElementById("loading-image").setAttribute("style","display:block");
+                    document.getElementById("bg-image").setAttribute("style", "display:none");
+                }
+                catch(err){
+                    alert(err.message);
+                }
+                
+                numQA = 0;
+            }
+            else{
+                //alert("Please enter at least one Q&A pair!");
+                document.getElementById("alrt").innerHTML = "Please answer the questions!";
+            }
+            
+        })
+        </script>
 
     </div> <!-- Row -->
 
