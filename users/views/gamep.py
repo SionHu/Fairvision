@@ -23,6 +23,7 @@ from .roundsgenerator import rphase02
 # We should set up in backend manually
 KEY = settings.KEY
 NUMROUNDS = settings.NUMROUNDS
+NUMROUNDSb = settings.NUMROUNDS // 4
 
 
 old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
@@ -77,13 +78,12 @@ def phase01a(request):
         questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum - 1)) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])        
-        print(new_Qs)
+        # print(new_Qs)
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        result_array, id_merge = send__receive_data([new_Qs, old_Qs])
-        print("I got result array: ", result_array)
-        print("I got the merge id: ", id_merge)
+        id_merge = send__receive_data([new_Qs, old_Qs])
+        PRINT
 
         if id_merge is not None:
             Question.objects.filter(id__in=[id for _, id in id_merge]).update(isFinal=True)
@@ -94,6 +94,8 @@ def phase01a(request):
         #    Question.objects.filter(id=new).update(isFinal=True)
             answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
         # print("Well bulk answer objects", answers)
+        return HttpResponse(status=201)
+
     else:
         rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
         roundsnum = rounds.num
@@ -121,12 +123,11 @@ View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
 POST = me
 '''
-#@login_required
+# @login_required
 def phase01b(request):
 
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
     # There should be an array of question that got skipped. Each entry should the final question value
-
     if request.method == 'POST':
         # Get the answer array for different 
         # Update the rounds number for phase 01b
@@ -135,31 +136,30 @@ def phase01b(request):
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST['data[dict'])
         for question, answer in dictionary.items():
-            if answer:
-                new_Ans = Answer.objects.create(text=answer)
-                new_Ans.question = Question.objects.get(text=question)
+            # if the answer is not empty, add into database
+            if not answer:
+                que = Question.objects.get(text=question)
+                new_Ans = Answer.objects.create(text=answer, question=que)
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount'))
     else:
         rounds, _ = RoundsNum.objects.get_or_create(phase='phase01b', defaults={'num': 1})
         roundsnum = rounds.num
+        print("Round num for 1b: ", roundsnum)
+        print("The total rounds for 1b: NUMROUNDSb")
 
-    if roundsnum > NUMROUNDS:
+    if roundsnum > NUMROUNDSb:
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
-    data = [default_storage.url(KEY.format(4 * (roundsnum - 1) + i)) for i in range(0, 4)]
-
+    # sending 4 images at a time
+    data = [default_storage.url(KEY.format(4 * (roundsnum - 1) + i)) for i in range(1, 5)]
     questions = Question.objects.all()
-    return render(request, 'over.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
     # The NLP server will be updated later?
 
-# Remove what we have for phase02
-#@login_required
+# function does not the 
 def phase02(request):
-
-    return render(request, 'over.html', {'phase' : 'PHASE 02'})
-
-
+    return render(request, 'over.html')
 # View for phase3
 #@login_required
 def phase03(request):
@@ -176,5 +176,3 @@ def phase03(request):
         return HttpResponse(None)
     else:
         return render(request, 'phase03.html', {'attributes': attributes, 'instructions': instructions})
-
-

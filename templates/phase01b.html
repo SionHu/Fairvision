@@ -76,17 +76,15 @@
         <div class="col-md-7" style="padding-top: 100px">
 
             <!-- IMAGE SET -->
-
                 <div class="row mt-3">
                     <div class="card col text-center" style="height: 35%;">
                         <div class="card-body" >
-                            <img src="https://media.giphy.com/media/BlmF3MhGfa4SY/giphy.gif" id="img1" class="d-inline-block img-fluid " style="height: 140px; width: 280px">
+                            <img src="{{ image_url.0 }}" id="img1" class="d-inline-block img-fluid " style="height: 140px; width: 280px">
                         </div>
                     </div>
-
                     <div class="card col text-center" style="height: 35%">
                         <div class="card-body">
-                            <img src="https://media.giphy.com/media/ClfqZr5WhqVi0/giphy.gif" id="img2" class="d-inline-block img-fluid" style="height: 140px; width: 280px">
+                            <img src="{{ image_url.1 }}" id="img2" class="d-inline-block img-fluid" style="height: 140px; width: 280px">
                         </div>
                     </div>
                 </div>
@@ -94,12 +92,12 @@
                 <div class="row">
                     <div class="card col text-center" style="height: 35%">
                         <div class="card-body">
-                            <img src="https://media.giphy.com/media/uCszz49N0iaCk/giphy.gif" id="img3" class="d-inline-block img-fluid" style="height: 140px; width: 280px">
+                            <img src="{{ image_url.2 }}" id="img3" class="d-inline-block img-fluid" style="height: 140px; width: 280px">
                         </div>
                     </div>
                     <div class="card col text-center" style="height: 35%">
                         <div class="card-body">
-                            <img src="https://media.giphy.com/media/OT8380WauvE9a/giphy.gif" id="img4" class="d-inline-block img-fluid" style="height: 140px; width: 280px">
+                            <img src="{{ image_url.3 }}" id="img4" class="d-inline-block img-fluid" style="height: 140px; width: 280px">
                         </div>
                     </div>
                 </div>
@@ -120,46 +118,26 @@
             <!-- Question List  !: Need Modification - just a template example, will be a for loop in the future -->
             <div class="row">
                 <div class="col mt-3 ml-3">
-                    <label style="font-size: x-large">Questions List</label>
-                    <div class="card" style="width: 100%; height: 50.5%"> <!-- height was 62% -->
+                    <label style="font-size: x-large">Questions List </label>
+                    <i class="fa fa-bell-o ml-2"></i>Scroll down to see all questions
+                    <div class="card" style="width: 100%; height: 33rem; overflow-y: scroll"> <!-- height was 62% -->
                         <div class="card-content">
                             <ul id="pre-list">
-                                <li>Q: What 's the color of the plane?
-                                <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                                </li><hr>
-                            <li>Q: What 's the color of the sky?
-                            <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                            </li> <hr>
-                            <li>Q: What 's under the plane?
-                            <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                            </li> <hr>
-                            <li>Q: What 's the direction of the plane?
-                            <div class="form-check-inline"></div>
-                                <label class = "form-check-label" for="wrong">
-                                    <input class = "form-check-inline" type="checkbox" id = "wrong" value = "wrong">
-                                    Skip
-                                </label> <br>
-                                A: <input class="form-control-sm" id = "newA" type="text" maxlength="20">
-                            </li> <hr>
+                                <br>
+                                {% for preq in quetion_list %}
+                                <li>Q: {{ preq.text }}<br>
+                                A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter }}" type="text" maxlength="30">
+                                <label class = "form-check-label" for="skip">
+                                <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ forloop.counter }}">
+                                Skip</label>
+                                </li> <hr>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
+                    <ul hidden id="list_answer" ></ul>
                     <button id="nextbtn" class="btn btn-warning float-right mt-2" >Next</button>
+                    <div id="alrt"></div>
                 </div>
             </div>
 
@@ -172,7 +150,68 @@
         <form>
         {% csrf_token %}
         </form>
+        
+        <script>
+    
+            var dict = {}
+            var resultArr = {
+                "dict" : {},
+            }    
+        
+            function rank(){
+                {% for q in questions %}
+                    if(document.getElementById("skip{{ forloop.counter }}").checked == true){
+                        resultArr['dict']["{{ q.text }}"] = " ";
+                    }
+                    else if(document.getElementById("skip{{ forloop.counter }}").checked == false){
+                        resultArr['dict']["{{ q.text }}"] = document.getElementById("newA{{ forloop.counter }}").value;
+                    }
+                {% endfor %}
+            resultArr['dict']= JSON.stringify(resultArr['dict']);
+            }
 
+        </script>
+
+        <script>
+        //next button listener
+        $('#nextbtn').click(function(event){
+            // alert("New Images Inbound!")
+            rank();
+                // get the value of CSRF token
+                var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+                
+                //post method
+                $.post('{% url 'phase01b' %}', {
+                    'validation': resultArr,
+                    csrfmiddlewaretoken : CSRFtoken
+                }, function(data){});
+                
+               // reload the webpage to set new images
+                var countdown = 3000;  // your countdown in milliseconds
+                
+                //catch the error when the reloading process crashes
+                try{
+                    setTimeout(function() {
+                    // hide your loading image after "countdown" milliseconds
+                    document.getElementById("loading-image").setAttribute("style","display:none");
+                    document.getElementById("bg-image").setAttribute("style", "display:block");
+                    location.reload();
+                    }, countdown);
+                    // show your loading image
+                    document.getElementById("loading-image").setAttribute("style","display:block");
+                    document.getElementById("bg-image").setAttribute("style", "display:none");
+                }
+                catch(err){
+                    alert(err.message);
+                }
+                
+                numQA = 0;
+            }
+            else{
+                //alert("Please enter at least one Q&A pair!");
+                document.getElementById("alrt").innerHTML = "Please answer the questions!";
+            }
+        </script>
 
     </div> <!-- Row -->
 
