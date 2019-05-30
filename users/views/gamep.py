@@ -153,9 +153,15 @@ def phase01b(request):
     return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'question_list' : questions})
     # The NLP server will be updated later?
 
-# function does not the
+# function that should be accessible only with admin
 def phase02(request):
-    return render(request, 'over.html')
+    if request.user.is_superuser or request.user.is_staff:
+        print("This is admin")
+        information = "Please press the button to process the redundant answers for each questions"
+    else:
+        print("The user should not process the homepage")
+        information= "Thank you for your support and please wait until we finish process and release the next phase"
+    return render(request, 'over.html', {'info' : information})
 # View for phase3
 #@login_required
 def phase03(request):
