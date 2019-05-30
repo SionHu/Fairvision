@@ -50,7 +50,7 @@ def phase01a(request):
 
     # Need to check
     if request.method == 'POST':
-        pushPostList(request, 'phase01a')
+        postList = pushPostList(request, 'phase01a')
 
         # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
         questions = request.POST.getlist('data_q[]')
@@ -72,7 +72,7 @@ def phase01a(request):
         old_Qs = list(Question.objects.values_list('text', 'id'))
         # print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum - 1)) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
         # print(new_Qs)
@@ -108,9 +108,9 @@ def phase01a(request):
         previous_questions = list(Question.objects.filter(imageID=KEY.format(rounds.post[-1])).values('text',))
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
-        return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
+        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions })
     else:
-        return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': []})
+        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'questions': []})
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
@@ -141,9 +141,10 @@ def phase01b(request):
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     # sending 4 images at a time
-    data = [default_storage.url(KEY.format(i)) for i in popGetList(rounds, 4)]
+    roundsnum = popGetList(rounds, 4)
+    data = [default_storage.url(KEY.format(i)) for i in roundsnum]
     questions = list(Question.objects.values('text',))
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'question_list' : questions})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions})
     # The NLP server will be updated later?
 
 # function does not the

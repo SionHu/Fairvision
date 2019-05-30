@@ -12,14 +12,15 @@ def pushPostList(request, phase):
     """
     Update the rounds posted for a particular phase.
     In order to do this, the list of images posted is sent
-    back to the server in the 'imageIds' field of the POST
+    back to the server in the 'imgnum' field of the POST
     request.
     """
     rounds = Rounds.objects.filter(phase=phase).get()
     postList = rounds.post
-    postList.extend([int(i[-8:-4]) for i in request.POST.getList('imageIds')])
+    postList.extend(map(int, request.POST.getlist('imgnum[]')))
     rounds.post = postList
     rounds.save()
+    return postList
 
 def popGetList(rounds, count=1):
     """
@@ -37,19 +38,15 @@ def popGetList(rounds, count=1):
         count -= len(getList)
         # Create a new GET list if necesary
         postList = rounds.post
-        print("Shuffling")
         keyPiece = KEY.rsplit('/', 1)[0]+'/'
         getList = [i.imgid for i in ImageModel.objects.filter(img__startswith=keyPiece)]
         random.shuffle(getList)
-        print("Shuffled")
     else:
         nextImage = []
 
     # Get the next images for the round
     nextImage.extend(getList[:count])
-    print("Pop "+str(count)+": "+str(nextImage))
     del getList[:count]
-    print("    Now: "+str(getList))
     rounds.get = getList
     rounds.save()
     return nextImage
