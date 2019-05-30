@@ -190,6 +190,7 @@
 
                 //post method
                 $.post('{% url 'phase01b' %}', {
+					'image_url': {{ image_url|safe }}
                     'data': resultArr,
                     csrfmiddlewaretoken : CSRFtoken
                     }, function(data){});
