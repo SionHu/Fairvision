@@ -20,15 +20,15 @@ def rephrase(q, a, img=PLURAL_NAME_OF_OBJECT+','):
             prep = q_words[prepLoc]
             fragment = ' '.join(q_words[prepLoc+1:])
             if q_words[1] in ('color', 'pattern'):
-                return ' '.join(['With most', img, fragment, is_are, a]) + "."
+                return ' '.join(['In most', img, 'images', fragment, is_are, a]) + "."
         fragment = ' '.join(q_words)
-        return ' '.join(['With most', img, a, is_are, fragment]) + "."
+        return ' '.join(['In most', img, 'images', a, is_are, fragment]) + "."
     else:
         if q_words[0] == 'the' and 'is' in q_words:
             fragment = ' '.join(q_words[2:])
-            return ' '.join(['With most', img, fragment, a]) + "."
+            return ' '.join(['In most', img, 'images', fragment, a]) + "."
         fragment = ' '.join(q_words)
-        return ' '.join(['With most', img, fragment, is_are, a]) + "."
+        return ' '.join(['In most', img, 'images', fragment, is_are, a]) + "."
 def getFirstIndex(input, matches=PREPOSITIONS):
     for index, word in enumerate(input):
         if word in matches:
@@ -39,6 +39,6 @@ def rephrase_old(q, a, img=PLURAL_NAME_OF_OBJECT+','):
     _, is_are, *q_words = q.split()
     fragment = ' '.join(q_words)[:-1]
     if q_words[0] in PREPOSITIONS or ' '.join(q_words[:2]) in TWO_WORD_PREPOSITIONS:
-        return ' '.join(['With most', img, a, is_are, fragment]) + "."
+        return ' '.join(['In most', img, 'images', a, is_are, fragment]) + "."
     else:
-        return ' '.join(['With most', img, fragment, is_are, a]) + "."
+        return ' '.join(['In most', img, 'images', fragment, is_are, a]) + "."
