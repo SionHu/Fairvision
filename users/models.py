@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
     # bools to keep track of types of users
     is_player = models.BooleanField(default=False)
     is_requester = models.BooleanField(default=False)
-    
+
     def __str__(self):
         return self.email
 
@@ -22,7 +22,7 @@ class Player(models.Model):
     level = models.IntegerField(default=0)
     pic = models.ImageField(upload_to="PlayerProfile/", blank=True, null=True)
 
-    
+
 # Class that will not be used right now, but potentially could be expanded in the future
 '''
 class Requester(models.Model):
@@ -77,7 +77,7 @@ class ImageModel(models.Model):
 
     def __str__(self):
         return self.img.name
-    
+
     #show the detailed dataset
     @property
     def dataset(self):
@@ -91,7 +91,7 @@ class ImageModel(models.Model):
     @property
     def datafolder(self):
         return self.img.name.rsplit("/", 1)[0]
-    
+
 # Delete the file on S3 at the same time delete model on Django
 @receiver(models.signals.post_delete, sender=ImageModel)
 def delete_file(sender, instance, *args, **kwargs):
@@ -103,42 +103,42 @@ def delete_file(sender, instance, *args, **kwargs):
 class Phase01_instruction(models.Model):
     class Meta:
         verbose_name = 'Phase01 Instruction'
-        
+
     instruction = models.CharField(max_length=150, blank=False, null=True)
     imglink = models.CharField(max_length=100, blank=False, null=True)
     order = models.CharField(max_length=10, blank=False, null=True)
-    
+
     def get_queryset(self):
         return Phase01_instruction.objects.all()
-    
+
     def __str__(self):
         return "{0}".format(self.order)
-    
+
 class Phase02_instruction(models.Model):
     class Meta:
         verbose_name = 'Phase02 Instruction'
-        
+
     instruction = models.CharField(max_length=150, blank=False, null=True)
     imglink = models.CharField(max_length=100, blank=False, null=True)
     order = models.CharField(max_length=10, blank=False, null=True)
-    
+
     def get_queryset(self):
         return Phase02_instruction.objects.all()
-    
+
     def __str__(self):
         return "{0}".format(self.order)
 
 class Phase03_instruction(models.Model):
     class Meta:
         verbose_name = 'Phase03 Instruction'
-        
+
     instruction = models.CharField(max_length=150, blank=False, null=True)
     imglink = models.CharField(max_length=100, blank=False, null=True)
     order = models.CharField(max_length=10, blank=False, null=True)
-    
+
     def get_queryset(self):
         return Phase03_instruction.objects.all()
-    
+
     def __str__(self):
         return "{0}".format(self.order)
 
@@ -173,7 +173,7 @@ class Question(models.Model):
     # Count is the nunber of same/redundant Questions count (we will not remove the redundant attrbutes)
     count = models.IntegerField(default=1)
     # ID for reference which questions are for which image
-    imageID = models.CharField(max_length=64, default='airplanes/image_0001.jpg')
+    imageID = models.CharField(max_length=64, default='Caltech101/airplanes/image_0001.jpg')
     # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
     skipCount = models.IntegerField(default=0)
     def __str__(self):

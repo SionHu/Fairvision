@@ -34,7 +34,7 @@ from client import send__receive_data
 #@login_required
 def phase01a(request):
 
-    ''' Test case 
+    ''' Test case
     old_Q = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
     new_Q = list(Question.objects.filter(isFinal=False).values_list('text', 'id'))
 
@@ -49,7 +49,7 @@ def phase01a(request):
 
     '''
 
-    # Need to check 
+    # Need to check
     if request.method == 'POST':
         # Update the rounds number for phase 01a
         roundsnum = RoundsNum.objects.filter(phase='phase01a').first().num + 1
@@ -67,19 +67,19 @@ def phase01a(request):
         dictionary = json.loads(request.POST['validation[dict]'])
         print("the dictionary of life: ", dictionary)
 
-        
+
         for text, count in dictionary.items():
             Question.objects.filter(text=text).update(skipCount=F('skipCount')-count)
-        
+
         # Query list for the old data in the table
         old_Qs = list(Question.objects.values_list('text', 'id'))
-        print(old_Qs)
+        # print(old_Qs)
 
         questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum - 1)) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
-        answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])        
+        answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
         # print(new_Qs)
-        # Call the NLP function and get back with results, it should be something like wether it gets merged or kept 
+        # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
         id_merge = send__receive_data([new_Qs, old_Qs])
@@ -103,25 +103,23 @@ def phase01a(request):
     if roundsnum > NUMROUNDS:
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01a'})
-    
+
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
-    print("I got: ", serving_img_url)
-    # Previous all question pairs that will be sent to front-end 
+    # print("I got: ",     serving_img_url)
+    # Previous all question pairs that will be sent to front-end
     if roundsnum > 1 and roundsnum <= NUMROUNDS:
         # Get the previous question of the image with roundID
-        print("roundNum: ", roundsnum)
-        print("key format: ", KEY.format(roundsnum-1))
         previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
         if not previous_questions:
             raise Exception("The previous images does not have any question which is wired")
         return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
-    else:  
+    else:
         return render(request, 'phase01a.html', {'url' : serving_img_url, })
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
-POST = me
+POST = method that retrieve the QA dictionary from the crowd workers
 '''
 # @login_required
 def phase01b(request):
@@ -129,24 +127,22 @@ def phase01b(request):
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
     # There should be an array of question that got skipped. Each entry should the final question value
     if request.method == 'POST':
-        # Get the answer array for different 
+        # Get the answer array for different
         # Update the rounds number for phase 01b
         roundsnum = RoundsNum.objects.filter(phase='phase01b').first().num + 1
-        RoundsNum.objects.filter(phase='phase01b ').update(num=roundsnum)
+        RoundsNum.objects.filter(phase='phase01b').update(num=roundsnum)
         # get the dictionary from the front-end back
-        dictionary = json.loads(request.POST['data[dict'])
+        dictionary = json.loads(request.POST['data[dict]'])
         for question, answer in dictionary.items():
             # if the answer is not empty, add into database
             if not answer:
                 que = Question.objects.get(text=question)
                 new_Ans = Answer.objects.create(text=answer, question=que)
             else:
-                Question.objects.filter(text=question).update(skipCount=F('skipCount'))
+                Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
     else:
         rounds, _ = RoundsNum.objects.get_or_create(phase='phase01b', defaults={'num': 1})
         roundsnum = rounds.num
-        print("Round num for 1b: ", roundsnum)
-        print("The total rounds for 1b: NUMROUNDSb")
 
     if roundsnum > NUMROUNDSb:
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
@@ -154,10 +150,10 @@ def phase01b(request):
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(4 * (roundsnum - 1) + i)) for i in range(1, 5)]
     questions = Question.objects.all()
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'quetion_list' : questions})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'question_list' : questions})
     # The NLP server will be updated later?
 
-# function does not the 
+# function does not the
 def phase02(request):
     return render(request, 'over.html')
 # View for phase3
@@ -165,14 +161,14 @@ def phase02(request):
 def phase03(request):
     attributes = Attribute.objects.all() or ['none']
     instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
-    
+
     # Update count
     if request.method == 'POST':
         dictionary = json.loads(request.POST['data[dict]'])
         for word, count in dictionary.items():
             # print("key: ", word, " value: ", count)
             Attribute.objects.filter(word=word).update(count=F('count')+count)
-            
+
         return HttpResponse(None)
     else:
         return render(request, 'phase03.html', {'attributes': attributes, 'instructions': instructions})

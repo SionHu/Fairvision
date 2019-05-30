@@ -119,15 +119,15 @@
             <label style="font-size: x-large">Enter A New Q&A Pair</label>
             <div class="row-md-10" style="font-size:110%">
                 <div class="input-group m-3">
-                    Q: What 
+                    Q: What
                     <div class="input-group-prepend ml-2 mr-2">
                             <select id="is/are">
                                 <option value="is">is</option>
-                                <option value="are">are</option>  
+                                <option value="are">are</option>
                             </select>
                     </div>
                     <input class="form-control-sm mr-2" id="Q1" type="text" name="Q1" maxlength="40">?
-                    
+
                 </div>
                 <div class="input-group mb-3 ml-3">
                     <div class="input-group-prepend">
@@ -164,13 +164,13 @@
         <form>
         {% csrf_token %}
         </form>
-        
+
         <script>
-    
+
         var dict = {}
         var resultArr = {
             "dict" : {},
-        }    
+        }
 
             function rank(){
                 {% for q in questions %}
@@ -186,16 +186,16 @@
 
 </script>
 
-        
+
         <script>
-            
+
         //"add" button listener when clicked
         numQA = 0;
         var listNode_q = document.createElement("ul");
         var listNode_a = document.createElement("ul");
-            
+
         document.getElementById("add").addEventListener("click", function() {
-            
+
             //Get the question
             if(document.getElementById("Q1").value == ""){
                 document.getElementById("alrt").innerHTML = "Please enter the question!";
@@ -204,7 +204,7 @@
                 document.getElementById("alrt").innerHTML = "Please enter the answer of the question!";
             }
             else{
-                    
+
                  var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
 
                 //Get the answer
@@ -218,7 +218,7 @@
                 document.getElementById("A").value = ""; //clear entry field
                 }
         });
-            
+
         //input bar listener when key "enter" is hit
         document.getElementById("A").addEventListener("keyup", function(event) {
             event.preventDefault();
@@ -226,7 +226,7 @@
                 document.getElementById("add").click(); //basically calls the button click function
             }
         });
-            
+
         //next button listener
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
@@ -234,7 +234,7 @@
             var questionArray = [];
             var answerArray = [];
             if (document.getElementById("list_q").getElementsByTagName("LI").length !== 0) {
-                //retrieve the values and store it                
+                //retrieve the values and store it
                 $('#list_q LI').each(function(){
                     questionArray.push($(this).text());
                 });
@@ -242,14 +242,14 @@
                     answerArray.push($(this).text());
                 });
                 console.log(resultArr);
-                
+
                 //remove the list
                 $('li').remove();
                 // get the value of CSRF token
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
                 console.log(questionArray);
                 console.log(answerArray);
-                
+
                 //post method
                 $.post('{% url 'phase01a' %}', {
                     'data_q': questionArray,  // might change due to gamep.py - phase01a
@@ -257,10 +257,10 @@
                     'validation': resultArr,
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){});
-                
+
                // reload the webpage to set new images
                 var countdown = 3000;  // your countdown in milliseconds
-                
+
                 //catch the error when the reloading process crashes
                 try{
                     setTimeout(function() {
@@ -276,16 +276,16 @@
                 catch(err){
                     alert(err.message);
                 }
-                
+
                 numQA = 0;
             }
             else{
                 //alert("Please enter at least one Q&A pair!");
                 document.getElementById("alrt").innerHTML = "Please enter at least one Q&A pair!";
             }
-            
+
         })
-            
+
         //delete button listener
         $('#delete').click(function(event){
             // alert("New Images Inbound!")
@@ -297,7 +297,7 @@
             if (arrlen != 0) {
                 attrlist.removeChild(attrlist.childNodes[arrlen - 1]);
                 attrlist_q.removeChild(attrlist_q.childNodes[arrlen - 1]);
-                attrlist_a.removeChild(attrlist_a.childNodes[arrlen - 1]); 
+                attrlist_a.removeChild(attrlist_a.childNodes[arrlen - 1]);
             }
         })
         </script>
@@ -309,35 +309,35 @@
                 var qVal = "Q: What "+document.getElementById("is/are").value+" "+document.getElementById("Q1").value+ "?";
                 // get the whole answer
                 var aVal = "A: "+document.getElementById("A").value+".";
-                
+
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
                 var txtVal = qVal + ' \n' + aVal;
-                
+
                 //put Q&A into seperate lists (for back-end storage) and a generate list (for front-end show up)
                var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI"),
                     txtNode_q = document.createTextNode(txt_q);
-                
+
                 var listNode_a = document.getElementById('list_a'),
                     liNode_a = document.createElement("LI"),
                     txtNode_a = document.createTextNode(txt_a);
-                
+
                 var listNode = document.getElementById('list_all'),
                     liNode = document.createElement("LI"),
                     txtNode = document.createTextNode(txtVal);
-                
+
                 liNode.appendChild(txtNode);
                 listNode.appendChild(liNode);
                 liNode_q.appendChild(txtNode_q);
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
                 listNode_a.appendChild(liNode_a);
-                
-                console.log(listNode_q);
-                
+
+              //  console.log(listNode_q);
+
             }
-        
+
     </script>
 
     </div> <!-- Row -->

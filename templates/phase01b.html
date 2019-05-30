@@ -123,7 +123,7 @@
                         <div class="card-content">
                             <ul id="pre-list">
                                 <br>
-                                {% for preq in quetion_list %}
+                                {% for preq in question_list %}
                                 <li>Q: {{ preq.text }}<br>
                                 A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter }}" type="text" maxlength="30">
                                 <label class = "form-check-label" for="skip">
@@ -154,9 +154,9 @@
             var resultArr = {
                 "dict" : {},
             }
-
+        // Function that create the dictionary for QA pairs
         function rank(){
-            {% for q in questions %}
+            {% for q in question_list %}
                 if(document.getElementById("skip{{ forloop.counter }}").checked == true){
                     resultArr['dict']["{{ q.text }}"] = " ";
                 }
@@ -168,11 +168,11 @@
         }
 
         function checkEmpty(){
-            {% for q in questions %}
-                console.log(q);
+            {% for q in question_list %}
+                //console.log(q);
                 if(document.getElementById("skip{{ forloop.counter }}").checked == false && document.getElementById("newA{{ forloop.counter }}").value==""){
                     flag = 1;
-                    console.log("Empty answer!");
+                    // alert("Empty answer!");
                 }
             {% endfor %}
         }
@@ -182,7 +182,7 @@
             //alert("New Images Inbound!")
 
             checkEmpty();
-            console.log(flag);
+            // console.log(flag);
             if (flag == 0){
                 rank();
                 // get the value of CSRF token
@@ -190,7 +190,7 @@
 
                 //post method
                 $.post('{% url 'phase01b' %}', {
-                    'validation': resultArr,
+                    'data': resultArr,
                     csrfmiddlewaretoken : CSRFtoken
                     }, function(data){});
 
@@ -202,7 +202,7 @@
                     setTimeout(function () {
                         // hide your loading image after "countdown" milliseconds
 
-                        document.getElementById("loadingimage").setAttribute("style", "display:none");
+                        document.getElementById("loading-image").setAttribute("style", "display:none");
                         document.getElementById("bg-image").setAttribute("style", "display:block");
                         location.reload();
                     }, countdown);
