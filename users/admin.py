@@ -7,7 +7,7 @@ from django.db import transaction
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, ImageModel, Attribute, Rounds, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question
+from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question
 
 
 from django import forms
@@ -137,7 +137,7 @@ class AttributeAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
 admin.site.register(PhaseBreak)
-admin.site.register(Rounds)
+admin.site.register(Phase)
 
 admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(ImageModel, ImageModelAdmin)

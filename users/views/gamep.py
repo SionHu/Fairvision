@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.db.models import F
-from users.models import CustomUser, ImageModel, Attribute, Rounds, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Question, Answer
+from users.models import CustomUser, ImageModel, Attribute, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Question, Answer
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -50,7 +50,7 @@ def phase01a(request):
 
     # Need to check
     if request.method == 'POST':
-        postList = pushPostList(request, 'phase01a')
+        postList = pushPostList(request, '01a')
 
         # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
         questions = request.POST.getlist('data_q[]')
@@ -72,14 +72,15 @@ def phase01a(request):
         old_Qs = list(Question.objects.values_list('text', 'id'))
         # print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(int(postList[-1]))) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
-        # print(new_Qs)
+        print(new_Qs)
+
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        id_merge = send__receive_data([new_Qs, old_Qs])
+        id_merge = send__receive_data(new_Qs, old_Qs)
 
         if id_merge is not None:
             Question.objects.filter(id__in=[id for _, id in id_merge]).update(isFinal=True)
@@ -90,10 +91,12 @@ def phase01a(request):
         #    Question.objects.filter(id=new).update(isFinal=True)
             answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
         # print("Well bulk answer objects", answers)
+
         return HttpResponse(status=201)
 
-    rounds = Rounds.objects.get_or_create(phase='phase01a')[0]
-    roundsnum = popGetList(rounds)[0]
+    # Get rounds played in total and by the current player
+    rounds, (roundsnum,) = popGetList('01a')
+    players_images = request.session.get('user_imgs_phase01a', [])
 
     if len(rounds.post) > NUMROUNDS:
         # push all to waiting page
@@ -103,14 +106,19 @@ def phase01a(request):
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
-    if rounds.post:
-        # Get the previous question of the image with roundID
-        previous_questions = list(Question.objects.filter(imageID=KEY.format(rounds.post[-1])).values('text',))
-        if not previous_questions:
-            raise Exception("The previous images does not have any question which is wired")
-        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions })
-    else:
-        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'questions': []})
+
+    # Get the last image not seen by the current player
+    for new in reversed(rounds.post):
+        if new not in players_images:
+            break
+    else: # if not broken
+        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'oldnum': -1, 'questions': []})
+
+    # Get all of the questions for that image
+    previous_questions = list(Question.objects.filter(imageID=KEY.format(new)).values('text',))
+    assert previous_questions, "The previous image does not have any questions which is weird."
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'oldnum': new, 'questions': previous_questions })
+
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
@@ -123,7 +131,7 @@ def phase01b(request):
     if request.method == 'POST':
         # Get the answer array for different
         # Update the rounds posted for phase 01b
-        pushPostList(request, 'phase01b')
+        pushPostList(request, '01b')
 
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST['data[dict]'])
@@ -135,13 +143,13 @@ def phase01b(request):
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
 
-    rounds = Rounds.objects.get_or_create(phase='phase01b')[0]
+    # Get rounds played in total and by the current player
+    rounds, roundsnum = popGetList('01b', 4)
 
     if len(rounds.post) > NUMROUNDS:
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     # sending 4 images at a time
-    roundsnum = popGetList(rounds, 4)
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
     questions = list(Question.objects.values('text',))
     return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions})

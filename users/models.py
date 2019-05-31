@@ -147,10 +147,12 @@ class Phase03_instruction(models.Model):
 
 
 # Global variable of round number for phase01 and phase02
-class Rounds(models.Model):
+class Phase(models.Model):
     phase = models.CharField(max_length=10, primary_key=True)
     get = ArrayField(models.IntegerField(), blank=False, default=list)
     post = ArrayField(models.IntegerField(), blank=False, default=list)
+    def __str__(self):
+        return self.phase
 
 # Array indices for recursion list of phase02
 class listArray(models.Model):
