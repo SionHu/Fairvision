@@ -14,6 +14,7 @@ import os
 import configparser
 # Tricky lib to convert string to boolean directly in python.
 from distutils.util import strtobool
+import importlib.util
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -80,11 +81,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
+    'storages',
+]
+
+# Optional applications that are not required for the working of the game
+INSTALLED_APPS.extend(filter(importlib.util.find_spec, (
     'corsheaders',
     'rest_framework',
-    'storages',
-    'import_export'
-]
+    'import_export',
+    'jsoneditor',
+)))
 
 MIDDLEWARE = [
     # Simplified static file serving.
@@ -151,7 +157,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Indiana/Indianapolis'
 
 USE_I18N = True
 

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import transaction
 
@@ -133,7 +134,32 @@ def export_csv(filename, field_names):
 class AttributeAdmin(admin.ModelAdmin):
     actions = [export_csv('phase3-attributes.csv', ['word','count'])]
 
+try:
+    from jsoneditor.forms import JSONEditor
+except:
+    JSONEditor = forms.Textarea
+
+class SessionForm(forms.ModelForm):
+    decoded_data = forms.CharField(widget=JSONEditor)
+    class Meta:
+        model = Session
+        fields = ('session_key', 'decoded_data', 'expire_date')
+        exclude = ("session_data", )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial['decoded_data'] = self.instance.get_decoded() if self.instance else '{}'
+    def save(self, *args, **kwargs):
+        obj = self.instance
+        obj.save(obj.session_key, obj.encode(self.cleaned_data['decoded_data']), obj.expire_date)
+        return super().save(*args, **kwargs)
+
+class SessionAdmin(admin.ModelAdmin):
+    form = SessionForm
+    list_display = ['session_key', 'get_decoded', 'expire_date']
+    def has_add_permission(self, request):
+        return False
     
+
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
 admin.site.register(PhaseBreak)
@@ -147,3 +173,4 @@ admin.site.register(Phase02_instruction)
 admin.site.register(Phase03_instruction)
 admin.site.register(Question)
 admin.site.register(Answer)
+admin.site.register(Session, SessionAdmin)
