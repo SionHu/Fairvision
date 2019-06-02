@@ -8,7 +8,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from django.http import HttpResponse
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 import boto3
 #from operator import attrgetter, itemgetter
@@ -155,7 +155,7 @@ def phase01b(request):
 
 # function does not the
 def phase02(request):
-    return render(request, 'over.html')
+    return redirect('/admin/') if request.user.is_superuser else render(request, 'phase02.html')
 # View for phase3
 #@login_required
 def phase03(request):
