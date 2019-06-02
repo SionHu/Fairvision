@@ -153,9 +153,10 @@ def phase01b(request):
     return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'question_list' : questions})
     # The NLP server will be updated later?
 
-# function does not the
+# function that should be accessible only with admin
 def phase02(request):
-    return redirect('/admin/') if request.user.is_superuser else render(request, 'phase02.html')
+    return redirect('/admin/') if request.user.is_superuser or request.user.is_staff else render(request, 'phase02.html')
+
 # View for phase3
 #@login_required
 def phase03(request):
