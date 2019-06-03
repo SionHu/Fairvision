@@ -1,10 +1,39 @@
 import sys
+import socket
 import struct
 import _pickle as pickle  # Depreciated code. # TODO: Try to update to pickle 3.6+
+import os
+
 
 # pick a port that is not used by any other process
-server_port = 17001
 server_host = '127.0.0.1'  # localhost
+
+def getPort():
+    herokuPort = int(os.getenv('PORT', '17001'))
+    choices = range(6379, 6381)#range(3002, 5001)
+    forcedPort = 0
+
+    assert herokuPort not in choices
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    main_name = os.path.splitext(os.path.basename(sys.modules['__main__'].__file__))[0]
+    # I don't know if binding will always work. The client and server may fight over the space to the port.
+    # If so, uncomment the rest of the line.
+    force = sock.bind# if main_name == 'nlp_server' else sock.connect
+    for forcedPort in choices:
+        try:
+            force((server_host,forcedPort))
+            break
+        except IOError:
+            pass
+    else:
+        raise IOError("No port could be forced open.")
+    sock.close()
+
+    print("Hosting on port %d." % (forcedPort,))
+    return forcedPort
+
+server_port = os.getenv('NLP_PORT') or getPort()
 message_size = 8192
 # code to use with struct.pack to convert transmission size (int)
 # to a byte string
