@@ -168,9 +168,10 @@
         var resultArr = {
             "dict" : {},
         }
+
         var qs = {{ questions|safe }};
             function rank(){
-                for (var i = 1; i < qs.length; i++) {
+                 for (var i = 1; i < qs.length; i++) {
                     if(document.getElementById("wrong"+i).checked == true){
                         resultArr['dict'][qs[i].text] = -1;
                     }
@@ -180,10 +181,37 @@
                 }
                 resultArr['dict']= JSON.stringify(resultArr['dict']);
             }
+
         </script>
 
 
         <script>
+            
+            function myChecker(user_input, index, array) {
+                
+                var input = user_input; // This should be changed to the input from other functions
+                
+                var list = []; // used to stor the list from checker.txt
+                var boo = true;
+                var file = "../static/score_checker/list.txt";
+                var f = new XMLHttpRequest();
+                f.open("GET", file, false);
+                f.onreadystatechange = function () {
+                    if(f.readyState === 4) {
+                        if(f.status === 200 || f.status == 0) {
+                            var res= f.responseText;
+                            list = res.split("\n");
+//                            alert(list[1].toString());
+                            if(list.includes(input)){ boo = false; }
+                        }
+                    }
+                }
+                f.send(null);
+                
+//                alert(boo.toString());
+                
+                return boo;
+            }
 
             function myChecker(user_input, index, array) {
 
@@ -214,53 +242,53 @@
         var listNode_q = document.createElement("ul");
         var listNode_a = document.createElement("ul");
         document.getElementById("add").addEventListener("click", function() {
-            //Get the question
-
+            //Get the question            
             var ques = document.getElementById("Q").value;
             var ans = document.getElementById("A").value;
-
+            
             //Check user input using the checker function
-
+            
             var ques_list = ques.split(" ");
             var ans_list = ans.split(" ");
-
             var boo = true;
             if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
                 alert("STOP SWEARING, HAOBO!");
                 boo = false;
             }
-
             if (ques !== "" && ans !== "" &&  boo) {
                 qVal = "Q: What "+document.getElementById("is/are").value+" "+ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
-
+            
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
                 var txtVal = qVal + ' \n' + aVal;
-
+                
                 var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI"),
                     txtNode_q = document.createTextNode(txt_q);
-
+                
                 var listNode_a = document.getElementById('list_a'),
                     liNode_a = document.createElement("LI"),
                     txtNode_a = document.createTextNode(txt_a);
-
+                
                 var listNode = document.getElementById('list_all'),
                     liNode = document.createElement("LI"),
                     txtNode = document.createTextNode(txtVal);
                 liNode.appendChild(txtNode);
                 listNode.appendChild(liNode);
 
-
                 liNode_q.appendChild(txtNode_q);
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
                 listNode_a.appendChild(liNode_a);
-
+            
                 // If the input of Q&A is valid, increment numQA counter
                 numQA++;
                 }
+            
+                document.getElementById("Q").value = ""; //clear entry field
+                document.getElementById("A").value = ""; //clear entry field
+        });
 
             document.getElementById("Q").value = ""; //clear entry field
             document.getElementById("A").value = ""; //clear entry field

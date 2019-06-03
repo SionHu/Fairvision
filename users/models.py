@@ -60,6 +60,9 @@ class Attribute(models.Model):
     count = models.IntegerField(default=0)
 
 class ImageModel(models.Model):
+    class Meta:
+        ordering = ('img',)
+
     def get_upload_path(instance, filename):
         ''' Construct the upload path of the file, including the filename itself'''
         real_path = default_storage.upload_lock.key + filename
@@ -87,7 +90,7 @@ class ImageModel(models.Model):
         return self.img.name.split("/")[1]
     @property
     def imgid(self):
-        return self.img.name[-8:-4]
+        return int(self.img.name[-8:-4])
     @property
     def datafolder(self):
         return self.img.name.rsplit("/", 1)[0]
@@ -144,9 +147,10 @@ class Phase03_instruction(models.Model):
 
 
 # Global variable of round number for phase01 and phase02
-class RoundsNum(models.Model):
-    num = models.IntegerField(default=0)
-    phase = models.CharField(max_length=10, primary_key=True, default='phase01')
+class Phase(models.Model):
+    phase = models.CharField(max_length=10, primary_key=True)
+    get = ArrayField(models.IntegerField(), blank=True, default=list)
+    post = ArrayField(models.IntegerField(), blank=True, default=list)
     def __str__(self):
         return self.phase
 
