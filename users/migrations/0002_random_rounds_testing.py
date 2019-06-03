@@ -15,8 +15,8 @@ class Migration(migrations.Migration):
             name='Phase',
             fields=[
                 ('phase', models.CharField(max_length=10, primary_key=True, serialize=False)),
-                ('get', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), default=list, size=None)),
-                ('post', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), default=list, size=None)),
+                ('get', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), blank=True, default=list, size=None)),
+                ('post', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), blank=True, default=list, size=None)),
             ],
         ),
     ]

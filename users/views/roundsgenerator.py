@@ -4,6 +4,7 @@ The Random number generator that helps generate image lists for phase01a and pha
 
 from django.conf import settings
 from django.db import transaction
+from operator import attrgetter
 import random
 from users.models import ImageModel, Phase
 
@@ -34,7 +35,7 @@ def pushPostList(request, phase):
     if old != -1:
         userList.append(old)
     request.session['user_imgs_phase'+phase] = userList
-    print('user_imgs_phase'+phase + str(request.session['user_imgs_phase'+phase]))
+    request.session.modified = True
     return new
 
 
@@ -56,8 +57,8 @@ def popGetList(phase, count=1):
         # Create a new GET list if necesary
         postList = rounds.post
         keyPiece = KEY.rsplit('/', 1)[0]+'/'
-        getList = [i for i in ImageModel.objects.filter(
-            img__startswith=keyPiece).values_list('imgid', flat=True) if i not in postList]
+        imgids = map(attrgetter('imgid'), ImageModel.objects.filter(img__startswith=keyPiece))
+        getList = [i for i in imgids if i not in postList]
         random.shuffle(getList)
     else:
         nextImage = []
