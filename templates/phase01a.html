@@ -19,7 +19,8 @@
     </div>
 
         <!-- The Modal -->
-  <div class="modal fade" id="myModal">
+    <div class="modal fade" id="myModal">
+
     <div class="modal-dialog">
         <div class="modal-content" style="width: 250%; margin-left: -400px;margin-top: 80px">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -67,29 +68,28 @@
             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
     </div>
-  </div>
+    </div>
 
     <hr> <!--  Divider line  -->
 
     <div class="row">
 
         <div class="col-md-6" id="bg-image">
-
             <!-- IMAGE -->
             <div class="row">
-                    <div class="card col" style="height: 50%;">
-                        <div class="card-body">
-                            <img src="{{ url }}" id="img1" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
-                        </div>
+                <div class="card col" style="height: 50%;">
+                    <div class="card-body">
+                        <img src="{{ url }}" id="img1" class="d-inline-block img-fluid" style="height: 10rem; width: 30rem">
                     </div>
+                </div>
             </div>
             <!-- END IMAGE -->
 
             <!-- Previous Q&A List -->
             <div class="row">
-                <div class="col-md-9 mt-3 ml-5">
+                <div class="col-md-10 ml-5 mt-4">
                     <label style="font-size: x-large">Previous Q&amp;A</label>
-                    <div class="card" style="width: 100%; height: 50.5%;max-height: 10rem; overflow-y: auto"> <!-- height was 62% -->
+                    <div class="card" style="width: 100%; height: 50.5%;max-height: 15rem; overflow-y: auto">
                         <div class="card-content">
                             <ul id="pre-list">
                                 <br>
@@ -116,18 +116,17 @@
         <div class="col-md-6">
 
             <!-- INPUT BAR -->
-            <label style="font-size: x-large">Enter A New Q&amp;A Pair</label>
-            <div class="row-md-10" style="font-size:110%">
+            <div class="row-md-10" style="font-size:110%;padding-left: 25px">
+                <label style="font-size: x-large">Enter A New Q&amp;A Pair</label>
                 <div class="input-group m-3">
                     Q: What
                     <div class="input-group-prepend ml-2 mr-2">
-                            <select id="is/are">
-                                <option value="is">is</option>
-                                <option value="are">are</option>
-                            </select>
+                        <select id="is/are">
+                            <option value="is">is</option>
+                            <option value="are">are</option>
+                        </select>
                     </div>
                     <input class="form-control-sm mr-2" id="Q" type="text" name="Q" maxlength="40">?
-
                 </div>
                 <div class="input-group mb-3 ml-3">
                     <div class="input-group-prepend">
@@ -142,9 +141,9 @@
             <hr> <!--  Divider line  -->
 
             <!-- Q&A LIST -->
-            <div class="row mt-3">
-                <div class="col-md-12 ml-3">
-                    <div class="card" style="width: 100%; height: 50.5%"> <!-- height was 62% -->
+            <div class="row m-3">
+                <div class="col">
+                    <div class="card" style="width: 100%; height: 50.5%;max-height: 15rem;overflow-y: auto"> <!-- height was 62% -->
                         <div class="card-content">
                             <div class="row-md-11">
                                 <ul><a id="list_all" ></a></ul>
@@ -158,7 +157,6 @@
                 </div>
             </div>
             <!-- END Q&A LIST -->
-
         </div>
 
         <form>
@@ -166,7 +164,6 @@
         </form>
 
         <script>
-
         var dict = {}
         var resultArr = {
             "dict" : {},
@@ -181,8 +178,8 @@
                     else if(document.getElementById("wrong"+i).checked == false){
                         resultArr['dict'][qs[i].text] = 0;
                     }
-                 }
-            resultArr['dict']= JSON.stringify(resultArr['dict']);
+                }
+                resultArr['dict']= JSON.stringify(resultArr['dict']);
             }
 
         </script>
@@ -216,11 +213,34 @@
                 return boo;
             }
 
+            function myChecker(user_input, index, array) {
+
+                var input = user_input; // This should be changed to the input from other functions
+                var list = []; // used to stor the list from checker.txt
+                var boo = true;
+                var file = "../static/score_checker/list.txt";
+                var f = new XMLHttpRequest();
+                f.open("GET", file, false);
+                f.onreadystatechange = function () {
+                    if(f.readyState === 4) {
+                        if(f.status === 200 || f.status == 0) {
+                            var res= f.responseText;
+                            list = res.split("\n");
+//                            alert(list[1].toString());
+                            if(list.includes(input)){ boo = false; }
+                        }
+                    }
+                }
+                f.send(null);
+
+//                alert(boo.toString());
+
+                return boo;
+            }
         //"add" button listener when clicked
         numQA = 0;
         var listNode_q = document.createElement("ul");
         var listNode_a = document.createElement("ul");
-
         document.getElementById("add").addEventListener("click", function() {
             //Get the question            
             var ques = document.getElementById("Q").value;
@@ -230,13 +250,11 @@
             
             var ques_list = ques.split(" ");
             var ans_list = ans.split(" ");
-            
             var boo = true;
             if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
                 alert("STOP SWEARING, HAOBO!");
                 boo = false;
             }
-            
             if (ques !== "" && ans !== "" &&  boo) {
                 qVal = "Q: What "+document.getElementById("is/are").value+" "+ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
@@ -258,8 +276,7 @@
                     txtNode = document.createTextNode(txtVal);
                 liNode.appendChild(txtNode);
                 listNode.appendChild(liNode);
-                
-                
+
                 liNode_q.appendChild(txtNode_q);
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
@@ -273,6 +290,9 @@
                 document.getElementById("A").value = ""; //clear entry field
         });
 
+            document.getElementById("Q").value = ""; //clear entry field
+            document.getElementById("A").value = ""; //clear entry field
+        });
         //input bar listener when key "enter" is hit
         document.getElementById("A").addEventListener("keyup", function(event) {
             event.preventDefault();
@@ -280,7 +300,6 @@
                 document.getElementById("add").click(); //basically calls the button click function
             }
         });
-
         //next button listener
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
@@ -296,14 +315,12 @@
                     answerArray.push($(this).text());
                 });
                 console.log(resultArr);
-
                 //remove the list
                 $('li').remove();
                 // get the value of CSRF token
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
                 console.log(questionArray);
                 console.log(answerArray);
-
                 //post method
                 $.post('{% url 'phase01a' %}', {
                     'data_q': questionArray,  // might change due to gamep.py - phase01a
@@ -313,10 +330,8 @@
                     'oldnum': {{ oldnum }},
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){});
-
                // reload the webpage to set new images
                 var countdown = 3000;  // your countdown in milliseconds
-
                 //catch the error when the reloading process crashes
                 try{
                     setTimeout(function() {
@@ -332,16 +347,13 @@
                 catch(err){
                     alert(err.message);
                 }
-
                 numQA = 0;
             }
             else{
                 //alert("Please enter at least one Q&A pair!");
                 document.getElementById("alrt").innerHTML = "Please enter at least one Q&A pair!";
             }
-
         })
-
         //delete button listener
         $('#delete').click(function(event){
             // alert("New Images Inbound!")
