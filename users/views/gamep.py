@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.db.models import F
-from users.models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Question, Answer
+from users.models import CustomUser, ImageModel, Attribute, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Question, Answer
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -17,13 +17,12 @@ import botocore
 from botocore.client import Config
 import random
 import json
-from .roundsgenerator import rphase02
+from .roundsgenerator import popGetList, pushPostList
 
 
 # We should set up in backend manually
 KEY = settings.KEY
 NUMROUNDS = settings.NUMROUNDS
-NUMROUNDSb = settings.NUMROUNDS // 4
 
 
 old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
@@ -51,9 +50,7 @@ def phase01a(request):
 
     # Need to check
     if request.method == 'POST':
-        # Update the rounds number for phase 01a
-        roundsnum = RoundsNum.objects.filter(phase='phase01a').first().num + 1
-        RoundsNum.objects.filter(phase='phase01a').update(num=roundsnum)
+        postList = pushPostList(request, '01a')
 
         # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
         questions = request.POST.getlist('data_q[]')
@@ -75,15 +72,15 @@ def phase01a(request):
         old_Qs = list(Question.objects.values_list('text', 'id'))
         # print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(roundsnum - 1)) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(int(postList[-1]))) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
-        # print(new_Qs)
+        print(new_Qs)
+
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        id_merge = send__receive_data([new_Qs, old_Qs])
-        PRINT
+        id_merge = send__receive_data(new_Qs, old_Qs)
 
         if id_merge is not None:
             Question.objects.filter(id__in=[id for _, id in id_merge]).update(isFinal=True)
@@ -94,13 +91,14 @@ def phase01a(request):
         #    Question.objects.filter(id=new).update(isFinal=True)
             answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
         # print("Well bulk answer objects", answers)
+
         return HttpResponse(status=201)
 
-    else:
-        rounds, _ = RoundsNum.objects.get_or_create(phase='phase01a', defaults={'num': 1})
-        roundsnum = rounds.num
+    # Get rounds played in total and by the current player
+    rounds, (roundsnum,) = popGetList('01a')
+    players_images = request.session.get('user_imgs_phase01a', [])
 
-    if roundsnum > NUMROUNDS:
+    if len(rounds.post) > NUMROUNDS:
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01a'})
 
@@ -108,14 +106,19 @@ def phase01a(request):
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
-    if roundsnum > 1 and roundsnum <= NUMROUNDS:
-        # Get the previous question of the image with roundID
-        previous_questions = Question.objects.filter(imageID=KEY.format(roundsnum-1))
-        if not previous_questions:
-            raise Exception("The previous images does not have any question which is wired")
-        return render(request, 'phase01a.html', {'url' : serving_img_url, 'questions': previous_questions })
-    else:
-        return render(request, 'phase01a.html', {'url' : serving_img_url, })
+
+    # Get the last image not seen by the current player
+    for new in reversed(rounds.post):
+        if new not in players_images:
+            break
+    else: # if not broken
+        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'oldnum': -1, 'questions': []})
+
+    # Get all of the questions for that image
+    previous_questions = list(Question.objects.filter(imageID=KEY.format(new)).values('text',))
+    assert previous_questions, "The previous image does not have any questions which is weird."
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'oldnum': new, 'questions': previous_questions })
+
 '''
 View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
@@ -123,14 +126,13 @@ POST = method that retrieve the QA dictionary from the crowd workers
 '''
 # @login_required
 def phase01b(request):
-
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
     # There should be an array of question that got skipped. Each entry should the final question value
     if request.method == 'POST':
         # Get the answer array for different
-        # Update the rounds number for phase 01b
-        roundsnum = RoundsNum.objects.filter(phase='phase01b').first().num + 1
-        RoundsNum.objects.filter(phase='phase01b').update(num=roundsnum)
+        # Update the rounds posted for phase 01b
+        pushPostList(request, '01b')
+
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST['data[dict]'])
         for question, answer in dictionary.items():
@@ -140,17 +142,17 @@ def phase01b(request):
                 new_Ans = Answer.objects.create(text=answer, question=que)
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
-    else:
-        rounds, _ = RoundsNum.objects.get_or_create(phase='phase01b', defaults={'num': 1})
-        roundsnum = rounds.num
 
-    if roundsnum > NUMROUNDSb:
+    # Get rounds played in total and by the current player
+    rounds, roundsnum = popGetList('01b', 4)
+
+    if len(rounds.post) > NUMROUNDS:
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     # sending 4 images at a time
-    data = [default_storage.url(KEY.format(4 * (roundsnum - 1) + i)) for i in range(1, 5)]
-    questions = Question.objects.all()
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'question_list' : questions})
+    data = [default_storage.url(KEY.format(i)) for i in roundsnum]
+    questions = list(Question.objects.values('text',))
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
