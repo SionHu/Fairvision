@@ -84,7 +84,7 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-# Optional applications that are not required for the working of the game
+ # Optional applications that are not required for the working of the game
 INSTALLED_APPS.extend(filter(importlib.util.find_spec, (
     'corsheaders',
     'rest_framework',
