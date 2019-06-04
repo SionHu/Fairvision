@@ -1,7 +1,5 @@
 from django.http import *
 from django.shortcuts import render_to_response,redirect,render
-from django.views.decorators.clickjacking import xframe_options_sameorigin
-
 
 def profile(request):
     return render(request, 'profile.html')

@@ -2,18 +2,23 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import transaction
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, ImageModel, Attribute, RoundsNum, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question
+from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question
 
 
 from django import forms
 from natsort import natsorted
 
-import csv, itertools, operator
+from ast import literal_eval
+import base64
+import csv
+import itertools
+import operator
 from django.http import HttpResponse
 
 def sort_uniq(sequence):
@@ -133,11 +138,62 @@ def export_csv(filename, field_names):
 class AttributeAdmin(admin.ModelAdmin):
     actions = [export_csv('phase3-attributes.csv', ['word','count'])]
 
+try:
+    from jsoneditor.forms import JSONEditor
+except:
+    JSONEditor = forms.Textarea
+
+class PhaseForm(forms.ModelForm):
+    get = forms.CharField(widget=JSONEditor)
+    post = forms.CharField(widget=JSONEditor)
+    class Meta:
+        model = Phase
+        fields = '__all__'
+    def save(self, *args, **kwargs):
+        obj = self.instance
+        obj.get = literal_eval(self.cleaned_data['get'])
+        obj.post = literal_eval(self.cleaned_data['post'])
+        return super().save(*args, **kwargs)
+
+class PhaseAdmin(admin.ModelAdmin):
+#    form = PhaseForm
+    readonly_fields = ('phase',)
+    fieldsets = (
+        (None, {'fields': ('phase', 'get', 'post')}),
+    )
+    def has_add_permission(self, request):
+        return False
+
+class SessionForm(forms.ModelForm):
+    decoded_data = forms.CharField(widget=JSONEditor)
+    class Meta:
+        model = Session
+        fields = ('session_key', 'decoded_data', 'expire_date')
+        exclude = ("session_data", )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial['decoded_data'] = self.instance.get_decoded() if self.instance else '{}'
+        self.objects = self._meta.model.objects
+    def save(self, *args, **kwargs):
+        obj = self.instance
+        obj.session_data = self.objects.encode(literal_eval(self.cleaned_data['decoded_data']))
+        return super().save(*args, **kwargs)
+
+class SessionAdmin(admin.ModelAdmin):
+    form = SessionForm
+    list_display = ('session_key', 'get_decoded', 'expire_date')
+    readonly_fields = ('session_key', )
+    fieldsets = (
+        (None, {'fields': ('session_key', 'decoded_data', 'expire_date')}),
+    )
+    def has_add_permission(self, request):
+        return False
     
+
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
 admin.site.register(PhaseBreak)
-admin.site.register(RoundsNum)
+admin.site.register(Phase, PhaseAdmin)
 
 admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(ImageModel, ImageModelAdmin)
@@ -147,3 +203,4 @@ admin.site.register(Phase02_instruction)
 admin.site.register(Phase03_instruction)
 admin.site.register(Question)
 admin.site.register(Answer)
+admin.site.register(Session, SessionAdmin)
