@@ -21,7 +21,7 @@ output: HITID and HIITGroupID for preview link
 def create_hit(phase):
     question = open(file='hitp1.xml', mode='r').read()
     new_hit = mturk.create_hit(
-        Title="test for cds game again",
+        Title="test for cds game redirect",
         Description="This is just a test for cds",
         Keywords='image, tagging',
         Reward = '0.15',
@@ -73,20 +73,20 @@ if __name__ == "__main__":
             print('python mturk_hit.py -p')
             sys.exit()
         elif opt in ("-c", "--create_phase"):
-            phase=arg
-            if phase != 'phase01a' or phase != 'phase01b' or phase != 'phase03':
+            phase=arg.strip()
+            if phase != 'phase01a' and phase != 'phase01b' and phase != 'phase03':
                 print()
                 print("-----------------------------------------")
                 print("Error: Please use correct phase: phase01a or phase01b or phase03")
                 sys.exit(2)
             create_hit(phase)
         elif opt in ("-d", "--delete_phase"):
-            phase=arg
-            if phase != 'phase01a' or phase != 'phase01b' or phase != 'phase03':
+            phase=arg.strip()
+            if phase != 'phase01a' and phase != 'phase01b' and phase != 'phase03':
                 print()
                 print("-----------------------------------------")
                 print("Error: Please use correct phase: phase01a or phase01b or phase03")
                 sys.exit(2)
-            delete_hit(phase)
+            #delete_hit(phase)
         elif opt == '-p':
             print_hit()

@@ -199,6 +199,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #Default file storage
 DEFAULT_FILE_STORAGE = 'csgame.storage_backends.MediaStorage'
 
+# X_Frame header option to make sure our website works in subscreen
+X_FRAME_OPTIONS = 'ALLOW_ALL'
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
+
 import boto3
 MTURK_SANDBOX = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
 MTURK = boto3.client('mturk',
