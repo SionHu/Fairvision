@@ -179,4 +179,4 @@ def phase03(request):
 
         return HttpResponse(None)
     else:
-        return render(request, 'phase03.html', {'attributes': attributes, 'instructions': instructions})
+        return render(request, 'phase03.html', {'statements': attributes, 'instructions': instructions})
