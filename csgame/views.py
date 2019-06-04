@@ -1,5 +1,6 @@
 from django.http import *
 from django.shortcuts import render_to_response,redirect,render
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 
 
 def profile(request):
@@ -19,4 +20,3 @@ def handler500(request, *args, **argv):
 
 def phase01b(request):
     return render(request, 'phase01b.html')
-
