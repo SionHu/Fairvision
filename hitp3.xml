@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">
+  <ExternalURL>https://cam2-crowdsourcing.herokuapp.com/phase03/</ExternalURL>
+  <FrameHeight>1000</FrameHeight>
+</ExternalQuestion>

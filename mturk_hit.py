@@ -34,8 +34,8 @@ def create_hit(phase):
         # create new hit
         new_hit = mturk.create_hit(
             Title="test for cds game redirect",
-            Description="This is just a test for cds",
-            Keywords='image, tagging',
+            Description="The phase01a for generating the QA pairs from the given image about a common single object from machine learning image classification dataset",
+            Keywords='image, tagging, machine learning, text generation',
             Reward = '0.15',
             MaxAssignments=10,
             LifetimeInSeconds=172800,
@@ -52,7 +52,20 @@ def create_hit(phase):
             print("----------------------")
             print('Error: no file found!')
             exit(1)
+        # create new hit
+        new_hit = mturk.create_hit(
+            Title="test for cds game redirect",
+            Description="The phase03 for crowdsourcing game, given an image of single object from ML image dataset, answer the questions provided",
+            Keywords='image, tagging',
+            Reward = '0.15',
+            MaxAssignments=10,
+            LifetimeInSeconds=7200,
+            AssignmentDurationInSeconds=6000,
+            AutoApprovalDelayInSeconds=14400,
+            Question=question,
+        )
     else:
+        # phase 03
         try:
             open(file='hitp3.xml', mode='r').read()
         except:
@@ -60,6 +73,18 @@ def create_hit(phase):
             print("----------------------")
             print('Error: no file found!')
             exit(1)
+        # create new hit
+        new_hit = mturk.create_hit(
+            Title="test for cds game redirect",
+            Description="The phase03 for crowdsourcing game, vote YES or NO for question provided based on common sense",
+            Keywords='binary tagging, text verification, computer vision, machine learning',
+            Reward = '0.15',
+            MaxAssignments=10,
+            LifetimeInSeconds=7200,
+            AssignmentDurationInSeconds=6000,
+            AutoApprovalDelayInSeconds=14400,
+            Question=question,
+        )
 
     # some print function for reference
     print(new_hit['HIT']['HITGroupId'])
@@ -68,12 +93,18 @@ def create_hit(phase):
 
 '''
 check available hit
-input argument: phase number
+input argument: N/A
 output print: HIT and Some title
 '''
 def print_hit():
     print(mturk.list_hits()['HITs'])
 
+'''
+delete_hit for different
+input argument: phase number
+output print: delete HIT ID, Status and delete message: success or fail
+Note: This should only been done for sandbox(development) or between the phase gap
+'''
 def delete_hit(phase):
     # Delete all HITs for now
     for item in mturk.list_hits()['HITs']:
@@ -83,28 +114,74 @@ def delete_hit(phase):
         # GET the HIT status
         status = mturk.get_hit(HITId=hit_id)['HIT']['HITStatus']
         print('HITStatus: ', status)
-        # If HIT is active then set it to expire immediately
-        if status=='Assignable':
-            response = mturk.update_expiration_for_hit(
-                HITId=hit_id,
-                ExpireAt=datetime(2015, 1, 1)
-            )
         description = mturk.get_hit(HITId=hit_id)['HIT']['Description']
-        if description == 'This is just a test for cds':
-            print("I found for phase1a")
-        # Delete the HIT
-        try:
-            mturk.delete_hit(HITId=hit_id)
-        except:
-            print('Not deleted')
-        else:
-            print('Deleted')
 
+        # delete phase01a
+        if phase == 'phase01a' and description == :
+            # If HIT is active then set it to expire immediately
+            if status=='Assignable':
+                response = mturk.update_expiration_for_hit(
+                    HITId=hit_id,
+                    ExpireAt=datetime(2015, 1, 1)
+                )
+
+            print("I found for phase1a")
+            # Delete the HIT
+            try:
+                mturk.delete_hit(HITId=hit_id)
+            except:
+                print('Not deleted')
+            else:
+                print('Deleted')
+        elif phase == 'phase01b' and description == 'The phase01b for crowdsourcing game, given an image of single object from ML image dataset, answer the questions provided':
+            # GET the HIT status
+            status = mturk.get_hit(HITId=hit_id)['HIT']['HITStatus']
+            print('HITStatus: ', status)
+            description = mturk.get_hit(HITId=hit_id)['HIT']['Description']
+
+            # delete phase01a
+            if phase == 'phase01a' and description == :
+                # If HIT is active then set it to expire immediately
+                if status=='Assignable':
+                    response = mturk.update_expiration_for_hit(
+                        HITId=hit_id,
+                        ExpireAt=datetime(2015, 1, 1)
+                    )
+
+                print("I found for phase01b")
+                # Delete the HIT
+                try:
+                    mturk.delete_hit(HITId=hit_id)
+                except:
+                    print('Not deleted')
+                else:
+                    print('Deleted')
+        elif phase == 'phase03' and description == 'The phase03 for crowdsourcing game, given an image of single object from ML image dataset, answer the questions provided':
+            # GET the HIT status
+            status = mturk.get_hit(HITId=hit_id)['HIT']['HITStatus']
+            print('HITStatus: ', status)
+            description = mturk.get_hit(HITId=hit_id)['HIT']['Description']
+
+            # delete phase01a
+            if phase == 'phase01a' and description == :
+                # If HIT is active then set it to expire immediately
+                if status=='Assignable':
+                    response = mturk.update_expiration_for_hit(
+                        HITId=hit_id,
+                        ExpireAt=datetime(2015, 1, 1)
+                    )
+
+                print("I found for phase03")
+                # Delete the HIT
+                try:
+                    mturk.delete_hit(HITId=hit_id)
+                except:
+                    print('Not deleted')
+                else:
+                    print('Deleted')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--images', type=str, default=None, help="file containing ID,URL pairs")
-    parser.add_argument('--pretend', action='store_true', help="show what would be done; don't do it")
 
     subparsers = parser.add_subparsers(metavar='subcommands', dest='command')
     phasesArg = dict(type=str, choices=['phase01a', 'phase01b', 'phase03'], metavar='phase',
@@ -119,7 +196,7 @@ if __name__ == "__main__":
     subparsers.add_parser('print', help='print hit status', aliases=['p'])
     options = parser.parse_args()
 
-
+    # Hello world for mturk boto api
     print("I have $" + mturk.get_account_balance()['AvailableBalance'] + " in my account")
     if options.command in ('create', 'c'):
         create_hit(options.phase)
