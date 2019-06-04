@@ -193,13 +193,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #Default file storage
 DEFAULT_FILE_STORAGE = 'csgame.storage_backends.MediaStorage'
 
-import boto3
-MTURK_SANDBOX = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
-MTURK = boto3.client('mturk',
-   aws_access_key_id = AWS_ACCESS_KEY_ID,
-   aws_secret_access_key = AWS_SECRET_ACCESS_KEY,
-   region_name='us-east-1',
-   endpoint_url = MTURK_SANDBOX
-)
-
-print("I have $" + MTURK.get_account_balance()['AvailableBalance'] + " in my Sandbox account")
+MTURK_URL = 'https://mechanicalturk.amazonaws.com' if IS_PRODUCTION_SITE else 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'

@@ -5,12 +5,11 @@ import django
 django.setup()
 
 from django.conf import settings
-mturk = settings.MTURK
+from csgame.storage_backends import mturk
 #number of rounds that will be hard coded for other test
 roundsnum = settings.NUMROUNDS
 import sys
-from sys import argv
-import getopt
+import argparse
 
 '''
 create hits assignments with phase01a, phase01b and available rounds number
@@ -53,40 +52,30 @@ def delete_hit(phase):
     print(mturk.list_hits()['HITs'])
 
 if __name__ == "__main__":
-    # create_hit()
-    try:
-        opts, args = getopt.getopt(argv[1:],"hpc:d:", ["create_phase=", "delete_phase="])
-    except getopt.GetoptError:
-      print()
-      print("-----------------------------------------")
-      print ('refer to commands with -h: \'python create_hit.py -h\'')
-      sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print()
-            print("-----------------------------------------")
-            print('    create hits for specfic phase with:')
-            print('python mturk_hit.py -c <create_phase>')
-            print('    or delete hits for specfic phase with:')
-            print('python mturk_hit.py -d <delete_phase>')
-            print('    or print hit status with:')
-            print('python mturk_hit.py -p')
-            sys.exit()
-        elif opt in ("-c", "--create_phase"):
-            phase=arg
-            if phase != 'phase01a' or phase != 'phase01b' or phase != 'phase03':
-                print()
-                print("-----------------------------------------")
-                print("Error: Please use correct phase: phase01a or phase01b or phase03")
-                sys.exit(2)
-            create_hit(phase)
-        elif opt in ("-d", "--delete_phase"):
-            phase=arg
-            if phase != 'phase01a' or phase != 'phase01b' or phase != 'phase03':
-                print()
-                print("-----------------------------------------")
-                print("Error: Please use correct phase: phase01a or phase01b or phase03")
-                sys.exit(2)
-            delete_hit(phase)
-        elif opt == '-p':
-            print_hit()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--images', type=str, default=None, help="file containing ID,URL pairs")
+    parser.add_argument('--pretend', action='store_true', help="show what would be done; don't do it")
+
+    subparsers = parser.add_subparsers(metavar='subcommands', dest='command')
+    phasesArg = dict(type=str, choices=['phase01a', 'phase01b', 'phase03'], metavar='phase',
+                     help='Choose phase01a, phase01b, or phase03.')
+
+    cparser = subparsers.add_parser('create', help='create hits for specfic phase with', aliases=['c'])
+    cparser.add_argument('phase', **phasesArg)
+
+    dparser = subparsers.add_parser('delete', help='delete hits for specfic phase with', aliases=['d'])
+    dparser.add_argument('phase', **phasesArg)
+
+    subparsers.add_parser('print', help='print hit status', aliases=['p'])
+    options = parser.parse_args()
+
+
+    print("I have $" + mturk.get_account_balance()['AvailableBalance'] + " in my account")
+    if options.command in ('create', 'c'):
+        create_hit(options.phase)
+    elif options.command in ('delete', 'd'):
+        delete_hit(options.phase)
+    elif options.command in ('print', 'p'):
+        print_hit()
+    else:
+        sys.exit(2)
