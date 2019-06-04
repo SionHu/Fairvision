@@ -73,7 +73,7 @@
 
     <div class="row">
 
-        <div class="col-md-7" id="bg-image" style="padding-top: 100px">
+        <div class="col-md-7" id="bg-image">
 
             <!-- IMAGE SET -->
             <div class="row mt-3">
@@ -154,27 +154,28 @@
             var resultArr = {
                 "dict" : {},
             }
+		var qs = {{ question_list|safe }};
         // Function that create the dictionary for QA pairs
         function rank(){
-            {% for q in question_list %}
-                if(document.getElementById("skip{{ forloop.counter }}").checked == true){
-                    resultArr['dict']["{{ q.text }}"] = " ";
+            for (var i = 1; i < qs.length; i++) {
+                if(document.getElementById("skip"+i).checked == true){
+                    resultArr['dict'][qs[i].text] = " ";
                 }
-                else if(document.getElementById("skip{{ forloop.counter }}").checked == false){
-                    resultArr['dict']["{{ q.text }}"] = document.getElementById("newA{{ forloop.counter }}").value;
+                else if(document.getElementById("skip"+i).checked == false){
+                    resultArr['dict'][qs[i].text] = document.getElementById("newA"+i).value;
                 }
-            {% endfor %}
+            }
             resultArr['dict']= JSON.stringify(resultArr['dict']);
         }
 
         function checkEmpty(){
-            {% for q in question_list %}
+            for (var q = 1; q < qs.length; q++) {
                 //console.log(q);
-                if(document.getElementById("skip{{ forloop.counter }}").checked == false && document.getElementById("newA{{ forloop.counter }}").value==""){
+                if(document.getElementById("skip"+q).checked == false && document.getElementById("newA"+q).value==""){
                     flag = 1;
                     // alert("Empty answer!");
                 }
-            {% endfor %}
+            }
         }
 
         //next button listener
@@ -190,6 +191,8 @@
 
                 //post method
                 $.post('{% url 'phase01b' %}', {
+                    'imgnum': {{ imgnum|safe }},
+                    'oldnum': -1,
                     'data': resultArr,
                     csrfmiddlewaretoken : CSRFtoken
                     }, function(data){});
