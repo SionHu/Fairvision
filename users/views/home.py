@@ -8,8 +8,11 @@ class SignUpView(TemplateView):
 def home(request):
     assignment = request.GET.get('assignment')
     is_mturker = assignment
-    if request.session.get('assignment') or is_mturker:
+
+    if is_mturker:
         request.session['assignment'] = assignment
+
+    if request.session.get('assignment'):
         messages.info(request, 'Thank you for choosing our project. Your assignment ID is %s.' % (assignment,))
     else:
         messages.warning(request, 'You are not an MTurker.')

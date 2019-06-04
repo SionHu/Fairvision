@@ -130,7 +130,7 @@
                 </div>
                 <div class="input-group mb-3 ml-3">
                     <div class="input-group-prepend">
-                        A: <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40">.
+                        A:&nbsp;<p id="it_is/they_are">It/There is</p><input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40">.
                     </div>
                 </div>
                 <button id="add" class="btn btn-success ml-3 mb-2" >Add</button>
@@ -188,6 +188,7 @@
         <script>
             
             function myChecker(user_input, index, array) {
+                if (user_input == '') return true;
                 
                 var input = user_input; // This should be changed to the input from other functions
                 
@@ -241,21 +242,29 @@
         numQA = 0;
         var listNode_q = document.createElement("ul");
         var listNode_a = document.createElement("ul");
+
+        document.getElementById("is/are").addEventListener("input", function() {
+            var isare = document.getElementById("is/are").value;
+            document.getElementById("it_is/they_are").innerText = isare == "is" ? "It/There is" : "They/There are";
+            console.log(document.getElementById("is/are").value + " " + document.getElementById("it_is/they_are").text);
+        });
+
         document.getElementById("add").addEventListener("click", function() {
             //Get the question            
-            var ques = document.getElementById("Q").value;
-            var ans = document.getElementById("A").value;
+            var ques = document.getElementById("Q").value.trim();
+            var ans = document.getElementById("A").value.trim();
             
             //Check user input using the checker function
             
             var ques_list = ques.split(" ");
             var ans_list = ans.split(" ");
-            var boo = true;
-            if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
-                alert("STOP SWEARING, HAOBO!");
-                boo = false;
-            }
-            if (ques !== "" && ans !== "" &&  boo) {
+            
+            boo: if (ques !== "" && ans !== "") {
+                if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
+                    alert("STOP SWEARING, HAOBO!");
+                    break boo;
+                }
+
                 qVal = "Q: What "+document.getElementById("is/are").value+" "+ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
             
@@ -348,7 +357,7 @@
             }
             else{
                 //alert("Please enter at least one Q&A pair!");
-                document.getElementById("alrt").innerHTML = "Please enter at least one Q&A pair!";
+                document.getElementById("alrt").innerHTML = "Please enter at least one Q&amp;A pair!";
             }
         })
         //delete button listener
