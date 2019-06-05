@@ -8,7 +8,7 @@ from operator import attrgetter
 import random
 from users.models import ImageModel, Phase
 
-KEY = settings.KEY
+KEYRING = settings.KEYRING
 
 
 def pushPostList(request, phase):
@@ -56,8 +56,7 @@ def popGetList(phase, count=1):
         count -= len(getList)
         # Create a new GET list if necesary
         postList = rounds.post
-        keyPiece = KEY.rsplit('/', 1)[0]+'/'
-        imgids = map(attrgetter('imgid'), ImageModel.objects.filter(img__startswith=keyPiece))
+        imgids = map(attrgetter('imgid'), ImageModel.objects.filter(img__startswith=KEYRING))
         getList = [i for i in imgids if i not in postList]
         random.shuffle(getList)
     else:

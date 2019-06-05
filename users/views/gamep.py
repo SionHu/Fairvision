@@ -25,7 +25,7 @@ from .roundsgenerator import popGetList, pushPostList
 
 # We should set up in backend manually
 KEY = settings.KEY
-NUMROUNDS = settings.NUMROUNDS
+KEYRING = settings.KEYRING
 
 
 old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
@@ -74,13 +74,8 @@ def phase01a(request):
 
         if id_merge is not None:
             Question.objects.filter(id__in=acceptedList).update(isFinal=True)
-            ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
-        # Don't think this is necessary. Need to test though
-        #for old, new in id_merge.items():
-        #    Question.objects.filter(id=old).update(isFinal=False)
-        #    Question.objects.filter(id=new).update(isFinal=True)
+            #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
             answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans) for que, ans in zip(questions, answers)])
-        # print("Well bulk answer objects", answers)
 
         return HttpResponse(status=201)
 
@@ -88,7 +83,7 @@ def phase01a(request):
     rounds, (roundsnum,) = popGetList('01a')
     players_images = request.session.get('user_imgs_phase01a', [])
 
-    if len(rounds.post) > NUMROUNDS:
+    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01a'})
 
@@ -129,7 +124,7 @@ def phase01b(request):
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01b', 4)
 
-    if len(rounds.post) > NUMROUNDS:
+    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     # sending 4 images at a time
