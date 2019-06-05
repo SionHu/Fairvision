@@ -24,7 +24,7 @@ from .roundsgenerator import popGetList, pushPostList
 
 # We should set up in backend manually
 KEY = settings.KEY
-NUMROUNDS = settings.NUMROUNDS
+KEYRING = settings.KEYRING
 
 
 old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
@@ -100,7 +100,7 @@ def phase01a(request):
     rounds, (roundsnum,) = popGetList('01a')
     players_images = request.session.get('user_imgs_phase01a', [])
 
-    if len(rounds.post) > NUMROUNDS:
+    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01a'})
 
@@ -148,7 +148,7 @@ def phase01b(request):
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01b', 4)
 
-    if len(rounds.post) > NUMROUNDS:
+    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     # sending 4 images at a time
