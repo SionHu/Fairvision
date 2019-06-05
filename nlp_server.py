@@ -4,7 +4,7 @@ import RedundancyV1
 import importlib
 import spacy
 # import threading  # Possible need to allow multiple connections if Django does not handle them
-import en_core_web_md
+
 def process_connection(sock):
     print("processing transmission from client...")
     print("Running Module Reload...")
@@ -12,7 +12,7 @@ def process_connection(sock):
     # receive data from the client
     data = comm.receive_data(sock)
     # do something with the data # TODO: Add link to main redundancy code.
-    reducer = RedundancyV1.RedundancyRemover(nlp)
+    reducer = RedundancyV1.RedundancyRemover()
     data = reducer.get_reduced_records(*data)  # See CSV file for the format of the data
     print(data)
     # send the result back to the client
@@ -30,8 +30,7 @@ server_sock.bind((comm.server_host, comm.server_port))
 server_sock.listen(5)
 
 # Start loading neural net down here to minimize the risk of dropped requests
-
-nlp = en_core_web_md.load()  # Single load in memory till killed
+from csgame.nlp_loader import nlp
 
 print("listening on port {}...".format(comm.server_port))
 try:
