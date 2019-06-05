@@ -9,6 +9,7 @@ Model Name  - en_core_web_md
 # Imports
 import warnings
 import spacy
+from csgame.nlp_loader import nlp
 
 
 def remove_taboo_words(question, taboo_list=("what", "is", "are", "of", "which", "the")):
@@ -18,19 +19,6 @@ def remove_taboo_words(question, taboo_list=("what", "is", "are", "of", "which",
 
 
 class RedundancyRemover:
-    """
-    Class to handle all machine based redundancy removal.
-    """
-    def __init__(self, model):
-        """
-        Class initializer
-        """
-        # self.file_handle = open(file_path)
-        # self.csv_reader = csv.reader(self.file_handle, delimiter=',')
-        self.nlp = model  # spacy.load('en_core_web_md')  # The SpaCy handle to the Language model
-        if not isinstance(self.nlp, spacy.lang.en.English):
-            raise TypeError("Model given is not of type {}.".format("spacy.lang.en.English"))
-
     def get_reduced_records(self, new_ques, old_ques):
         """
         Method to run an immediate validation on the data for redundancy.
@@ -48,10 +36,10 @@ class RedundancyRemover:
         all_old = (' '.join(remove_taboo_words(question)) for question, _ in old_ques)
         new_old_pairs = {}
         accepted_ids = []
-        docs_old = list(map(self.nlp, all_old))
+        docs_old = list(map(nlp, all_old))
 
         for qid_new, q_new in zip(new_ques, all_new):
-            doc_new = self.nlp(q_new)
+            doc_new = nlp(q_new)
             for qid_old, doc_old in zip(old_ques, docs_old):
                 # Uncomment the Prints below to see output. Remove them for production version
                 val = doc_new.similarity(doc_old)
@@ -68,36 +56,3 @@ class RedundancyRemover:
                 docs_old.append(doc_new)
 
         return accepted_ids, new_old_pairs
-
-    def remove_redundant_answers(self, answers):
-        """
-        method will return a new list of  unique questions and a dict of the ID'd merged.
-        :param answers: The set of answers [answer, id]
-        :return: new list of reduced answers and id merge list
-        """
-
-        # Remove taboo words from the sentence
-        all_new = (' '.join(remove_taboo_words(question)) for question, _ in answers)
-        all_old = []  # (' '.join(remove_taboo_words(question)) for question, _ in old_ques)
-        new_old_pairs = {}
-        old_ans = []
-        docs_old = list(map(self.nlp, all_old))
-
-        for qid_new, q_new in zip(answers, all_new):
-            doc_new = self.nlp(q_new)
-            for qid_old, doc_old in zip(old_ans, docs_old):
-                # Uncomment the Prints below to see output. Remove them for production version
-                val = doc_new.similarity(doc_old)
-                if val > 0.80:
-                    # print(doc_old.text)
-                    # print(doc_new.text)
-                    # print(val)
-                    # print("\n_______________________\n")
-                    new_old_pairs[qid_new[1]] = qid_old[1]
-                    break
-            else:
-                # If code reaches this point merge the questions
-                old_ans.append(qid_new)
-                docs_old.append(doc_new)
-
-        return old_ans, new_old_pairs
