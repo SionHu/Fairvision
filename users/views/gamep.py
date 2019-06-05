@@ -77,15 +77,16 @@ def phase01a(request):
         questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(int(postList[-1]))) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
-        print(new_Qs)
+        # print(new_Qs)
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
         id_merge = send__receive_data(new_Qs, old_Qs)
+        print("id_merge is: ", id_merge)
 
         if id_merge is not None:
-            Question.objects.filter(id__in=[id for _, id in id_merge]).update(isFinal=True)
+            Question.objects.filter(id__in=id_merge).update(isFinal=True)
             ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
         # Don't think this is necessary. Need to test though
         #for old, new in id_merge.items():

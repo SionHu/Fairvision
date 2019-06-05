@@ -25,7 +25,7 @@ def create_hit(phase):
     # phase 01a
     if(phase == 'phase01a'):
         try:
-            question = open(file='hitp1.xml', mode='r').read()
+            question = open(file='hitExternal/hitp1.xml', mode='r').read()
         except:
             print()
             print("----------------------")
@@ -46,7 +46,7 @@ def create_hit(phase):
     # phase 01b
     elif(phase == 'phase01b'):
         try:
-            open(file='hitp1b.xml', mode='r').read()
+            open(file='hitExternal/hitp1b.xml', mode='r').read()
         except:
             print()
             print("----------------------")
@@ -67,7 +67,7 @@ def create_hit(phase):
     else:
         # phase 03
         try:
-            open(file='hitp3.xml', mode='r').read()
+            open(file='hitExteranl/hitp3.xml', mode='r').read()
         except:
             print()
             print("----------------------")
