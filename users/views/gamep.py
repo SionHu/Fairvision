@@ -142,7 +142,7 @@ def phase01b(request):
 
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
-    questions = list(Question.objects.values('text',))
+    questions = list(Question.objects.filter(isFinal=True).values('text',))
     return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId})
     # The NLP server will be updated later?
 
