@@ -69,17 +69,17 @@ def phase01a(request):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        id_merge = send__receive_data(new_Qs, old_Qs)
+        acceptedList, id_merge = send__receive_data(new_Qs, old_Qs)
         print("id_merge is: ", id_merge)
 
         if id_merge is not None:
-            Question.objects.filter(id__in=id_merge).update(isFinal=True)
+            Question.objects.filter(id__in=acceptedList).update(isFinal=True)
             ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
         # Don't think this is necessary. Need to test though
         #for old, new in id_merge.items():
         #    Question.objects.filter(id=old).update(isFinal=False)
         #    Question.objects.filter(id=new).update(isFinal=True)
-            answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
+            answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans) for que, ans in zip(questions, answers)])
         # print("Well bulk answer objects", answers)
 
         return HttpResponse(status=201)
@@ -97,16 +97,8 @@ def phase01a(request):
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
 
-    # Get the last image not seen by the current player
-    for new in reversed(rounds.post):
-        if new not in players_images:
-            break
-    else: # if not broken
-        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'oldnum': -1, 'questions': []})
-
-    # Get all of the questions for that image
-    previous_questions = list(Question.objects.filter(imageID=KEY.format(new)).values('text',))
-    assert previous_questions, "The previous image does not have any questions which is weird."
+    # Get all of the questions
+    previous_questions = list(Question.objects.values('text',))
     return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'oldnum': new, 'questions': previous_questions, 'assignmentId': assignmentId })
 
 '''
