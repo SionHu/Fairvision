@@ -28,12 +28,8 @@ def pushPostList(request, phase):
         rounds.post = postList
         rounds.save()
 
-    # Update the user's session variable with the old images
-    old = int(request.POST['oldnum'])
     userList = request.session.get('user_imgs_phase'+phase, [])
     userList.extend(new)
-    if old != -1:
-        userList.append(old)
     request.session['user_imgs_phase'+phase] = userList
     request.session.modified = True
     return new

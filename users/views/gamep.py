@@ -61,7 +61,7 @@ def phase01a(request):
         old_Qs = list(Question.objects.values_list('text', 'id'))
         # print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(int(postList[-1]))) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
         # print(new_Qs)
@@ -94,7 +94,7 @@ def phase01a(request):
 
     # Get all of the questions
     previous_questions = list(Question.objects.values('text',))
-    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'oldnum': new, 'questions': previous_questions, 'assignmentId': assignmentId })
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId })
 
 '''
 View for phase 01 b
@@ -130,7 +130,7 @@ def phase01b(request):
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
     questions = list(Question.objects.values('text',))
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'question_list' : questions, 'assignmentId': assignmentId})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
