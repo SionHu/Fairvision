@@ -9,9 +9,10 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
 import django
 django.setup()
-from users.models import Question, Answer
+from users.models import Question, Answer, Attribute
 from django.db.models import F
 from phase2_reducer import AnswerReducer
+from users.views.rephrasing import rephrase
 
 '''
 script function for phase02
@@ -37,3 +38,7 @@ def phase02():
 
 if __name__ == "__main__":
     phase02()
+    # rephrase and import into attributes we have
+    for answer in Answer.objects.filter(isFinal=True):
+        Attributes.objects.get_or_create(word=rephrase(answer.question.text, answer.text))
+        
