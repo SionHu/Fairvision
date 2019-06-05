@@ -4,8 +4,9 @@ threshold will be given only.
 """
 
 # import spacy
-import RedundancyV1
+
 from csgame.nlp_loader import nlp
+import RedundancyV1
 from collections import defaultdict
 from operator import itemgetter
 
@@ -36,7 +37,7 @@ class AnswerReducer:
             if each[1] in self.grouped_questions.keys():
                 self.grouped_questions[each[1]].append(each[0])
             else:
-                print("Came here")
+                # print("Came here")
                 self.grouped_questions.setdefault(each[1], [each[0]])
 
     def remove_redundant_answers(self, answers):

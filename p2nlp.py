@@ -11,6 +11,7 @@ import django
 django.setup()
 from users.models import Question, Answer
 from django.db.models import F
+from phase2_reducer import AnswerReducer
 
 '''
 script function for phase02
@@ -20,13 +21,18 @@ def phase02():
     questions = Question.objects.all()
     answers = Answer.objects.all()
     # Make the list with requirements
-    question_list = [(que.text, que.id) for que in questions]
-    answer_list = [(ans.text, ans.question.id) for ans in answers]
-    print("answer list: ", answer_list)
-    # psudo-code
-    result_dict = p2receive([question_list, answer_list])
-    for q in result_dict:
-        Answer.object.filter(text=result_dict[q], question=Question.objects.get(text=q)).update(isFinal=True, count=F('count') + 1)
+    question_list = [[que.text, que.id] for que in questions]
+    answer_list = [[ans.text, ans.question.id] for ans in answers]
+    # print("answer list: ", answer_list)
+
+
+    test_obj = AnswerReducer(questions=question_list, answers=answer_list)
+    test_obj.grouper()
+    result_dict = test_obj.reduce_within_groups()
+
+    for q, a in result_dict.items():
+        # print("q is: ", q)
+        Answer.objects.filter(text=a, question_id=q).update(isFinal=True, count=F('count') + 1)
     print("Update successfully!")
 
 if __name__ == "__main__":
