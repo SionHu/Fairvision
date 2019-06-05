@@ -129,8 +129,9 @@ def phase01b(request):
 
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
-    questions = list(Question.objects.values('text',))
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'question_list' : questions, 'assignmentId': assignmentId})
+
+    questions = list(Question.objects.values('text',)) # TODO: Haobo added .filter(isFinal=True) here. I don't think that is right. Please check.
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin

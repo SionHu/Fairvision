@@ -47,7 +47,7 @@ try:
     NUMROUNDS = int(my_env.get('NUMROUNDS', '5'))
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
-    KEY = my_env.get('KEY', 'Caltech101/airplanes/image_{:04d}.jpg')
+    KEY = my_env.get('KEY', 'Caltech101/laptop/image_{:04d}.jpg')
     KEYRING = KEY.rsplit('/', 1)[0]+'/'
 
 except KeyError as e:
