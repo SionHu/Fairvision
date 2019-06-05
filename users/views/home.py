@@ -7,7 +7,8 @@ class SignUpView(TemplateView):
 
 def home(request):
     assignment = request.GET.get('assignment')
-    is_mturker = assignment
+    is_mturker = assignment not in (None, 'ASSIGNMENT_ID_NOT_AVAILABLE')
+    print(is_mturker)
 
     if is_mturker:
         request.session['assignment'] = assignment
