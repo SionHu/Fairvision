@@ -1,3 +1,5 @@
+from django.conf import settings
+
 PREPOSITIONS = ("aboard", "about", "above", "across", "after", "against",
     "along", "amid", "among", "around", "as", "at", "before", "behind",
     "below", "beneath", "beside", "between", "beyond", "but", "by",
@@ -9,7 +11,7 @@ PREPOSITIONS = ("aboard", "about", "above", "across", "after", "against",
     "until", "up", "upon", "versus", "via", "with", "within", "without")
 TWO_WORD_PREPOSITIONS = ("left of", "right of", "close to", "back to",
     "counter to", "far from", "other than")
-IMG_PROMPT='cats,'
+IMG_PROMPT=settings.KEY.split('/')[1]+'s,'
 
 def rephraseList(qaDict):
     return [rephrase(*i) for i in qaDict.items()]

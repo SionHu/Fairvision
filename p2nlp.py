@@ -40,5 +40,4 @@ if __name__ == "__main__":
     phase02()
     # rephrase and import into attributes we have
     for answer in Answer.objects.filter(isFinal=True):
-        Attributes.objects.get_or_create(word=rephrase(answer.question.text, answer.text))
-        
+        Attribute.objects.get_or_create(word=rephrase(answer.question.text, answer.text))

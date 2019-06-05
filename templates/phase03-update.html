@@ -18,11 +18,11 @@
     function rank(){
         {% for stat in statements %}
 
-            if(document.getElementById("{{ stat.text }}yes").checked == true){
-                resultArr['dict']["{{ stat.text }}"] = 0;
+            if(document.getElementById("{{ stat.word }}yes").checked == true){
+                resultArr['dict']["{{ stat.word }}"] = 0;
             }
-            else if(document.getElementById("{{ stat.text }}yes").checked == false){
-                resultArr['dict']["{{ stat.text }}"] = -1;
+            else if(document.getElementById("{{ stat.word }}yes").checked == false){
+                resultArr['dict']["{{ stat.word }}"] = -1;
             }
         {% endfor %}
         resultArr['dict']= JSON.stringify(resultArr['dict']);
@@ -121,16 +121,16 @@
     <div class="card-content mt-3">
         {% for stat in statements %}
             <div class="d-flex justify-content-center">
-                <h4>{{ stat.text }}</h4>
+                <h4>{{ stat.word }}</h4>
                 <form action="/phase03.html" id="bias">
                     <div class="ml-3 mt-1 form-check-inline">
                         <label class="form-check-label" for="exampleRadios1">
-                            <input class="form-check-input" type="radio" name="radios" id="{{ stat.text }}yes" value="option1" checked>YES
+                            <input class="form-check-input" type="radio" name="radios" id="{{ stat.word }}yes" value="option1" checked>YES
                         </label>
                     </div>
                     <div class="ml-3 mt-1 form-check-inline">
                         <label class="form-check-label" for="exampleRadios2">
-                            <input class="form-check-input" type="radio" name="radios" id="{{ stat.text }}no" value="option2">NO
+                            <input class="form-check-input" type="radio" name="radios" id="{{ stat.word }}no" value="option2">NO
                         </label>
                     </div>
                 </form>

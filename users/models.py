@@ -56,7 +56,7 @@ def delete_file(sender, instance, *args, **kwargs):
 
 # Phase 03: attributes that we ask and decide for dataset
 class Attribute(models.Model):
-    word = models.CharField(max_length=20, primary_key=True)
+    word = models.CharField(max_length=200, primary_key=True)
     count = models.IntegerField(default=0)
 
 class ImageModel(models.Model):
