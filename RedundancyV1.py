@@ -7,9 +7,9 @@ Model Name  - en_core_web_md
 """
 
 # Imports
+from csgame.nlp_loader import nlp
 import warnings
 import spacy
-from csgame.nlp_loader import nlp
 
 
 def remove_taboo_words(question, taboo_list=("what", "is", "are", "of", "which", "the")):
@@ -35,7 +35,6 @@ class RedundancyRemover:
         all_new = (' '.join(remove_taboo_words(question)) for question, _ in new_ques)
         all_old = (' '.join(remove_taboo_words(question)) for question, _ in old_ques)
         new_old_pairs = {}
-        accepted_ids = []
         docs_old = list(map(nlp, all_old))
 
         for qid_new, q_new in zip(new_ques, all_new):
@@ -52,7 +51,6 @@ class RedundancyRemover:
                     break
             else:
                 # If code reaches this point merge the questions
-                accepted_ids.append(id_new)
                 docs_old.append(doc_new)
 
-        return accepted_ids, new_old_pairs
+        return new_old_pairs
