@@ -28,13 +28,14 @@ urlpatterns = [
 
     path('accounts/', include('django.contrib.auth.urls')),
     # path('accounts/signup/', home.SignUpView.as_view(), name='signup'),
-    path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
+    # path('accounts/signup/player/', player.PlayerSignUpView.as_view(), name='player_signup'),
     # path('accounts/signup/requester/', requester.RequesterSignUpView.as_view(), name='requester_signup'),
     # path('uploads/', upload.ZipfileCreateView.as_view(), name='test_upload')
-    
+
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^over/$', views.over, name='over'),
     url(r'^about/$', views.about, name='about'),
+    url(r'^stop/$', views.stop, name='stop'),
 
     # url(r'^phase01/$', gamep.phase01, name='phase01'),
     url(r'^phase01a/$', gamep.phase01a, name='phase01a'),

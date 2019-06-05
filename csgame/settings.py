@@ -84,7 +84,7 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-# Optional applications that are not required for the working of the game
+ # Optional applications that are not required for the working of the game
 INSTALLED_APPS.extend(filter(importlib.util.find_spec, (
     'corsheaders',
     'rest_framework',
@@ -198,3 +198,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #Default file storage
 DEFAULT_FILE_STORAGE = 'csgame.storage_backends.MediaStorage'
+
+MTURK_URL = 'https://mechanicalturk.amazonaws.com' if IS_PRODUCTION_SITE else 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'

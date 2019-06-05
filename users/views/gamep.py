@@ -17,6 +17,8 @@ import botocore
 from botocore.client import Config
 import random
 import json
+
+from ..decorators import player_required
 from .roundsgenerator import popGetList, pushPostList
 
 
@@ -30,7 +32,7 @@ new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
 
 
 from client import send__receive_data
-#@login_required
+@player_required
 def phase01a(request):
 
     ''' Test case
@@ -124,7 +126,7 @@ View for phase 01 b
 Output to front-end: list of all questions and 4 images without overlapping (similar to what we did before)
 POST = method that retrieve the QA dictionary from the crowd workers
 '''
-# @login_required
+@player_required
 def phase01b(request):
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
     # There should be an array of question that got skipped. Each entry should the final question value
@@ -156,6 +158,7 @@ def phase01b(request):
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
+@player_required
 def phase02(request):
     if request.user.is_superuser or request.user.is_staff:
         print("This is admin")
@@ -165,7 +168,7 @@ def phase02(request):
         information= "Thank you for your support and please wait until we finish process and release the next phase"
     return render(request, 'over.html', {'info' : information})
 # View for phase3
-#@login_required
+@player_required
 def phase03(request):
     attributes = Attribute.objects.all() or ['none']
     instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
@@ -179,4 +182,4 @@ def phase03(request):
 
         return HttpResponse(None)
     else:
-        return render(request, 'phase03.html', {'attributes': attributes, 'instructions': instructions})
+        return render(request, 'phase03.html', {'statements': attributes, 'instructions': instructions})
