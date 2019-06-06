@@ -92,7 +92,7 @@ def phase01a(request):
     # Previous all question pairs that will be sent to front-end
 
     # Get all of the questions
-    previous_questions = list(Question.objects.values('text',))
+    previous_questions = list(Question.objects.filter(isFinal=True).values('text',))
     return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId })
 
 '''
@@ -113,10 +113,13 @@ def phase01b(request):
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST['data[dict]'])
         print("I got the QA dict: ", dictionary)
+
         for question, answer in dictionary.items():
+            print("Answer: ", answer)
             # if the answer is not empty, add into database
-            if not answer:
-                que = Question.objects.get(text=question)
+            if answer != " ":
+                print("answer is: ", answer)
+                que = Question.objects.get(text=question, isFinal=True)
                 new_Ans = Answer.objects.create(text=answer, question=que)
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
