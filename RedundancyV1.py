@@ -34,6 +34,7 @@ class RedundancyRemover:
         # Remove taboo words from the sentence
         all_new = (' '.join(remove_taboo_words(question)) for question, _ in new_ques)
         all_old = (' '.join(remove_taboo_words(question)) for question, _ in old_ques)
+        acceptedList = []
         new_old_pairs = {}
         docs_old = list(map(nlp, all_old))
 
@@ -51,6 +52,7 @@ class RedundancyRemover:
                     break
             else:
                 # If code reaches this point merge the questions
+                acceptedList.append(qid_new[1])
                 docs_old.append(doc_new)
 
-        return new_old_pairs
+        return acceptedList, new_old_pairs

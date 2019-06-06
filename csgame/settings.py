@@ -48,6 +48,7 @@ try:
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
     KEY = my_env.get('KEY', 'Caltech101/laptop/image_{:04d}.jpg')
+    KEYRING = KEY.rsplit('/', 1)[0]+'/'
 
 except KeyError as e:
     exit('Lacking Environment Variables: ' + str(e)) # indicate to the OS that the program has failed

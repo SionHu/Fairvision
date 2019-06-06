@@ -25,7 +25,7 @@ from .roundsgenerator import popGetList, pushPostList
 
 # We should set up in backend manually
 KEY = settings.KEY
-NUMROUNDS = settings.NUMROUNDS
+KEYRING = settings.KEYRING
 
 
 old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
@@ -61,26 +61,20 @@ def phase01a(request):
         old_Qs = list(Question.objects.values_list('text', 'id'))
         # print(old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(int(postList[-1]))) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
-        answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
         # print(new_Qs)
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        id_merge = send__receive_data(new_Qs, old_Qs)
+        acceptedList, id_merge = send__receive_data(new_Qs, old_Qs)
         print("id_merge is: ", id_merge)
 
         if id_merge is not None:
-            Question.objects.filter(id__in=id_merge).update(isFinal=True)
-            ques_merge = {que.id:que for que in Question.objects.filter(id__in=id_merge.values())}
-        # Don't think this is necessary. Need to test though
-        #for old, new in id_merge.items():
-        #    Question.objects.filter(id=old).update(isFinal=False)
-        #    Question.objects.filter(id=new).update(isFinal=True)
-            answers = Answer.objects.bulk_create([Answer(question=(ques_merge[id_merge[que.id]] if que.id in id_merge else que), text=ans) for que, ans in zip(questions, answers)])
-        # print("Well bulk answer objects", answers)
+            Question.objects.filter(id__in=acceptedList).update(isFinal=True)
+            #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
+            answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans) for que, ans in zip(questions, answers)])
 
         return HttpResponse(status=201)
 
@@ -88,7 +82,7 @@ def phase01a(request):
     rounds, (roundsnum,) = popGetList('01a')
     players_images = request.session.get('user_imgs_phase01a', [])
 
-    if len(rounds.post) > NUMROUNDS:
+    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
         return render(request, 'over.html', {'phase': 'PHASE 01a'})
 
@@ -97,17 +91,9 @@ def phase01a(request):
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
 
-    # Get the last image not seen by the current player
-    for new in reversed(rounds.post):
-        if new not in players_images:
-            break
-    else: # if not broken
-        return render(request, 'phase01a.html', {'url' : serving_img_url, 'imgnum': roundsnum, 'oldnum': -1, 'questions': []})
-
-    # Get all of the questions for that image
-    previous_questions = list(Question.objects.filter(imageID=KEY.format(new)).values('text',))
-    assert previous_questions, "The previous image does not have any questions which is weird."
-    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'oldnum': new, 'questions': previous_questions, 'assignmentId': assignmentId })
+    # Get all of the questions
+    previous_questions = list(Question.objects.values('text',))
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId })
 
 '''
 View for phase 01 b
@@ -137,11 +123,12 @@ def phase01b(request):
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01b', 4)
 
-    if len(rounds.post) > NUMROUNDS:
+    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         return render(request, 'over.html', {'phase' : 'PHASE 01b'})
 
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
+
     questions = list(Question.objects.filter(isFinal=True).values('text',))
     return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId})
     # The NLP server will be updated later?

@@ -61,7 +61,7 @@ toolz==0.9.0
 tqdm==4.32.1
 ujson==1.35
 wrapt==1.10.11
-https://github.com/explosion/spacy-models/releases/download/en_core_web_md-2.1.0/en_core_web_md-2.1.0.tar.gz
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.1.0/en_core_web_sm-2.1.0.tar.gz
 
 # JSON
 django-jsoneditor==0.1.4
