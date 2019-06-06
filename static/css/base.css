@@ -117,3 +117,24 @@ hr {
 .modal.and.carousel {
   position: fixed; 
 }
+
+#navbar {
+  display: flex;
+  background-color: #2C2C2C;
+  transform: translateY(-100%);
+  transition: transform .5s cubic-bezier(.4,0,.2,1);
+}
+
+#navbar a {
+    color: white;
+    text-decoration: none;
+}
+#navbar > * {
+  padding: 0.5rem;
+}
+body {
+  margin: 0;
+}
+.nav-container:hover #navbar {
+  transform: translateY(0);
+}

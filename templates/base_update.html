@@ -1,0 +1,86 @@
+{% load static %}
+
+</!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/png" href="{% static "img/logo.jpg" %}"/>
+	<title>{% block title %}CSGAME{% endblock %}</title>
+
+    <!--  Bootstrap 4 css link  -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Implement base.css  -->
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+
+    <style type="text/css">
+   		body { background: #673183 !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+	</style>
+
+    {% block css %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+</head>
+
+<body style="padding-top: 100px">
+
+<!--  Navebar  -->
+<div class="nav-container fixed-top">
+    <nav id = 'navbar'>
+
+        <div class="navbar-header" style="padding-left: 200px">
+            <a class="navbar-brand" href="/">Game</a>
+        </div>
+
+        <div class="link-container">
+            <a href="{% url 'about' %}" class="nav-link">About</a>
+        </div>
+
+        <div class="dropdown ml-2">
+            <button type="button" class="btn btn-secondary  dropdown-toggle" data-toggle="dropdown">
+                        Phase
+                    </button>
+            <ul class="dropdown-menu" style="color: #2C2C2C">
+              <li><a class="dropdown-item" href="{% url 'phase01a' %}" style="color: black">Phase01a: Q&A Generations</a></li>
+              <li><a class="dropdown-item" href="{% url 'phase01b' %}" style="color: black">Phase01b: Q&A Validation</a></li>
+              <li><a class="dropdown-item" href="{% url 'phase03' %}" style="color: black">Phase03: Yes or No?</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<!--  End of Navebar  -->
+
+	{% block content %}
+	{% endblock %}
+
+<!--  Footer  -->
+<footer class="footer-copyright py-3 bg-dark fixed-bottom text-center">
+    Copyright © 2019 Purdue CAM2 Research Group Crowdsourcing Team. All rights reserved.
+  </footer>
+
+  <!-- Footer -->
+
+<!--  End of Footer  -->
+
+</body>
+</html>
