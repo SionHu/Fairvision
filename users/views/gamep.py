@@ -80,7 +80,6 @@ def phase01a(request):
 
     # Get rounds played in total and by the current player
     rounds, (roundsnum,) = popGetList('01a')
-    players_images = request.session.get('user_imgs_phase01a', [])
 
     if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
