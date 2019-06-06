@@ -44,10 +44,10 @@ class RedundancyRemover:
                 # Uncomment the Prints below to see output. Remove them for production version
                 val = doc_new.similarity(doc_old)
                 if val > 0.80:
-                    # print(doc_old.text)
-                    # print(doc_new.text)
-                    # print(val)
-                    # print("\n_______________________\n")
+                    print(doc_old.text)
+                    print(doc_new.text)
+                    print(val)
+                    print("\n_______________________\n")
                     new_old_pairs[qid_new[1]] = qid_old[1]
                     break
             else:

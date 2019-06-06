@@ -19,7 +19,7 @@ def getPort():
     main_name = os.path.splitext(os.path.basename(sys.modules['__main__'].__file__))[0]
     # I don't know if binding will always work. The client and server may fight over the space to the port.
     # If so, uncomment the rest of the line.
-    force = sock.bind# if main_name == 'nlp_server' else sock.connect
+    force = sock.bind if main_name == 'nlp_server' else sock.connect
     for forcedPort in choices:
         try:
             force((server_host,forcedPort))
