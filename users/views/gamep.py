@@ -63,7 +63,6 @@ def phase01a(request):
 
         questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
-        answers = Answer.objects.bulk_create([Answer(question=que, text=ans) for que, ans in zip(questions, answers)])
         # print(new_Qs)
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
