@@ -157,19 +157,19 @@
 		var qs = {{ question_list|safe }};
         // Function that create the dictionary for QA pairs
         function rank(){
-            for (var i = 1; i < qs.length; i++) {
+            for (var i = 1; i <= qs.length; i++) {
                 if(document.getElementById("skip"+i).checked == true){
-                    resultArr['dict'][qs[i].text] = " ";
+                    resultArr['dict'][qs[i-1].text] = " ";
                 }
                 else if(document.getElementById("skip"+i).checked == false){
-                    resultArr['dict'][qs[i].text] = document.getElementById("newA"+i).value;
+                    resultArr['dict'][qs[i-1].text] = document.getElementById("newA"+i).value;
                 }
             }
             resultArr['dict']= JSON.stringify(resultArr['dict']);
         }
 
         function checkEmpty(){
-            for (var q = 1; q < qs.length; q++) {
+            for (var q = 1; q <= qs.length; q++) {
                 //console.log(q);
                 if(document.getElementById("skip"+q).checked == false && document.getElementById("newA"+q).value==""){
                     flag = 1;
@@ -188,11 +188,10 @@
                 rank();
                 // get the value of CSRF token
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-
+                // console.log(resultArr);
                 //post method
                 $.post('{% url 'phase01b' %}', {
                     'imgnum': {{ imgnum|safe }},
-                    'oldnum': -1,
                     'data': resultArr,
                     csrfmiddlewaretoken : CSRFtoken
                     }, function(data){});
