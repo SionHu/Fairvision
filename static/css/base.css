@@ -106,7 +106,7 @@ h1{
 
 ::selection {
   background-color: #0099cc;
-} 
+}
 
 
 hr {
@@ -117,7 +117,7 @@ hr {
 }
 
 .modal.and.carousel {
-  position: fixed; 
+  position: fixed;
 }
 
 #navbar {
