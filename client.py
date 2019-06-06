@@ -42,7 +42,7 @@ if __name__ == "__main__":
         for row in csv_reader:
             new.append(row)
     try:
-        send__receive_data(new, old)
+        print(send__receive_data(new, old))
 
 
     except ConnectionRefusedError:
