@@ -112,6 +112,7 @@ def phase01b(request):
 
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST['data[dict]'])
+        print("I got the QA dict: ", dictionary)
         for question, answer in dictionary.items():
             # if the answer is not empty, add into database
             if not answer:
