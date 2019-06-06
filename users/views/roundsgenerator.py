@@ -28,7 +28,7 @@ def pushPostList(request, phase):
         rounds.post = postList
         rounds.save()
 
-    hitObj = HIT.objects.get(session=request.session.session_key)
+    hitObj = HIT.objects.only('data').get(session=request.session.session_key)
     hit = hitObj.data
     userList = hit.get('user_imgs_phase'+phase, [])
     userList.extend(new)

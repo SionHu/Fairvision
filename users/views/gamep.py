@@ -145,17 +145,14 @@ def phase02(request):
 # View for phase3
 @player_required
 def phase03(request):
-    assignmentId = request.GET.get('assignmentId')
-    attributes = Attribute.objects.all() or ['none']
-    instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
-
     # Update count
     if request.method == 'POST':
-        dictionary = json.loads(request.POST['data[dict]'])
-        for word, count in dictionary.items():
-            # print("key: ", word, " value: ", count)
-            Attribute.objects.filter(word=word).update(count=F('count')+count)
+        words = request.POST.getlist('data[]')
+        Attribute.objects.filter(word__in=words).update(count=F('count')-1)
 
         return HttpResponse(None)
     else:
+        assignmentId = request.GET.get('assignmentId')
+        attributes = list(Attribute.objects.values_list('word', flat=True))
+        instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
         return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId})

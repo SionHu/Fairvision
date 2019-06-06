@@ -29,27 +29,21 @@ def player_required(func):
             request.session['assignmentId'] = request.user.username
 
         if "assignmentId" in request.session:
-            hitObj = HIT.objects.get_or_create(session=request.session.session_key, defaults={'data': {}})[0]
+            hitObj = HIT.objects.only('data').get_or_create(session=request.session.session_key, defaults={'data': {}})[0]
             hit = hitObj.data
 
-            if 'roundnums' in hit:
-                roundnums = hit['roundnums']
-            else:
-                roundnums = hit['roundnums'] = {}
+            roundnums = hit.setdefault('roundnums', {})
 
             numInPhase = roundnums.get(func.__name__, 0) # this line is pretty unsafe, but it will do
-            if numInPhase > NUMROUNDS:
-                return over(request)
 
-            output = func(request, *args, **kwargs)
             if request.method == 'POST':
-                hit['roundnums'][func.__name__] = numInPhase + 1
+                output = func(request, *args, **kwargs)
+                roundnums[func.__name__] = numInPhase + 1
+                hitObj.data = hit
+                hitObj.save()
+                return output
             else:
-                # TODO: Perhaps something needs to be here. I don't know
-                pass
-            hitObj.data = hit
-            hitObj.save()
-            return output
+                return over(request) if numInPhase >= NUMROUNDS else func(request, *args, **kwargs)
         else:
             return stop(request)
     return wrapper
