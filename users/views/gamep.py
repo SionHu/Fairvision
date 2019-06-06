@@ -69,12 +69,11 @@ def phase01a(request):
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
         acceptedList, id_merge = send__receive_data(new_Qs, old_Qs)
-        print("id_merge is: ", id_merge)
+        # print("id_merge is: ", id_merge)
 
-        if id_merge is not None:
-            Question.objects.filter(id__in=acceptedList).update(isFinal=True)
-            #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
-            answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans) for que, ans in zip(questions, answers)])
+        Question.objects.filter(id__in=acceptedList).update(isFinal=True)
+        #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
+        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans) for que, ans in zip(questions, answers)])
 
         return HttpResponse(status=201)
 
