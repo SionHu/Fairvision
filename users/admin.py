@@ -5,6 +5,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import transaction
+from django.urls import reverse
+from django.utils.html import format_html
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
@@ -18,6 +20,7 @@ from ast import literal_eval
 import base64
 import csv
 import itertools
+from more_itertools import partition
 import operator
 from django.http import HttpResponse
 
@@ -176,28 +179,40 @@ class SessionForm(forms.ModelForm):
         exclude = ("session_data", )
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.initial['decoded_data'] = self.instance.get_decoded() if self.instance else '{}'
+        public, self.private = partition(lambda k: k[0].startswith('_'), self.instance.get_decoded().items())
+        self.initial['decoded_data'] = dict(public) if self.instance else '{}'
         self.objects = self._meta.model.objects
     def save(self, *args, **kwargs):
         obj = self.instance
-        obj.session_data = self.objects.encode(literal_eval(self.cleaned_data['decoded_data']))
+        data = literal_eval(self.cleaned_data['decoded_data'])
+        data.update(self.private)
+        obj.session_data = self.objects.encode(data)
         return super().save(*args, **kwargs)
 
 class SessionAdmin(admin.ModelAdmin):
     form = SessionForm
-    list_display = ('session_key', 'get_decoded', 'expire_date')
-    readonly_fields = ('session_key', )
+    list_display = ('session_key', 'username', 'expire_date')
+    readonly_fields = ('session_key', 'username')
     fieldsets = (
-        (None, {'fields': ('session_key', 'decoded_data', 'expire_date')}),
+        (None, {'fields': ('session_key', 'username', 'decoded_data', 'expire_date')}),
     )
     def has_add_permission(self, request):
         return False
+    def username(self, obj):
+        id = obj.get_decoded().get('_auth_user_id')
+        if id is None: return None
+        user = CustomUser.objects.get(id=id)
+        #return .username if id else None
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(user._meta.app_label, user._meta.model_name),
+            args=(user.pk,)),
+        user.username))
 
 class HITAdmin(admin.ModelAdmin):
-    list_display = ('assignment_id', 'session', 'data')
-    readonly_fields = ('session', 'assignment_id')
+    list_display = ('assignment_id', 'data')
+    readonly_fields = ('assignment_id', )
     fieldsets = (
-        (None, {'fields': ('assignment_id', 'session', 'data')}),
+        (None, {'fields': ('assignment_id', 'data')}),
     )
     def has_add_permission(self, request):
         return False

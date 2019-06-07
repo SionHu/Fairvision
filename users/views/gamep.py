@@ -50,12 +50,10 @@ def phase01a(request, previewMode=False):
         print("I got questions: ", questions)
         print("I got answers: ", answers)
         # retrieve the json data for updating skip count for the previous questions
-        dictionary = json.loads(request.POST['validation[dict]'])
-        print("the dictionary of life: ", dictionary)
+        validation_list = request.POST.getlist('data[]')
 
 
-        for text, count in dictionary.items():
-            Question.objects.filter(text=text).update(skipCount=F('skipCount')-count)
+        Question.objects.filter(text__in=validation_list).update(skipCount=F('skipCount')-1)
 
         # Query list for the old data in the table
         old_Qs = list(Question.objects.values_list('text', 'id'))
@@ -90,7 +88,7 @@ def phase01a(request, previewMode=False):
     # Previous all question pairs that will be sent to front-end
 
     # Get all of the questions
-    previous_questions = list(Question.objects.filter(isFinal=True).values('text',))
+    previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
     return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode})
 
 '''
@@ -109,7 +107,7 @@ def phase01b(request, previewMode=False):
         pushPostList(request, '01b')
 
         # get the dictionary from the front-end back
-        dictionary = json.loads(request.POST['data[dict]'])
+        dictionary = request.POST.getlist('data[]')
         print("I got the QA dict: ", dictionary)
 
         for question, answer in dictionary.items():
@@ -131,7 +129,7 @@ def phase01b(request, previewMode=False):
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
 
-    questions = list(Question.objects.filter(isFinal=True).values('text',))
+    questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
     return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode})
     # The NLP server will be updated later?
 

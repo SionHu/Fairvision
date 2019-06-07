@@ -124,10 +124,10 @@
                             <ul id="pre-list">
                                 <br>
                                 {% for preq in question_list %}
-                                <li>Q: {{ preq.text }}<br>
-                                A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter }}" type="text" maxlength="30">
+                                <li>Q: {{ preq }}<br>
+                                A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter0 }}" type="text" maxlength="30">
                                 <label class = "form-check-label" for="skip">
-                                <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ forloop.counter }}">
+                                <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ forloop.counter0 }}">
                                 Skip</label>
                                 </li> <hr>
                                 {% endfor %}
@@ -159,19 +159,19 @@
 		var qs = {{ question_list|safe }};
         // Function that create the dictionary for QA pairs
         function rank(){
-            for (var i = 1; i <= qs.length; i++) {
+            for (var i = 0; i < qs.length; i++) {
                 if(document.getElementById("skip"+i).checked == true){
-                    resultArr['dict'][qs[i-1].text] = " ";
+                    resultArr['dict'][qs[i]] = " ";
                 }
-                else if(document.getElementById("skip"+i).checked == false){
-                    resultArr['dict'][qs[i-1].text] = document.getElementById("newA"+i).value;
+                else{
+                    resultArr['dict'][qs[i]] = document.getElementById("newA"+i).value;
                 }
             }
             resultArr['dict']= JSON.stringify(resultArr['dict']);
         }
 
         function checkEmpty(){
-            for (var q = 1; q <= qs.length; q++) {
+            for (var q = 0; q < qs.length; q++) {
                 //console.log(q);
                 if(document.getElementById("skip"+q).checked == false && document.getElementById("newA"+q).value==""){
                     flag = 1;
@@ -190,7 +190,7 @@
                 rank();
                 // get the value of CSRF token
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-                // console.log(resultArr);
+
                 //post method
                 $.post('{% url 'phase01b' %}', {
                     'imgnum': {{ imgnum|safe }},

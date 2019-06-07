@@ -7,6 +7,7 @@ from django.contrib.sessions.models import Session
 from django.shortcuts import redirect
 from functools import wraps
 from .models import HIT
+import uuid
 
 
 NUMROUNDS = settings.NUMROUNDS
@@ -19,31 +20,37 @@ def player_required(func):
     '''
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        assignmentId = request.GET.get('assignmentId')
-        is_mturker = assignmentId not in (None, 'ASSIGNMENT_ID_NOT_AVAILABLE')
+        newCookie = request.GET.get('assignmentId')
 
-        if is_mturker:
-            request.session['assignmentId'] = assignmentId
+        if newCookie == 'ASSIGNMENT_ID_NOT_AVAILABLE':
+            newCookie = None
 
-        if (request.user.is_staff or request.user.is_superuser) and "assignmentId" not in request.session:
-            request.session['assignmentId'] = request.user.username
+        assignmentId = newCookie or request.COOKIES.get('assignmentid')
 
-        if "assignmentId" in request.session:
-            hitObj = HIT.objects.only('data').get_or_create(session=request.session.session_key, defaults={'data': {}})[0]
-            hit = hitObj.data
+        if (request.user.is_staff or request.user.is_superuser) and not assignmentId:
+            assignmentId = newCookie = request.user.username + "__" + uuid.uuid4().hex
 
-            roundnums = hit.setdefault('roundnums', {})
+        if assignmentId:
+            hitObj = HIT.objects.only('data').get_or_create(assignment_id=assignmentId, defaults={'data': {}})[0]
+            request.hit = hitObj.data
+
+            roundnums = request.hit.setdefault('roundnums', {})
 
             numInPhase = roundnums.get(func.__name__, 0) # this line is pretty unsafe, but it will do
 
             if request.method == 'POST':
                 output = func(request, *args, **kwargs)
+                if newCookie: output.set_cookie('assignmentid', newCookie)
                 roundnums[func.__name__] = numInPhase + 1
-                hitObj.data = hit
                 hitObj.save()
                 return output
             else:
-                return over(request) if numInPhase >= NUMROUNDS else func(request, *args, **kwargs)
+                if numInPhase >= NUMROUNDS:
+                    return over(request)
+                else:
+                    output = func(request, *args, **kwargs)
+                    if newCookie: output.set_cookie('assignmentid', newCookie)
+                    return output
         else:
             return func(request, *args, **{'previewMode': True, **kwargs})
     return wrapper

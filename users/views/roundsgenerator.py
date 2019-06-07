@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import transaction
 from operator import attrgetter
 import random
-from ..models import ImageModel, Phase, HIT
+from ..models import ImageModel, Phase
 
 KEYRING = settings.KEYRING
 
@@ -28,13 +28,9 @@ def pushPostList(request, phase):
         rounds.post = postList
         rounds.save()
 
-    hitObj = HIT.objects.only('data').get(session=request.session.session_key)
-    hit = hitObj.data
-    userList = hit.get('user_imgs_phase'+phase, [])
+    userList = request.hit.get('user_imgs_phase'+phase, [])
     userList.extend(new)
-    hit['user_imgs_phase'+phase] = userList
-    hitObj.data = hit
-    hitObj.save()
+    request.hit['user_imgs_phase'+phase] = userList
     return new
 
 
