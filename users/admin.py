@@ -8,7 +8,7 @@ from django.db import transaction
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question
+from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question, HIT
 
 
 from django import forms
@@ -140,15 +140,19 @@ class AttributeAdmin(admin.ModelAdmin):
 
 try:
     from jsoneditor.forms import JSONEditor
+    from django.contrib.postgres.forms import JSONField
+    JSONField.widget = JSONEditor
 except:
     JSONEditor = forms.Textarea
 
 class PhaseForm(forms.ModelForm):
-    get = forms.CharField(widget=JSONEditor)
-    post = forms.CharField(widget=JSONEditor)
     class Meta:
         model = Phase
         fields = '__all__'
+        widgets = {
+            'get': JSONEditor,
+            'post': JSONEditor
+        }
     def save(self, *args, **kwargs):
         obj = self.instance
         obj.get = literal_eval(self.cleaned_data['get'])
@@ -188,6 +192,24 @@ class SessionAdmin(admin.ModelAdmin):
     )
     def has_add_permission(self, request):
         return False
+
+class HITAdmin(admin.ModelAdmin):
+    list_display = ('assignment_id', 'session', 'data')
+    readonly_fields = ('session', 'assignment_id')
+    fieldsets = (
+        (None, {'fields': ('assignment_id', 'session', 'data')}),
+    )
+    def has_add_permission(self, request):
+        return False
+
+class AnswerInline(admin.TabularInline):
+    model = Answer
+    extra = 0
+
+class QuestionAdmin(admin.ModelAdmin):
+    inlines = [
+        AnswerInline,
+    ]
     
 
 admin.site.register(CustomUser, CustomUserAdmin)
@@ -201,6 +223,7 @@ admin.site.register(ImageModel, ImageModelAdmin)
 admin.site.register(Phase01_instruction)
 admin.site.register(Phase02_instruction)
 admin.site.register(Phase03_instruction)
-admin.site.register(Question)
+admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer)
 admin.site.register(Session, SessionAdmin)
+admin.site.register(HIT, HITAdmin)
