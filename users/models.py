@@ -2,7 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.sessions.models import Session
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 import os
@@ -191,3 +192,11 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     def __str__(self):
         return self.text
+
+class HIT(models.Model):
+    data = JSONField()
+    session = models.CharField(verbose_name="Session ID", max_length=32, blank=False, null=False, primary_key=True)
+    @property
+    def assignment_id(self):
+        session = Session.objects.get(session_key=self.session)
+        return session.get_decoded().get('assignmentId')

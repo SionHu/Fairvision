@@ -10,22 +10,16 @@
 <script>
 
     var dict = {}
-    var resultArr = {
-        "dict" : {},
-    }
-
+    var resultArr = []
 
     function rank(){
-        {% for stat in statements %}
-
-            if(document.getElementById("{{ stat.word }}yes").checked == true){
-                resultArr['dict']["{{ stat.word }}"] = 0;
+        var statements = {{ statements|safe }};
+        for (var i = 0; i < statements.length; i++) {
+            var stat = statements[i]
+            if(document.getElementById(stat).checked) {
+                resultArr.push(stat);
             }
-            else if(document.getElementById("{{ stat.word }}yes").checked == false){
-                resultArr['dict']["{{ stat.word }}"] = -1;
-            }
-        {% endfor %}
-        resultArr['dict']= JSON.stringify(resultArr['dict']);
+        }
 
         // console.log(resultArr);
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
@@ -121,16 +115,16 @@
     <div class="card-content mt-3">
         {% for stat in statements %}
             <div class="d-flex justify-content-center">
-                <h4>{{ stat.word }}</h4>
+                <h4>{{ stat }}</h4>
                 <form action="/phase03.html" id="bias">
                     <div class="ml-3 mt-1 form-check-inline">
                         <label class="form-check-label" for="exampleRadios1">
-                            <input class="form-check-input" type="radio" name="radios" id="{{ stat.word }}yes" value="option1" checked>YES
+                            <input class="form-check-input" type="radio" name="radios" value="option1" checked>YES
                         </label>
                     </div>
                     <div class="ml-3 mt-1 form-check-inline">
                         <label class="form-check-label" for="exampleRadios2">
-                            <input class="form-check-input" type="radio" name="radios" id="{{ stat.word }}no" value="option2">NO
+                            <input class="form-check-input" type="radio" name="radios" id="{{ stat }}" value="option2">NO
                         </label>
                     </div>
                 </form>
@@ -141,9 +135,11 @@
 
 <!--  Categories  -->
 <div class="row justify-content-center m-3" style="margin-bottom: 100px">
+  {% if not previewMode %}
     <button type="button"  class="btn btn-success" onclick="rank()" style="width: 100px">
         Submit
     </button>
+  {% endif %}
 </div>
 
 </div> <!--  Container  -->

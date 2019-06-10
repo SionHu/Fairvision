@@ -1,10 +1,12 @@
 from collections import defaultdict
-from csgame.views import over, stop
+from csgame.views import over
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.sessions.models import Session
 from django.shortcuts import redirect
 from functools import wraps
+from .models import HIT
 
 
 NUMROUNDS = settings.NUMROUNDS
@@ -23,25 +25,27 @@ def player_required(func):
         if is_mturker:
             request.session['assignmentId'] = assignmentId
 
-        if "assignmentId" in request.session or request.user.is_staff or request.user.is_superuser:
-            if 'roundnums' in request.session:
-                roundnums = request.session['roundnums']
-            else:
-                roundnums = request.session['roundnums'] = {}
+        if (request.user.is_staff or request.user.is_superuser) and "assignmentId" not in request.session:
+            request.session['assignmentId'] = request.user.username
+
+        if "assignmentId" in request.session:
+            hitObj = HIT.objects.only('data').get_or_create(session=request.session.session_key, defaults={'data': {}})[0]
+            hit = hitObj.data
+
+            roundnums = hit.setdefault('roundnums', {})
 
             numInPhase = roundnums.get(func.__name__, 0) # this line is pretty unsafe, but it will do
-            if numInPhase > NUMROUNDS:
-                return over(request)
 
             if request.method == 'POST':
                 output = func(request, *args, **kwargs)
-                request.session['roundnums'][func.__name__] = numInPhase + 1
+                roundnums[func.__name__] = numInPhase + 1
+                hitObj.data = hit
+                hitObj.save()
                 return output
             else:
-                # TODO: Perhaps something needs to be here. I don't know
-                return func(request, *args, **kwargs)
+                return over(request) if numInPhase >= NUMROUNDS else func(request, *args, **kwargs)
         else:
-            return stop(request)
+            return func(request, *args, **{'previewMode': True, **kwargs})
     return wrapper
 
 
