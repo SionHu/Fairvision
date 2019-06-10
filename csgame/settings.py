@@ -65,7 +65,7 @@ SECRET_KEY = 'jsl5xrm^in$mx)ftkdeybi0#(uqr)j=e=eer%eg2rxk#h#1l9r'
 DEBUG=not(IS_PRODUCTION_SITE or TEST_HTTP_HANDLING)
 
 ALLOWED_HOSTS = [
-	'cdstrain.herokuapp.com',
+	'test-csgame.herokuapp.com',
     '127.0.0.1',
     'localhost',
     'cam2-crowdsourcing.herokuapp.com'
