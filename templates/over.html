@@ -9,8 +9,12 @@
 
 {% block content %}
 
+<form>
+    {% csrf_token %}
+</form>
+
 <div class="container " style="display: none;" id="loading-image" alt="Loading..." >
-    <div class="row h-100 align-items-cente justify-content-center">
+    <div class="row align-items-cente justify-content-center">
         <img src="https://media.giphy.com/media/l0He4fJxPCbfqv7Xi/giphy.gif" style="height: 60%;" />
     </div>
 </div>
@@ -20,14 +24,19 @@
 <div class="row justify-content-center text-center">
     <h4>Many thanks for <a style="color: orange">your</a> participation!</h4>
 </div>
-    
-<div class="row h-100 align-items-cente justify-content-center">
+
+<div class="row align-items-cente justify-content-center">
     <img src="https://media.giphy.com/media/xThuW0uZfF3rwVan4I/giphy.gif" style="height: 60%">
 </div>
 
-<hr>    
-    
-    
+<hr>
+
+<form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center"> <!--Sandbox link, official link: https://workersandbox.mturk.com/mturk/externalSubmit -->
+    <input type="hidden" name="assignmentId" value={{ assignmentId }}>
+    <input type="hidden" name="sessionId" value={{ sessionId }}>
+    <input type="submit" class= "btn btn-success" value="Submit" >
+</form>
+
 </div>
 
 {% endblock %}

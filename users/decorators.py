@@ -1,5 +1,5 @@
 from collections import defaultdict
-from csgame.views import over, stop
+from csgame.views import over
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
@@ -45,7 +45,7 @@ def player_required(func):
             else:
                 return over(request) if numInPhase >= NUMROUNDS else func(request, *args, **kwargs)
         else:
-            return stop(request)
+            return func(request, *args, **{'previewMode': True, **kwargs})
     return wrapper
 
 
