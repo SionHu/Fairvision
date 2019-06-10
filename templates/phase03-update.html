@@ -135,9 +135,11 @@
 
 <!--  Categories  -->
 <div class="row justify-content-center m-3" style="margin-bottom: 100px">
+  {% if not previewMode %}
     <button type="button"  class="btn btn-success" onclick="rank()" style="width: 100px">
         Submit
     </button>
+  {% endif %}
 </div>
 
 </div> <!--  Container  -->

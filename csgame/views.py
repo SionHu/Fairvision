@@ -18,6 +18,3 @@ def handler500(request, *args, **argv):
 
 def phase01b(request):
     return render(request, 'phase01b.html')
-
-def stop(request):
-    return render(request, 'stop.html')

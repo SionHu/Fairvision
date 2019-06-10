@@ -153,7 +153,9 @@
                         </div>
                     </div>
                     <button id="delete" class="btn btn-danger float-left mt-2">Undo</button>
+                    {% if not previewMode %}
                     <button id="nextbtn" class="btn btn-warning float-right mt-2" >Next</button>
+                    {% endif %}
                 </div>
             </div>
             <!-- END Q&A LIST -->
