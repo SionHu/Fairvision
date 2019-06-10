@@ -34,7 +34,7 @@ new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
 
 from client import send__receive_data
 @player_required
-def phase01a(request):
+def phase01a(request, previewMode=False):
     # assignmentID for front-end submit javascript
     assignmentId = request.GET.get('assignmentId')
     # Need to check
@@ -91,7 +91,7 @@ def phase01a(request):
 
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values('text',))
-    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId })
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode})
 
 '''
 View for phase 01 b
@@ -99,7 +99,7 @@ Output to front-end: list of all questions and 4 images without overlapping (sim
 POST = method that retrieve the QA dictionary from the crowd workers
 '''
 @player_required
-def phase01b(request):
+def phase01b(request, previewMode=False):
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
     # There should be an array of question that got skipped. Each entry should the final question value
     assignmentId = request.GET.get('assignmentId')
@@ -132,12 +132,12 @@ def phase01b(request):
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
 
     questions = list(Question.objects.filter(isFinal=True).values('text',))
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
 @player_required
-def phase02(request):
+def phase02(request, previewMode=False):
     if request.user.is_superuser or request.user.is_staff:
         print("This is admin")
         information = "Please press the button to process the redundant answers for each questions"
@@ -147,7 +147,7 @@ def phase02(request):
     return render(request, 'over.html', {'info' : information})
 # View for phase3
 @player_required
-def phase03(request):
+def phase03(request, previewMode=False):
     # Update count
     if request.method == 'POST':
         words = request.POST.getlist('data[]')
@@ -158,4 +158,4 @@ def phase03(request):
         assignmentId = request.GET.get('assignmentId')
         attributes = list(Attribute.objects.values_list('word', flat=True))
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
-        return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId})
+        return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
