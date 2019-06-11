@@ -30,7 +30,7 @@ def player_required(func):
         #if (request.user.is_staff or request.user.is_superuser) and not assignmentId:
         #    assignmentId = newCookie = request.user.username + "__" + uuid.uuid4().hex
         if not assignmentId: # TODO: This line is ONLY for the June test of our code. Do not put on MTurk
-            assignmentId = "testing__" + uuid.uuid4().hex
+            assignmentId = newCookie = "testing__" + uuid.uuid4().hex
 
         if assignmentId:
             hitObj = HIT.objects.only('data').get_or_create(assignment_id=assignmentId, defaults={'data': {}})[0]
