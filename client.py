@@ -18,6 +18,8 @@ def send__receive_data(new_Qs, old_Qs):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, True)
     sock.connect((comm.server_host, comm.server_port))
+    print("create a socket Successfully")
+    
     comm.send_data((new_Qs, old_Qs), sock)
     print("Sent Data Successfully.")
     result = comm.receive_data(sock)
@@ -49,4 +51,3 @@ if __name__ == "__main__":
         print("CHECK IF SERVER IS RUNNING !!")
 
     print("Run complete")
-
