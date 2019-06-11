@@ -111,7 +111,7 @@
 
 <hr> <!--  Divider line  -->
 
-<div class="card" style="width: 100%; overflow-y: scroll; margin:0 auto;">
+<div class="card" style="width: 100%; overflow-y: scroll; margin:0 auto;height: 450px">
     <div class="card-content mt-3">
         {% for stat in statements %}
             <div class="d-flex justify-content-center">
@@ -136,7 +136,7 @@
 <!--  Categories  -->
 <div class="row justify-content-center m-3" style="margin-bottom: 100px">
   {% if not previewMode %}
-    <button type="button"  class="btn btn-success" onclick="rank()" style="width: 100px">
+    <button type="button"  class="btn btn-success btn-lg" onclick="rank()" style="width: 100px">
         Submit
     </button>
   {% endif %}
