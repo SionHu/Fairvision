@@ -206,3 +206,13 @@ MTURK_URL = 'https://mechanicalturk.amazonaws.com' # if IS_PRODUCTION_SITE else 
 # for mturk iframe
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
+import threading
+
+class NLPThread(threading.Thread):
+    def run(self):
+        from .nlp_loader import nlp
+        print("NLP loaded")
+thread = NLPThread()
+thread.setDaemon(True)
+thread.start()
