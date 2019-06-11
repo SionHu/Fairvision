@@ -94,7 +94,7 @@
                             <ul id="pre-list">
                                 <br>
                                 {% for preq in questions%}
-                                <li>Q: {{ preq.text }}?<br>
+                                <li>Q: {{ preq }}<br>
                                 <div class="form-check-inline"></div>
                                 <label class = "form-check-label" for="wrong">
                                     <input class = "form-check-inline" type="checkbox" id = "wrong{{ forloop.counter }}">
@@ -167,21 +167,15 @@
 
         <script>
         var dict = {}
-        var resultArr = {
-            "dict" : {},
-        }
+        var resultArr = []
 
         var qs = {{ questions|safe }};
             function rank(){
                  for (var i = 1; i < qs.length; i++) {
-                    if(document.getElementById("wrong"+i).checked == true){
-                        resultArr['dict'][qs[i].text] = -1;
-                    }
-                    else if(document.getElementById("wrong"+i).checked == false){
-                        resultArr['dict'][qs[i].text] = 0;
+                    if(document.getElementById("wrong"+i).checked) {
+                        resultArr.push(qs[i].text);
                     }
                 }
-                resultArr['dict']= JSON.stringify(resultArr['dict']);
             }
 
         </script>

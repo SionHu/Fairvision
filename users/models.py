@@ -194,9 +194,5 @@ class Answer(models.Model):
         return self.text
 
 class HIT(models.Model):
+    assignment_id = models.CharField(verbose_name="Assignment ID", max_length=255, blank=False, null=False, primary_key=True)
     data = JSONField()
-    session = models.CharField(verbose_name="Session ID", max_length=32, blank=False, null=False, primary_key=True)
-    @property
-    def assignment_id(self):
-        session = Session.objects.get(session_key=self.session)
-        return session.get_decoded().get('assignmentId')
