@@ -32,7 +32,6 @@ old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
 new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
 
 
-from client import send__receive_data
 @player_required
 def phase01a(request, previewMode=False):
     # assignmentID for front-end submit javascript
@@ -68,7 +67,8 @@ def phase01a(request, previewMode=False):
         # exist_q should be telling which new question got merged into
         # THIS IS THE PROBLEM!!!!!!!!!!!!!!!
         try:
-            acceptedList, id_merge = send__receive_data(new_Qs, old_Qs)
+            from RedundancyV1 import RedundancyRemover
+            acceptedList, id_merge = RedundancyRemover().get_reduced_records(new_Qs, old_Qs)
             print("id_merge is: ", id_merge)
 
             Question.objects.filter(id__in=acceptedList).update(isFinal=True)
