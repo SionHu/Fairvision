@@ -57,17 +57,17 @@ def phase01a(request, previewMode=False):
 
         # Query list for the old data in the table
         old_Qs = list(Question.objects.values_list('text', 'id'))
-        # print(old_Qs)
+        print("old questions", old_Qs)
 
         questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
-        # print(new_Qs)
+        print("new question", new_Qs)
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
         acceptedList, id_merge = send__receive_data(new_Qs, old_Qs)
-        # print("id_merge is: ", id_merge)
+        print("id_merge is: ", id_merge)
 
         Question.objects.filter(id__in=acceptedList).update(isFinal=True)
         #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
