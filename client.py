@@ -6,9 +6,10 @@ Script will connect to the server that we setup to reduce the nlp time stuff.
 import socket
 import comm as comm
 import csv
+import requests
 
 
-def send__receive_data(new_Qs, old_Qs):
+def send__receive_data_old(new_Qs, old_Qs):
     """
     Method to send the data to the server and get the result from it.
     :param new_Qs: The new questions with IDs that need to be compared.
@@ -31,6 +32,15 @@ def send__receive_data(new_Qs, old_Qs):
     #for row_rec in result[0]:
     #    print(row_rec)
     return result
+
+def send__receive_data(new_Qs, old_Qs):
+    stuff_to_give = {"new_ques": new_Qs, "old_ques": old_Qs}
+
+    res = requests.post('https://nlp-hosty.appspot.com/receive', json=stuff_to_give, verify=False)
+    if res.ok:
+       return res.json()
+    else:
+       print(res.reason)
 
 if __name__ == "__main__":
     old = []
