@@ -88,8 +88,11 @@
             <!-- Previous Q&A List -->
             <div class="row">
                 <div class="col-md-10 ml-5 mt-4">
-                    <label style="font-size: x-large">Previous Q&amp;A</label>
+                    <!-- <label style="font-size: x-large">Previous Q&amp;A</label> -->
                     <div class="card" style="width: 100%; height: 50.5%;height: 15rem; overflow-y: auto;border: transparent;">
+                        <div class="card-title">
+                          <a style="font-size: x-large; padding-left: 10px">Previous Q&amp;A</a>
+                        </div>
                         <div class="card-content">
                             <ul id="pre-list">
                                 <br>
@@ -126,10 +129,10 @@
                             <option value="are" style="color: black">are</option>
                         </select>
                     </div>
-                    <input class="form-control-sm mr-2" id="Q" type="text" name="Q" maxlength="40">?
+                    <input class="form-control-sm mr-2" id="Q" type="text" name="Q" maxlength="50" size="30">?
                 </div>
                 <div class="input-group ml-3">
-                    A:&nbsp;<p id="it_is/they_are">It/There is</p> <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40">.
+                    A:&nbsp;<p id="it_is/they_are">It/There is</p> <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40" size="33.5">.
                 </div>
                 <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
                 <div id="alrt"></div>
@@ -139,7 +142,7 @@
             <hr> <!--  Divider line  -->
 
             <!-- Q&A LIST -->
-            <div class="row m-3">
+            <div class="row m-3" style="padding-top: 30px">
                 <div class="col">
                     <div class="rectangle" style="width: 100%; height: 50.5%;height: 15rem;overflow-y: auto;"> <!-- height was 62% -->
                         <div class="card-content mt-2">
@@ -180,12 +183,12 @@
 
 
         <script>
-            
+
             function myChecker(user_input, index, array) {
                 if (user_input == '') return true;
-                
+
                 var input = user_input; // This should be changed to the input from other functions
-                
+
                 var list = []; // used to stor the list from checker.txt
                 var boo = true;
                 var file = "../static/score_checker/list.txt";
@@ -202,9 +205,9 @@
                     }
                 }
                 f.send(null);
-                
+
 //                alert(boo.toString());
-                
+
                 return boo;
             }
 
@@ -244,15 +247,15 @@
         });
 
         document.getElementById("add").addEventListener("click", function() {
-            //Get the question            
+            //Get the question
             var ques = document.getElementById("Q").value.trim();
             var ans = document.getElementById("A").value.trim();
-            
+
             //Check user input using the checker function
-            
+
             var ques_list = ques.split(" ");
             var ans_list = ans.split(" ");
-            
+
             boo: if (ques !== "" && ans !== "") {
                 if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
                     alert("STOP SWEARING, HAOBO!");
@@ -261,19 +264,19 @@
 
                 qVal = "Q: What "+document.getElementById("is/are").value+" "+ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
-            
+
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
                 var txtVal = qVal + ' \n' + aVal;
-                
+
                 var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI"),
                     txtNode_q = document.createTextNode(txt_q);
-                
+
                 var listNode_a = document.getElementById('list_a'),
                     liNode_a = document.createElement("LI"),
                     txtNode_a = document.createTextNode(txt_a);
-                
+
                 var listNode = document.getElementById('list_all'),
                     liNode = document.createElement("LI"),
                     txtNode = document.createTextNode(txtVal);
@@ -284,15 +287,15 @@
                 listNode_q.appendChild(liNode_q);
                 liNode_a.appendChild(txtNode_a);
                 listNode_a.appendChild(liNode_a);
-            
+
                 // If the input of Q&A is valid, increment numQA counter
                 numQA++;
                 }
-            
+
                 document.getElementById("Q").value = ""; //clear entry field
                 document.getElementById("A").value = ""; //clear entry field
         });
-        
+
         //input bar listener when key "enter" is hit
         document.getElementById("A").addEventListener("keyup", function(event) {
             event.preventDefault();
