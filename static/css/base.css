@@ -20,7 +20,7 @@ height: 370px;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
-background-color: rgba(0,0,0,0.5) !important;
+background-color: rgba(164,164,164,0.5) !important ;
 }
 
 .social_icon span{
@@ -35,7 +35,7 @@ cursor: pointer;
 }
 
 .card-header h3{
-color: white;
+color: black;
 }
 
 .social_icon{
