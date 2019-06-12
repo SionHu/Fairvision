@@ -71,9 +71,9 @@
 
     <hr> <!--  Divider line  -->
 
-    <div class="row">
+    <div class="row" style="padding-bottom: 100px">
 
-        <div class="col-md-7" id="bg-image">
+        <div class="col-md-7" id="bg-image" style="padding-top: 50px">
 
             <!-- IMAGE SET -->
             <div class="row mt-3">
@@ -119,7 +119,7 @@
                 <div class="col mt-3 ml-3">
                     <label style="font-size: x-large">Questions List </label>
                     <i class="fa fa-bell-o ml-2"></i>Scroll down to see all questions
-                    <div class="card" style="width: 100%; overflow-y: scroll">
+                    <div class="rectangle" style="width: 100%; overflow-y: auto;">
                         <div class="card-content">
                             <ul id="pre-list">
                                 <br>
@@ -129,7 +129,7 @@
                                 <label class = "form-check-label" for="skip">
                                 <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ forloop.counter0 }}">
                                 Skip</label>
-                                </li> <hr>
+                                </li> <hr style="width: 90%;">
                                 {% endfor %}
                             </ul>
                         </div>

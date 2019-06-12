@@ -6,7 +6,7 @@ import os
 
 
 # pick a port that is not used by any other process
-server_host = '127.0.0.1'  # localhost
+server_host = socket.gethostbyname(socket.gethostname())  # localhost
 
 def getPort():
     herokuPort = int(os.getenv('PORT', '17001'))

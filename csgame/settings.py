@@ -40,11 +40,32 @@ try:
     AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
     IS_PRODUCTION_SITE = strtobool(my_env['IS_PRODUCTION_SITE'])
     TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
-    # Set up database url
-    DATABASE_URL = my_env.get('DATABASE_URL', None) or (
-        'postgres://cam2crowdsourcing:%s@cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com:8080/cam2cds'
-        % (my_env['POSTGRESQLPASS'],))
+    IS_GOOGLE_CLOUD = strtobool(my_env.get('IS_GOOGLE_CLOUD', 'False'))
     NUMROUNDS = int(my_env.get('NUMROUNDS', '5'))
+
+    # if not on google cloud
+    if not IS_GOOGLE_CLOUD:
+        print("I am not using googole cloud service!")
+        # Set up database url
+        DATABASE_URL = my_env.get('DATABASE_URL', None) or (
+            'postgres://cam2crowdsourcing:%s@cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com:8080/cam2cds'
+            % (my_env['POSTGRESQLPASS'],))
+        # Database
+        # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+        import dj_database_url
+        DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
+    else:
+        print("I am using google cloud service now!")
+        DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ['DB_HOST'],
+        'PORT': os.environ['DB_PORT'],
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD']
+        }
+    }
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
     KEY = my_env.get('KEY', 'Caltech101/laptop/image_{:04d}.jpg')
@@ -68,7 +89,8 @@ ALLOWED_HOSTS = [
 	'test-csgame.herokuapp.com',
     '127.0.0.1',
     'localhost',
-    'cam2-crowdsourcing.herokuapp.com'
+    'cam2-crowdsourcing.herokuapp.com',
+    'cam2-cds-test-243502.appspot.com',
 ]
 
 
@@ -127,12 +149,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'csgame.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-import dj_database_url
-DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -169,16 +185,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+if not IS_GOOGLE_CLOUD:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'cam2-cds-static')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATIC_URL = '/static/'
+STATIC_URL = my_env.get('STATIC_URL', '/static/')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -206,3 +224,13 @@ MTURK_URL = 'https://mechanicalturk.amazonaws.com' # if IS_PRODUCTION_SITE else 
 # for mturk iframe
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
+import threading
+
+class NLPThread(threading.Thread):
+    def run(self):
+        from .nlp_loader import nlp
+        print("NLP loaded")
+thread = NLPThread()
+thread.setDaemon(True)
+thread.start()
