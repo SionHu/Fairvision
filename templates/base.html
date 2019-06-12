@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="{% static "css/base.css" %}">
 
     <style type="text/css">
-   		body { background: #673183 !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+   		body { background: #758B8D !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
 	</style>
 
     {% block css %}{% endblock %}
@@ -48,7 +48,7 @@
     <nav id = 'navbar'>
 
         <div class="navbar-header" style="padding-left: 200px">
-            <a class="navbar-brand" href="/" style="color: white">Game</a>
+            <a class="navbar-brand" href="/" style="color: black">Game</a>
         </div>
 
         <div class="nav-item">
@@ -56,7 +56,7 @@
         </div>
 
         <div class="dropdown ml-2">
-            <button type="button" class="btn btn-secondary  dropdown-toggle" data-toggle="dropdown">
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown">
                         Phase
                     </button>
             <ul class="dropdown-menu" style="color: #2C2C2C">
@@ -74,7 +74,7 @@
 	{% endblock %}
 
 <!--  Footer  -->
-<footer class="footer-copyright py-3 bg-dark static-bottom text-center">
+<footer class="footer-copyright py-2 fixed-bottom text-center" style="background-color:white;color: black">
     Copyright © 2019 Purdue CAM2 Research Group Crowdsourcing Team. All rights reserved.
 </footer>
 
