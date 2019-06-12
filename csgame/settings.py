@@ -185,7 +185,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'cam2-cds-static')
+if not IS_GOOGLE_CLOUD:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'cam2-cds-static')
 
 STATIC_URL = my_env.get('STATIC_URL', '/static/')
 
