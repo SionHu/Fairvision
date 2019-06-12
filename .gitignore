@@ -105,3 +105,6 @@ venv.bak/
 
 # Ignore Mac DS_Store files
 .DS_Store
+
+# Ignore app.yaml for google cloud which contains credentials
+app.yaml
