@@ -45,6 +45,7 @@ try:
 
     # if not on google cloud
     if not IS_GOOGLE_CLOUD:
+        print("I am not using googole cloud service!")
         # Set up database url
         DATABASE_URL = my_env.get('DATABASE_URL', None) or (
             'postgres://cam2crowdsourcing:%s@cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com:8080/cam2cds'
@@ -54,6 +55,7 @@ try:
         import dj_database_url
         DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
     else:
+        print("I am using google cloud service now!")
         DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -183,18 +185,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-if not IS_GOOGLE_CLOUD:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-else:
-    STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'cam2-cds-static')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'cam2-cds-static')
 
-STATIC_URL = os.environ['STATIC_URL']
+STATIC_URL = my_env.get('STATIC_URL', '/static/')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
