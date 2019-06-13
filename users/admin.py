@@ -217,11 +217,15 @@ class HITAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+class AnswerAdmin(admin.ModelAdmin):
+    actions = [export_csv('phase3-answers.csv', ['text','isFinal','question'])]
+
 class AnswerInline(admin.TabularInline):
     model = Answer
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
+    actions = [export_csv('phase3-questions.csv', ['text','isFinal','skipCount'])]
     inlines = [
         AnswerInline,
     ]
@@ -239,6 +243,6 @@ admin.site.register(Phase01_instruction)
 admin.site.register(Phase02_instruction)
 admin.site.register(Phase03_instruction)
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Answer)
+admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(HIT, HITAdmin)
