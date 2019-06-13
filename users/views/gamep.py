@@ -56,7 +56,7 @@ def phase01a(request, previewMode=False):
         Question.objects.filter(text__in=validation_list).update(skipCount=F('skipCount')-1)
 
         # Query list for the old data in the table
-        old_Qs = list(Question.objects.values_list('text', 'id'))
+        old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         print("old questions", old_Qs)
 
         questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])

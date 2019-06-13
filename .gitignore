@@ -108,3 +108,6 @@ venv.bak/
 
 # Ignore app.yaml for google cloud which contains credentials
 app.yaml
+
+# Django static files
+staticfiles/

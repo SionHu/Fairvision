@@ -19,7 +19,7 @@ script function for phase02
 '''
 def phase02():
     # Get all the queries for answer and question from database
-    questions = Question.objects.all()
+    questions = Question.objects.filter(isFinal=True)
     answers = Answer.objects.all()
     # Make the list with requirements
     question_list = [[que.text, que.id] for que in questions]
