@@ -88,9 +88,12 @@ def phase01a(request, previewMode=False):
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
 
+    # Get all the instructions
+    instructions = Phase01_instruction.get_queryset(Phase01_instruction) or ['none']
+
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
-    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode})
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions})
 
 '''
 View for phase 01 b
@@ -130,8 +133,11 @@ def phase01b(request, previewMode=False):
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
 
+    # Get all the insturctions sets
+    instructions = Phase02_instruction.get_queryset(Phase02_instruction) or ['none']
+
     questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
