@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^over/$', views.over, name='over'),
     url(r'^about/$', views.about, name='about'),
     url(r'^stop/$', views.stop, name='stop'),
+    url(r'^feedback/$', views.feedback, name='feedback'),
 
     # url(r'^phase01/$', gamep.phase01, name='phase01'),
     url(r'^phase01a/$', gamep.phase01a, name='phase01a'),

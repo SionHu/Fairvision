@@ -7,6 +7,9 @@ def profile(request):
 def over(request):
     return render(request, 'over.html')
 
+def feedback(request):
+    return render(request, 'feedback.html')
+
 def about(request):
     return render(request, 'about.html')
 
