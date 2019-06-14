@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -31,11 +32,14 @@
 
 <hr>
 
-<form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center"> <!--Sandbox link, official link: https://workersandbox.mturk.com/mturk/externalSubmit -->
-    <input type="hidden" name="assignmentId" value={{ assignmentId }}>
-    <input type="hidden" name="sessionId" value={{ sessionId }}>
-    <input type="submit" class= "btn btn-success" value="Submit" >
-</form>
+    <div style="text-align: center">
+        <h5>Click the button below to fill in the feedback survey and get<b style="color:yellow"> Session Key </b>for final submission to MTurk!</h5>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScXGcYai89-FwQkxvmpmXlkbRo_mNaFHPmiqAXz2ZmlDwEG6w/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
+    </div>
+
+
+
+
 
 </div>
 
