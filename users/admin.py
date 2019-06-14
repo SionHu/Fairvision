@@ -46,7 +46,7 @@ class ImageModelForm(forms.ModelForm):
     img = forms.ImageField(label='Image', widget=forms.FileInput(attrs={'multiple': True}), help_text=('Images to upload to S3 (%.1f MB or less). We only allow JPG files.' % (settings.DATA_UPLOAD_MAX_MEMORY_SIZE / 1048576,)), required=True)
     set = forms.CharField(required=True)
     object = forms.CharField(required=True)
-    
+
     class Meta:
         Model = ImageModel
         fields = ('img', )
@@ -69,7 +69,7 @@ class ImageModelForm(forms.ModelForm):
             self.fields['set'].widget=ListTextInput(setChoices, 'set')
             self.fields['object'].widget=ListTextInput(objChoices, 'object')
             self.url = None
-        
+
     def save(self, *args, **kwargs):
         if self.fields['set'].required:
             # multiple file upload
@@ -115,7 +115,7 @@ class ImageModelAdmin(admin.ModelAdmin):
     list_display = ('img',)
     list_display_links = ('img',)
     list_filter = (ImageModelDatasetListFilter, ImageModelObjectListFilter)
-    
+
     def get_readonly_fields(self, request, obj=None):
         return [] if obj is None else ['img']
 
@@ -225,7 +225,12 @@ class QuestionAdmin(admin.ModelAdmin):
     inlines = [
         AnswerInline,
     ]
-    
+
+    list_filter = ('isFinal',)
+
+class AnwerAdmin(admin.ModelAdmin):
+    list_filter = ('isFinal',)
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
