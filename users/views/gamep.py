@@ -111,7 +111,7 @@ def phase01b(request, previewMode=False):
         pushPostList(request, '01b')
 
         # get the dictionary from the front-end back
-        dictionary = request.POST.getlist('data[]')
+        dictionary = json.loads(request.POST.get('data[dict]'))
         print("I got the QA dict: ", dictionary)
 
         for question, answer in dictionary.items():
