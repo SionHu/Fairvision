@@ -74,7 +74,9 @@ class ImageModel(models.Model):
         ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
         if ext.lower() != '.jpg':
             raise ValidationError(u'Unsupported file extension.')
-        if isinstance(value.name[-8:-4], int):
+        try:
+            int(value.name[-8:-4])
+        except Exception:
             raise ValidationError(u'No ID found on filename. Please give a name in the `image_####.jpg` format')
     # name = models.CharField(max_length=64, primary_key=True)
     img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True, validators=[validate_file_extension])

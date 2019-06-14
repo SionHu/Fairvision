@@ -217,18 +217,20 @@ class HITAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+class AnswerAdmin(admin.ModelAdmin):
+    actions = [export_csv('phase3-answers.csv', ['text','isFinal','question'])]
+    list_filter = ('isFinal',)
+
 class AnswerInline(admin.TabularInline):
     model = Answer
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
+    actions = [export_csv('phase3-questions.csv', ['text','isFinal','skipCount'])]
     inlines = [
         AnswerInline,
     ]
 
-    list_filter = ('isFinal',)
-
-class AnswerAdmin(admin.ModelAdmin):
     list_filter = ('isFinal',)
 
 

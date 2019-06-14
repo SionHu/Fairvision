@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Client code for server setup for nlp.
 Script will connect to the server that we setup to reduce the nlp time stuff.
