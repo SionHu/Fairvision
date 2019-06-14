@@ -192,11 +192,13 @@
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
                 //post method
-                $.post('{% url 'phase01b' %}', {
+                $.post(window.location, {
                     'imgnum': {{ imgnum|safe }},
                     'data': resultArr,
                     csrfmiddlewaretoken : CSRFtoken
-                    }, function(data){});
+                    }, function(data){}).fail(function() {
+                  alert( "An error occurred. Could not submit your data." );
+                });
 
                 // reload the webpage to set new images
                 var countdown = 3000;  // your countdown in milliseconds

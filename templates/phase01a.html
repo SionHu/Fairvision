@@ -324,13 +324,15 @@
                 console.log(questionArray);
                 console.log(answerArray);
                 //post method
-                $.post('{% url 'phase01a' %}', {
+                $.post(window.location, {
                     'data_q': questionArray,  // might change due to gamep.py - phase01a
                     'data_a': answerArray,
                     'validation': resultArr,
                     'imgnum': [{{ imgnum }}],
                     csrfmiddlewaretoken : CSRFtoken
-                }, function(data){});
+                }, function(data){}).fail(function() {
+                  alert( "An error occurred. Could not submit your data." );
+                });
                // reload the webpage to set new images
                 var countdown = 3000;  // your countdown in milliseconds
                 //catch the error when the reloading process crashes
