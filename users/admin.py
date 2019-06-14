@@ -228,7 +228,7 @@ class QuestionAdmin(admin.ModelAdmin):
 
     list_filter = ('isFinal',)
 
-class AnwerAdmin(admin.ModelAdmin):
+class AnswerAdmin(admin.ModelAdmin):
     list_filter = ('isFinal',)
 
 
