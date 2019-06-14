@@ -6,9 +6,14 @@ threshold will be given only.
 # import spacy
 
 from csgame.nlp_loader import nlp
-import RedundancyV1
 from collections import defaultdict
 from operator import itemgetter
+
+
+def remove_taboo_words(question, taboo_list=("what", "is", "are", "of", "which", "the")):
+    for word in question.split():
+        if word.lower() not in taboo_list:
+            yield word
 
 
 class AnswerReducer:
@@ -19,14 +24,9 @@ class AnswerReducer:
         """
         Class initializer.
         """
-        if answers is None or not isinstance(answers[0], list):
-            raise ValueError("No answer value is given. Or answer is not in form [[ans, id]]")
-        if questions is None or not isinstance(questions[0], list):
-            raise ValueError("No question value is given. Or question is not the form [[ques, id]]")
         self.answers = answers
         self.questions = questions
         self.grouped_questions = {}
-        self.reducer = RedundancyV1.RedundancyRemover()
 
     def grouper(self):
         """
@@ -48,7 +48,7 @@ class AnswerReducer:
         """
 
         # Remove taboo words from the sentence
-        all_new = (' '.join(RedundancyV1.remove_taboo_words(answer)) for answer in answers)
+        all_new = (' '.join(remove_taboo_words(answer)) for answer in answers)
         all_old = []
         old_new_pairs = defaultdict(list)
         docs_old = list(map(nlp, all_old))

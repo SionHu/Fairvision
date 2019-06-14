@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # impoer django settings module to make this script work separately
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
