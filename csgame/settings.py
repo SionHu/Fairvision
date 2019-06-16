@@ -219,7 +219,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_FILE_STORAGE = 'csgame.storage_backends.MediaStorage'
 
 # Only enable the mturk link when we done with experimenting mturk sandbox
-MTURK_URL = 'https://mechanicalturk.amazonaws.com' # if IS_PRODUCTION_SITE else 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
+MTURK_URL = my_env.get('MTURK_URL', 'https://mturk-requester-sandbox.us-east-1.amazonaws.com') 
 
 # for mturk iframe
 X_FRAME_OPTIONS = 'ALLOWALL'

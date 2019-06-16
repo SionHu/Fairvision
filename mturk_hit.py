@@ -47,7 +47,7 @@ def create_hit(phase):
     # phase 01b
     elif(phase == 'phase01b'):
         try:
-            open(file='hitExternal/hitp1b.xml', mode='r').read()
+            question = open(file='hitExternal/hitp1b.xml', mode='r').read()
         except:
             print()
             print("----------------------")
@@ -68,11 +68,11 @@ def create_hit(phase):
     else:
         # phase 03
         try:
-            open(file='hitExteranl/hitp3.xml', mode='r').read()
+            question = open(file='hitExternal/hitp3.xml', mode='r').read()
         except:
             print()
             print("----------------------")
-            print('Error: no file found!')
+            print('Error: no file hitp3.xml found!')
             exit(1)
         # create new hit
         new_hit = mturk.create_hit(
