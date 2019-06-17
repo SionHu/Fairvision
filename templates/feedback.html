@@ -29,7 +29,12 @@
 <hr>
 
     <div style="text-align: center;padding-bottom: 100px">
-        <a class="btn btn-lg btn-success">Go Back to MTurk</a>
+        <form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center"> <!--Sandbox link, official link: https://workersandbox.mturk.com/mturk/externalSubmit -->
+            <input type="hidden" name="assignmentId" value={{ request.session.assignmentId }}>
+            <input type="hidden" name="hitId" value={{ request.hit.hitId }}>
+            <input type="hidden" name="sessionId" value={{ request.session.session_key }}>
+            <input type="submit" class= "btn btn-lg btn-success" value="Go Back to MTurk" >
+        </form>
     </div>
 
 </div>

@@ -1,3 +1,5 @@
+from csgame.views import over
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
@@ -81,7 +83,7 @@ def phase01a(request, previewMode=False):
 
     if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
-        return render(request, 'over.html', {'phase': 'PHASE 01a'})
+        return over(request, phase01a.__name__)
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
@@ -128,7 +130,7 @@ def phase01b(request, previewMode=False):
     rounds, roundsnum = popGetList('01b', 4)
 
     if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
-        return render(request, 'over.html', {'phase' : 'PHASE 01b'})
+        return over(request, phase01b.__name__)
 
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
@@ -159,6 +161,8 @@ def phase03(request, previewMode=False):
         Attribute.objects.filter(word__in=words).update(count=F('count')-1)
 
         return HttpResponse(None)
+    elif request.hit['roundnums'].get(phase03.__name__):
+        return over(request, phase03.__name__)
     else:
         assignmentId = request.GET.get('assignmentId')
         attributes = list(Attribute.objects.values_list('word', flat=True))
