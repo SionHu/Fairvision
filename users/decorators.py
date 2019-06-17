@@ -48,7 +48,7 @@ def player_required(func):
                 return output
             else:
                 if numInPhase >= NUMROUNDS:
-                    hitObj['hitId'] = request.GET['hitId']
+                    request.hit['hitId'] = request.GET['hitId']
                     hitObj.save()
                     return over(request, func.__name__)
                 else:
