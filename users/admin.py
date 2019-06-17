@@ -231,6 +231,16 @@ class QuestionAdmin(admin.ModelAdmin):
         AnswerInline,
     ]
 
+    readonly_fields = ('image_id',)
+    exclude = ('imageID',)
+    def image_id(self, obj):
+        id = obj.imageID
+        img = ImageModel.objects.get(img=id)
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
+            args=(img.pk,)),
+        id))
+    image_id.short_description = 'Image ID'
     list_filter = ('isFinal',)
 
 

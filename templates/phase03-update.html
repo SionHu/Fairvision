@@ -24,13 +24,15 @@
         // console.log(resultArr);
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         //post method
-        $.post('{% url 'phase03' %}', {
+        $.post(window.location, {
             "data": resultArr,
             csrfmiddlewaretoken : CSRFtoken,
             success: function() {
               window.location = '{% url 'over' %}';
             }
-        }, function(data){});
+        }, function(data){}).fail(function() {
+          alert( "An error occurred. Could not submit your data." );
+        });
     }
 
 </script>

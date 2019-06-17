@@ -23,9 +23,9 @@ def player_required(func):
         newCookie = request.GET.get('assignmentId')
 
         if newCookie == 'ASSIGNMENT_ID_NOT_AVAILABLE':
-            newCookie = None
-
-        assignmentId = newCookie or request.COOKIES.get('assignmentid')
+            assignmentId = newCookie = None
+        else:
+            assignmentId = newCookie or request.COOKIES.get('assignmentid')
 
         if (request.user.is_staff or request.user.is_superuser) and not assignmentId:
             assignmentId = newCookie = request.user.username + "__" + uuid.uuid4().hex
