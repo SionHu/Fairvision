@@ -48,7 +48,9 @@ def player_required(func):
                 return output
             else:
                 if numInPhase >= NUMROUNDS:
-                    return over(request)
+                    hitObj['hitId'] = request.GET['hitId']
+                    hitObj.save()
+                    return over(request, func.__name__)
                 else:
                     output = func(request, *args, **kwargs)
                     if newCookie: output.set_cookie('assignmentid', newCookie)

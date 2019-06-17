@@ -32,14 +32,16 @@
 
 <hr>
 
-    <div style="text-align: center">
-        <h5>Click the button below to fill in the feedback survey and get<b style="color:yellow"> Session Key </b>for final submission to MTurk!</h5>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScXGcYai89-FwQkxvmpmXlkbRo_mNaFHPmiqAXz2ZmlDwEG6w/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
-    </div>
-
-
-
-
+<div style="text-align: center">
+    <h5>Click the button below to fill in the feedback survey and get<b style="color:yellow"> Session Key </b>for final submission to MTurk!</h5>
+    {% if phase == 'phase01a' %}
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScXGcYai89-FwQkxvmpmXlkbRo_mNaFHPmiqAXz2ZmlDwEG6w/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
+    {% elif phase == 'phase01b' %}
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfRkpNMT9sWdz4wx3uhriDKpBKaCgn0A4cNl8ZdxbvDjK9NHA/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
+    {% else %}
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScbVEuQMn2sM2kDA61QbFg50h6WvRCQG88nO0RVslWR51lMdQ/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
+    {% endif %}
+</div>
 
 </div>
 
