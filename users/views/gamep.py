@@ -83,7 +83,7 @@ def phase01a(request, previewMode=False):
 
     if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
-        return over(request, phase01a.__name__)
+        return over(request, 'phase01a')
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
@@ -130,7 +130,7 @@ def phase01b(request, previewMode=False):
     rounds, roundsnum = popGetList('01b', 4)
 
     if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
-        return over(request, phase01b.__name__)
+        return over(request, 'phase01b')
 
     # sending 4 images at a time
     data = [default_storage.url(KEY.format(i)) for i in roundsnum]
@@ -162,7 +162,7 @@ def phase03(request, previewMode=False):
 
         return HttpResponse(None)
     elif request.hit['roundnums'].get(phase03.__name__):
-        return over(request, phase03.__name__)
+        return over(request, 'phase03')
     else:
         assignmentId = request.GET.get('assignmentId')
         attributes = list(Attribute.objects.values_list('word', flat=True))
