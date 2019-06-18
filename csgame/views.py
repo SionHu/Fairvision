@@ -6,7 +6,9 @@ def profile(request):
     return render(request, 'profile.html')
 
 def over(request, phase=None):
-    return render(request, 'over.html', {'phase': phase})
+    output = render(request, 'over.html', {'phase': phase})
+    output.set_cookie('assignmentid', request.GET['assignmentId'])
+    return output
 
 def feedback(request):
     hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.COOKIES.get('assignmentid'), defaults={'data': {}})[0]

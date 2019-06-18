@@ -209,13 +209,19 @@ class SessionAdmin(admin.ModelAdmin):
         user.username))
 
 class HITAdmin(admin.ModelAdmin):
-    list_display = ('assignment_id', 'data')
-    readonly_fields = ('assignment_id', )
+    list_display = ('assignment_id', 'hitId', 'workerId', 'data')
+    readonly_fields = ('assignment_id', 'hitId', 'workerId')
     fieldsets = (
         (None, {'fields': ('assignment_id', 'data')}),
     )
     def has_add_permission(self, request):
         return False
+    def hitId(self, obj):
+        return obj.data.get('hitId')
+    hitId.short_description = "HIT ID"
+    def workerId(self, obj):
+        return obj.data.get('workerId')
+    workerId.short_description = "Worker ID"
 
 class AnswerAdmin(admin.ModelAdmin):
     actions = [export_csv('phase3-answers.csv', ['text','isFinal','question'])]
