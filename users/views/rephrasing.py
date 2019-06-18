@@ -11,7 +11,7 @@ PREPOSITIONS = ("aboard", "about", "above", "across", "after", "against",
     "until", "up", "upon", "versus", "via", "with", "within", "without")
 TWO_WORD_PREPOSITIONS = ("left of", "right of", "close to", "back to",
     "counter to", "far from", "other than")
-IMG_PROMPT=settings.KEY.split('/')[1]+'s,'
+IMG_PROMPT = settings.OBJECT_NAME_PLURAL
 
 def rephraseList(qaDict):
     return [rephrase(*i) for i in qaDict.items()]

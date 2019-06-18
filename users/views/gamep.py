@@ -28,6 +28,7 @@ from .roundsgenerator import popGetList, pushPostList
 # We should set up in backend manually
 KEY = settings.KEY
 KEYRING = settings.KEYRING
+PRODUCTION = settings.IS_PRODUCTION_SITE
 
 
 old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
@@ -95,7 +96,7 @@ def phase01a(request, previewMode=False):
 
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
-    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions})
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION})
 
 '''
 View for phase 01 b
@@ -139,7 +140,7 @@ def phase01b(request, previewMode=False):
     instructions = Phase02_instruction.get_queryset(Phase02_instruction) or ['none']
 
     questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
@@ -167,4 +168,4 @@ def phase03(request, previewMode=False):
         assignmentId = request.GET.get('assignmentId')
         attributes = list(Attribute.objects.values_list('word', flat=True))
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
-        return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
+        return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'PRODUCTION': PRODUCTION})
