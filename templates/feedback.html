@@ -38,7 +38,7 @@
         <form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center"> <!--Sandbox link, official link: https://workersandbox.mturk.com/mturk/externalSubmit -->
             <input type="hidden" name="assignmentId" value={{ request.COOKIES.assignmentid }}>
             <input type="hidden" name="hitId" value={{ request.hit.hitId }}>
-            <input type="hidden" name="sessionId" value={{ request.session.session_key }}>
+            <input type="hidden" name="sessionId" value="1234567890">
             <input type="submit" class= "btn btn-lg btn-success" value="Go Back to MTurk" >
         </form>
     </div>
