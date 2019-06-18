@@ -7,6 +7,7 @@ from django.contrib.sessions.models import Session
 from django.shortcuts import redirect
 from functools import wraps
 from .models import HIT
+from urllib.parse import urlparse, urlencode
 import uuid
 
 
@@ -20,17 +21,10 @@ def player_required(func):
     '''
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        newCookie = request.GET.get('assignmentId')
+        assignmentId = request.GET.get('assignmentId')
 
-        if newCookie == 'ASSIGNMENT_ID_NOT_AVAILABLE':
-            assignmentId = newCookie = None
-        else:
-            assignmentId = newCookie or request.COOKIES.get('assignmentid')
-
-        if (request.user.is_staff or request.user.is_superuser) and not assignmentId:
-            assignmentId = newCookie = request.user.username + "__" + uuid.uuid4().hex
-        #if not assignmentId: # TODO: This line is ONLY for the June test of our code. Do not put on MTurk
-        #    assignmentId = newCookie = "testing__" + uuid.uuid4().hex
+        if assignmentId == 'ASSIGNMENT_ID_NOT_AVAILABLE':
+            assignmentId = None
 
         if assignmentId:
             hitObj = HIT.objects.only('data').get_or_create(assignment_id=assignmentId, defaults={'data': {}})[0]
@@ -41,22 +35,25 @@ def player_required(func):
             numInPhase = roundnums.get(func.__name__, 0) # this line is pretty unsafe, but it will do
 
             if request.method == 'POST':
-                output = func(request, *args, **kwargs)
-                if newCookie: output.set_cookie('assignmentid', newCookie)
                 roundnums[func.__name__] = numInPhase + 1
                 hitObj.save()
-                return output
+                return func(request, *args, **kwargs)
             else:
                 if numInPhase >= NUMROUNDS:
                     request.hit['hitId'] = request.GET['hitId']
+                    request.hit['workerId'] = request.GET['workerId']
                     hitObj.save()
                     return over(request, func.__name__)
                 else:
-                    output = func(request, *args, **kwargs)
-                    if newCookie: output.set_cookie('assignmentid', newCookie)
-                    return output
+                    return func(request, *args, **kwargs)
+
+        elif request.user.is_staff or request.user.is_superuser:
+            assignmentId = f"{request.user.username}__{uuid.uuid4().hex}"
+            hitId = 'admin'
+            workerId = 'admin'
+            return redirect(f"{request.path_info}?assignmentId={assignmentId}&hitId={hitId}&workerId={workerId}")
         else:
-            return func(request, *args, **{'previewMode': True, **kwargs})
+            return func(request, *args, previewMode=True, **kwargs)
     return wrapper
 
 

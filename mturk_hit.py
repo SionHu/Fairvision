@@ -2,8 +2,6 @@
 # impoer django settings module to make this script work separately
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
-import django
-django.setup()
 
 from django.conf import settings
 from csgame.storage_backends import mturk
