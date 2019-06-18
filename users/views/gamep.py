@@ -62,7 +62,7 @@ def phase01a(request, previewMode=False):
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         print("old questions", old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1])) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1]), workerID=request.GET['workerId']) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         print("new question", new_Qs)
 
@@ -75,7 +75,7 @@ def phase01a(request, previewMode=False):
 
         Question.objects.filter(id__in=acceptedList).update(isFinal=True)
         #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
-        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans) for que, ans in zip(questions, answers)])
+        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, workerID=request.GET['workerId']) for que, ans in zip(questions, answers)])
 
         return HttpResponse(status=201)
 
@@ -123,7 +123,7 @@ def phase01b(request, previewMode=False):
             if answer != " ":
                 print("answer is: ", answer)
                 que = Question.objects.get(text=question, isFinal=True)
-                new_Ans = Answer.objects.create(text=answer, question=que)
+                new_Ans = Answer.objects.create(text=answer, question=que, workerID=request.GET['workerId'])
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
 

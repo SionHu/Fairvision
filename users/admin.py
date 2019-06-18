@@ -247,7 +247,7 @@ class QuestionAdmin(admin.ModelAdmin):
             args=(img.pk,)),
         id))
     image_id.short_description = 'Image ID'
-    list_filter = ('isFinal',)
+    list_filter = ('isFinal', 'workerID')
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
