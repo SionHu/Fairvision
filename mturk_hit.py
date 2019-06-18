@@ -4,6 +4,7 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
 import django
 django.setup()
+import pprint
 
 from django.conf import settings
 from csgame.storage_backends import mturk
@@ -98,7 +99,7 @@ input argument: N/A
 output print: HIT and Some title
 '''
 def print_hit():
-    print(mturk.list_hits()['HITs'])
+    pprint.pprint(mturk.list_hits()['HITs'])
 
 '''
 delete_hit for different
@@ -184,8 +185,17 @@ if __name__ == "__main__":
     subparsers.add_parser('print', help='print hit status', aliases=['p'])
     options = parser.parse_args()
 
-    # Hello world for mturk boto api
-    print("I have $" + mturk.get_account_balance()['AvailableBalance'] + " in my account")
+    # Hello world for mturk boto app
+    # Test command for get phase01a
+    response = mturk.list_assignments_for_hit(
+        HITId='3EKZL9T8YA57MESN9FRV7JJX7V0HCG',
+        AssignmentStatuses=['Submitted', 'Approved'],
+        MaxResults=5,
+    )
+
+    pprint.pprint(response)
+
+
     if options.command in ('create', 'c'):
         create_hit(options.phase)
     elif options.command in ('delete', 'd'):
