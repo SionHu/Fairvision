@@ -264,7 +264,7 @@
 
             boo: if (ques !== "" && ans !== "") {
                 if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
-                    alert("STOP SWEARING, HAOBO!");
+                    alert("STOP SWEARING, WORKER {{ request.GET.workerId }}!");
                     break boo;
                 }
 
