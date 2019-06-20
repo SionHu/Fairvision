@@ -177,7 +177,9 @@
         
         <script>
         $(document).ready(function(){
-            $("#agreement").modal();
+            if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
+                $("#agreement").modal();
+            }
         });
         </script>
     
