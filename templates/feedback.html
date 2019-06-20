@@ -19,28 +19,26 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container" style="padding-bottom: 100px">
 
 <div class="row justify-content-center text-center" style="padding-top: 100px">
-<h4>Thank you for your work.<br><br> Here is your session key : <br><b style="color:yellow"> {{ request.session.session_key }} </b></h4>
-</div>
 
-<br>
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Thank you for your work!</h4>
+        <br>
+        <h5>Please<b> click the button </b>below to go back to MTurk page.</h5>
+        <hr>
 
-<div class="row justify-content-center text-center">
-<h5>Please<b style="color:yellow"> copy </b>the session key and paste it after going back to MTurk page.</h5>
-</div>
-
-
-<hr>
-
-    <div style="text-align: center;padding-bottom: 100px">
-        <form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center"> <!--Sandbox link, official link: https://workersandbox.mturk.com/mturk/externalSubmit -->
+        <div style="text-align: center">
+            <form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center"> <!--Sandbox link, official link: https://workersandbox.mturk.com/mturk/externalSubmit -->
             <input type="hidden" name="assignmentId" value={{ request.COOKIES.assignmentid }}>
             <input type="hidden" name="hitId" value={{ request.hit.hitId }}>
             <input type="submit" class= "btn btn-lg btn-success" value="Go Back to MTurk" >
         </form>
+        </div>
     </div>
+
+</div>
 
 </div>
 

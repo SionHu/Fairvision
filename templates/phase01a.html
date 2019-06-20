@@ -13,9 +13,9 @@
     <div class="container" style="padding-top: 50px">
 
     <div class="row">
-    <h2>Phase 01-a: Q&amp;A Collection
+        <h2>Q&amp;A Collection - Image of {{ object }}
         <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>
-    </h2>
+        </h2>
     </div>
 
         <!-- The Modal -->
@@ -119,7 +119,7 @@
 
             <!-- INPUT BAR -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
-                <label style="font-size: x-large">Enter A New Q&amp;A Pair</label>
+                <label style="font-size: x-large">Enter A New Question &amp; Answer Pair</label>
                 <div class="input-group m-3">
                     Q: What
                     <div class="input-group-prepend ml-2 mr-2">
@@ -133,8 +133,15 @@
                 <div class="input-group ml-3">
                     A:&nbsp;<p id="it_is/they_are">It/There is</p> <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40" size="33.5">.
                 </div>
-                <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
-                <div id="alrt"></div>
+                <div>
+
+                    <div style="font-size: 18px;color: yellow;padding-left: 10px">
+                        <i class="fa fa-bell"></i> Please do NOT enter Q&A about the <b>name</b> of the object.
+                    </div>
+                    <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
+                </div>
+                    <div id="alrt"></div>
+
             </div>
             <!-- END INPUT BAR -->
 
