@@ -28,6 +28,7 @@ from .roundsgenerator import popGetList, pushPostList
 # We should set up in backend manually
 KEY = settings.KEY
 KEYRING = settings.KEYRING
+NUMROUNDS = settings.NUMROUNDS
 PRODUCTION = settings.IS_PRODUCTION_SITE
 
 
@@ -96,8 +97,9 @@ def phase01a(request, previewMode=False):
 
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
+
     object = KEY.split('/')[1].capitalize()
-    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'object': object})
+    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': object})
 
 '''
 View for phase 01 b
@@ -142,7 +144,7 @@ def phase01b(request, previewMode=False):
 
     questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin

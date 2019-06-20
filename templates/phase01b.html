@@ -169,6 +169,7 @@
                     {% if not previewMode %}
                     <button id="nextbtn" class="btn btn-warning float-right mt-2" >Next</button>
                     {% endif %}
+                    <div style="padding: 10px; text-align: center; font-size: 20px;">Round {{ request.hit.roundnums.phase01b|default:0|add:1 }} of {{ NUMROUNDS }}</div>
                     <div id="alrt"></div>
                 </div>
             </div>
