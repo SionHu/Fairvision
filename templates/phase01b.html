@@ -15,7 +15,7 @@
     <div class="row">
     <h2> Q&A Validation
         <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalScrollable">Instruction</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agreement">Agreement</button>
     </h2>
     </div>
 
@@ -73,7 +73,7 @@
     <!-- Button trigger modal -->
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="agreement" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -179,7 +179,7 @@
         <form>
         {% csrf_token %}
         </form>
-
+    
         <script>
 
         var flag = 0;
@@ -211,7 +211,7 @@
                 }
             }
         }
-
+            
         //next button listener
         $('#nextbtn').click(function(event){
             //alert("New Images Inbound!")
