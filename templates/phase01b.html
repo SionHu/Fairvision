@@ -4,11 +4,6 @@
 <link rel="stylesheet" href="{% static "css/phase01.css" %}">
 {% endblock %}
 
-{% block scripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-{% endblock %}
-
 {% block content %}
     <div class="container" style="padding-top: 50px">
 
@@ -179,6 +174,14 @@
         <form>
         {% csrf_token %}
         </form>
+        
+        <script>
+        $(document).ready(function(){
+            if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
+                $("#agreement").modal();
+            }
+        });
+        </script>
     
         <script>
 
