@@ -98,7 +98,7 @@
 
     <hr> <!--  Divider line  -->
 
-    <div class="row" style="padding-bottom: 100px">
+    <div class="row" style="padding-bottom: 30px">
 
         <div class="col-md-6" id="bg-image">
             <!-- IMAGE -->
@@ -147,17 +147,29 @@
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
                 <label style="font-size: x-large">Enter A New Question &amp; Answer Pair</label>
                 <div class="input-group m-3">
-                    Q: What
+                    Q: 
+                    <div class="input-group-prepend ml-2">
+                        <select id="sixw" style="border: white 1px solid;background-color: transparent;color: white">
+                            <option value="what" style="color: black">What</option>
+                            <option value="where" style="color: black">Where</option>
+                            <option value="who" style="color: black">Who</option>
+                            <option value="when" style="color: black">When</option>
+                            <option value="how" style="color: black">How</option>
+                            <option value="why" style="color: black">Why</option>
+                        </select>
+                    </div>
                     <div class="input-group-prepend ml-2 mr-2">
                         <select id="is/are" style="border: white 1px solid;background-color: transparent;color: white">
                             <option value="is" style="color: black">is</option>
                             <option value="are" style="color: black">are</option>
+                            <option value="does" style="color: black">does</option>
+                            <option value="do" style="color: black">do</option>
                         </select>
                     </div>
                     <input class="form-control-sm mr-2" id="Q" type="text" name="Q" maxlength="50" size="30">?
                 </div>
                 <div class="input-group ml-3">
-                    A:&nbsp;<p id="it_is/they_are">It/There is</p> <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40" size="33.5">.
+                    A: <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40" size="33.5">.
                 </div>
                 <div>
                     <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
@@ -307,7 +319,7 @@
                     break boo;
                 }
 
-                qVal = "Q: What "+document.getElementById("is/are").value+" "+ques+"?"; //gets inputted string
+                qVal = "Q: "+document.getElementById("sixw").value + " " + document.getElementById("is/are").value+ " "+ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
 
                 var txt_q = qVal; //inputted text
