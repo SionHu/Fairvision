@@ -2,8 +2,6 @@
 # impoer django settings module to make this script work separately
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
-import django
-django.setup()
 import pprint
 
 from django.conf import settings
@@ -169,6 +167,28 @@ def delete_hit(phase):
             else:
                 print('Deleted')
 
+'''
+check completed assigmments
+input argument: hit
+output print: HIT and Some title
+'''
+def print_assignment(hit_id):
+    pprint.pprint(mturk.list_assignments_for_hit(
+        HITId=hit_id
+    ).get('Assignments', []))
+
+def approve_assignment(assignment_id):
+    mturk.approve_assignment(
+        AssignmentId=assignment_id,
+        OverrideRejection=True
+    )
+
+def reject_assignment(assignment_id, reason):
+    mturk.reject_assignment(
+        AssignmentId=assignment_id,
+        RequesterFeedback=reason
+    )
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
@@ -182,25 +202,32 @@ if __name__ == "__main__":
     dparser = subparsers.add_parser('delete', help='delete hits for specfic phase with', aliases=['d'])
     dparser.add_argument('phase', **phasesArg)
 
-    subparsers.add_parser('print', help='print hit status', aliases=['p'])
+    pparser = subparsers.add_parser('print', help='print hit or assignment status', aliases=['p'])
+    pparser.add_argument('--assignment', type=str, metavar='assignment', help='HIT id to show assignments for.')
+
+    aparser = subparsers.add_parser('approve', help='approve the assignment', aliases=['a'])
+    aparser.add_argument('assignment', type=str, metavar='assignment')
+
+    rparser = subparsers.add_parser('reject', help='reject the assignment', aliases=['r'])
+    rparser.add_argument('assignment', type=str, metavar='assignment')
+
     options = parser.parse_args()
 
     # Hello world for mturk boto app
-    # Test command for get phase01a
-    response = mturk.list_assignments_for_hit(
-        HITId='3EKZL9T8YA57MESN9FRV7JJX7V0HCG',
-        AssignmentStatuses=['Submitted', 'Approved'],
-        MaxResults=5,
-    )
-
-    pprint.pprint(response)
-
 
     if options.command in ('create', 'c'):
         create_hit(options.phase)
     elif options.command in ('delete', 'd'):
         delete_hit(options.phase)
     elif options.command in ('print', 'p'):
-        print_hit()
+        hitId = options.assignment
+        if hitId:
+            print_assignment(hitId)
+        else:
+            print_hit()
+    elif options.command in ('approve', 'a'):
+        approve_assignment(options.assignment)
+    elif options.command in ('reject', 'r'):
+        reject_assignment(options.assignment, options.reason)
     else:
         sys.exit(2)
