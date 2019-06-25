@@ -34,7 +34,8 @@ def create_hit(phase, number):
                 exit(1)
             # create new hit
             new_hit = mturk.create_hit(
-                Title="test for cds game redirect",
+                Title="Image QA phase01a",
+                Description="The phase01a for generating the QA pairs from the given image about a common single object from machine learning image classification dataset",
                 Keywords='image, tagging, machine learning, text generation',
                 Reward = '0.25',
                 MaxAssignments=10,
@@ -54,7 +55,7 @@ def create_hit(phase, number):
                 exit(1)
             # create new hit
             new_hit = mturk.create_hit(
-                Title="test for cds game redirect",
+                Title="Image QA phase01b",
                 Description="The phase03 for crowdsourcing game, given an image of single object from ML image dataset, answer the questions provided",
                 Keywords='image, tagging',
                 Reward = '0.25',
@@ -75,7 +76,7 @@ def create_hit(phase, number):
                 exit(1)
             # create new hit
             new_hit = mturk.create_hit(
-                Title="test for cds game redirect",
+                Title="Vote phase03",
                 Description="The phase03 for crowdsourcing game, vote YES or NO for question provided based on common sense",
                 Keywords='binary tagging, text verification, computer vision, machine learning',
                 Reward = '0.25',
