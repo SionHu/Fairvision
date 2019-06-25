@@ -232,7 +232,7 @@ class AnswerInline(admin.TabularInline):
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase3-questions.csv', ['text','isFinal','skipCount'])]
+    actions = [export_csv('phase3-questions.csv', ['text','isFinal','skipCount','workerId'])]
     inlines = [
         AnswerInline,
     ]

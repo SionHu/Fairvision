@@ -167,6 +167,39 @@ def delete_hit(phase):
             else:
                 print('Deleted')
 
+'''
+check completed assigmments
+input argument: hit
+output print: HIT and Some title
+'''
+def print_assignment(hit_id):
+    if hit_id == 'all':
+        a = []
+        for hit in mturk.list_hits()['HITs']:
+            try:
+                a.extend(mturk.list_assignments_for_hit(
+                    HITId=hit['HITId']
+                ).get('Assignments', []))
+            except Exception as e:
+                print(e)
+        pprint.pprint(a)
+    else:
+        pprint.pprint(mturk.list_assignments_for_hit(
+            HITId=hit_id
+        ).get('Assignments', []))
+
+def approve_assignment(assignment_id):
+    mturk.approve_assignment(
+        AssignmentId=assignment_id,
+        OverrideRejection=True
+    )
+
+def reject_assignment(assignment_id, reason):
+    mturk.reject_assignment(
+        AssignmentId=assignment_id,
+        RequesterFeedback=reason
+    )
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
