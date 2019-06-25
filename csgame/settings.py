@@ -215,6 +215,7 @@ AWS_DEFAULT_ACL = None
 # File upload ?
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1073741824
 
 #Default file storage
 DEFAULT_FILE_STORAGE = 'csgame.storage_backends.MediaStorage'

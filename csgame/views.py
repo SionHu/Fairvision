@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import *
 from django.shortcuts import render_to_response,redirect,render
 from users.models import HIT
@@ -6,12 +7,15 @@ def profile(request):
     return render(request, 'profile.html')
 
 def over(request, phase=None):
-    output = render(request, 'over.html', {'phase': phase})
+    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.GET['assignmentId'], defaults={'data': {}})[0]
+    request.hit = hitObj.data
+    output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase)})
     output.set_cookie('assignmentid', request.GET['assignmentId'])
+    output.set_cookie('submissionUrl', request.GET['turkSubmitTo'])
     return output
 
 def feedback(request):
-    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.COOKIES.get('assignmentid'), defaults={'data': {}})[0]
+    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.COOKIES['assignmentid'], defaults={'data': {}})[0]
     request.hit = hitObj.data
     return render(request, 'feedback.html')
 

@@ -98,7 +98,7 @@ def phase01a(request, previewMode=False):
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    object = KEY.split('/')[1].capitalize()
+    object = KEY.split('/')[1]
     return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': object})
 
 '''

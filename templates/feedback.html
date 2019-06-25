@@ -30,7 +30,7 @@
         <hr>
 
         <div style="text-align: center">
-            <form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center"> <!--Sandbox link, official link: https://workersandbox.mturk.com/mturk/externalSubmit -->
+        <form name="mturk" method="post" action="{{ request.COOKIES.submissionUrl }}/mturk/externalSubmit" style="text-align: center">
             <input type="hidden" name="assignmentId" value={{ request.COOKIES.assignmentid }}>
             <input type="hidden" name="hitId" value={{ request.hit.hitId }}>
             <input type="hidden" name="token" value="cam2cdsgame">
