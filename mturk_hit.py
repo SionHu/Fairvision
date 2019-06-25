@@ -1,8 +1,7 @@
 # impoer django settings module to make this script work separately
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
-import django
-django.setup()
+from pprint import pprint
 
 from django.conf import settings
 from csgame.storage_backends import mturk
@@ -21,75 +20,76 @@ create hits assigmments with phase03 only with MaxAssignments defined by us.(Lik
 input: phase round number
 output: HITID and HIITGroupID for preview link
 '''
-def create_hit(phase):
+def create_hit(phase, number):
     # phase 01a
-    if(phase == 'phase01a'):
-        try:
-            question = open(file='hitExternal/hitp1.xml', mode='r').read()
-        except:
-            print()
-            print("----------------------")
-            print('Error: no file found!')
-            exit(1)
-        # create new hit
-        new_hit = mturk.create_hit(
-            Title="Image Labeling With Text",
-            Description="Generating questions and answers and verifying question given a shown image",
-            Keywords='image, tagging, machine learning, text generation',
-            Reward = '0.25',
-            MaxAssignments=1,
-            LifetimeInSeconds=172800,
-            AssignmentDurationInSeconds=6000,
-            AutoApprovalDelayInSeconds=14400,
-            Question=question,
-        )
-    # phase 01b
-    elif(phase == 'phase01b'):
-        try:
-            open(file='hitExternal/hitp1b.xml', mode='r').read()
-        except:
-            print()
-            print("----------------------")
-            print('Error: no file found!')
-            exit(1)
-        # create new hit
-        new_hit = mturk.create_hit(
-            Title="Knowledge Answer With Image",
-            Description="Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful",
-            Keywords='image, tagging',
-            Reward = '0.15',
-            MaxAssignments=1,
-            LifetimeInSeconds=7200,
-            AssignmentDurationInSeconds=6000,
-            AutoApprovalDelayInSeconds=14400,
-            Question=question,
-        )
-    else:
-        # phase 03
-        try:
-            open(file='hitExteranl/hitp3.xml', mode='r').read()
-        except:
-            print()
-            print("----------------------")
-            print('Error: no file found!')
-            exit(1)
-        # create new hit
-        new_hit = mturk.create_hit(
-            Title="Binary Selection Question",
-            Description="Vote YES or NO for question provided based on common sense",
-            Keywords='binary tagging, text verification, computer vision, machine learning',
-            Reward = '0.1',
-            MaxAssignments=1,
-            LifetimeInSeconds=7200,
-            AssignmentDurationInSeconds=6000,
-            AutoApprovalDelayInSeconds=14400,
-            Question=question,
-        )
+    for i in range(number):
+        if(phase == 'phase01a'):
+            try:
+                question = open(file='hitExternal/hitp1.xml', mode='r').read()
+            except:
+                print()
+                print("----------------------")
+                print('Error: no file found!')
+                exit(1)
+            # create new hit
+            new_hit = mturk.create_hit(
+                Title="Image Labeling With Text",
+                Description="Generating questions and answers and verifying question given a shown image",
+                Keywords='image, tagging, machine learning, text generation',
+                Reward = '0.25',
+                MaxAssignments=1,
+                LifetimeInSeconds=172800,
+                AssignmentDurationInSeconds=6000,
+                AutoApprovalDelayInSeconds=14400,
+                Question=question,
+            )
+        # phase 01b
+        elif(phase == 'phase01b'):
+            try:
+                open(file='hitExternal/hitp1b.xml', mode='r').read()
+            except:
+                print()
+                print("----------------------")
+                print('Error: no file found!')
+                exit(1)
+            # create new hit
+            new_hit = mturk.create_hit(
+                Title="Knowledge Answer With Image",
+                Description="Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful",
+                Keywords='image, tagging',
+                Reward = '0.15',
+                MaxAssignments=1,
+                LifetimeInSeconds=7200,
+                AssignmentDurationInSeconds=6000,
+                AutoApprovalDelayInSeconds=14400,
+                Question=question,
+            )
+        else:
+            # phase 03
+            try:
+                open(file='hitExteranl/hitp3.xml', mode='r').read()
+            except:
+                print()
+                print("----------------------")
+                print('Error: no file found!')
+                exit(1)
+            # create new hit
+            new_hit = mturk.create_hit(
+                Title="Binary Selection Question",
+                Description="Vote YES or NO for question provided based on common sense",
+                Keywords='binary tagging, text verification, computer vision, machine learning',
+                Reward = '0.1',
+                MaxAssignments=1,
+                LifetimeInSeconds=7200,
+                AssignmentDurationInSeconds=6000,
+                AutoApprovalDelayInSeconds=14400,
+                Question=question,
+            )
 
-    # some print function for reference
-    print(new_hit['HIT']['HITGroupId'])
-    print("https://workersandbox.mturk.com/mturk/preview?groupId=", new_hit['HIT']['HITGroupId'])
-    print("HITID = " + new_hit['HIT']['HITId'] + " (Use to Get Results)")
+        # some print function for reference
+        pprint(new_hit['HIT']['HITGroupId'])
+        print("https://workersandbox.mturk.com/mturk/preview?groupId=", new_hit['HIT']['HITGroupId'])
+        print("HITID = " + new_hit['HIT']['HITId'] + " (Use to Get Results)")
 
 '''
 check available hit
@@ -209,20 +209,38 @@ if __name__ == "__main__":
 
     cparser = subparsers.add_parser('create', help='create hits for specfic phase with', aliases=['c'])
     cparser.add_argument('phase', **phasesArg)
+    cparser.add_argument('number', type=int, default=1, help="The number of the HITS to generate each round")
 
     dparser = subparsers.add_parser('delete', help='delete hits for specfic phase with', aliases=['d'])
     dparser.add_argument('phase', **phasesArg)
 
-    subparsers.add_parser('print', help='print hit status', aliases=['p'])
+    pparser = subparsers.add_parser('print', help='print hit or assignment status', aliases=['p'])
+    pparser.add_argument('--assignment', type=str, metavar='assignment', help='HIT id to show assignments for.')
+
+    aparser = subparsers.add_parser('approve', help='approve the assignment', aliases=['a'])
+    aparser.add_argument('assignment', type=str, metavar='assignment')
+
+    rparser = subparsers.add_parser('reject', help='reject the assignment', aliases=['r'])
+    rparser.add_argument('assignment', type=str, metavar='assignment')
+
+
     options = parser.parse_args()
 
     # Hello world for mturk boto api
     print("I have $" + mturk.get_account_balance()['AvailableBalance'] + " in my account")
     if options.command in ('create', 'c'):
-        create_hit(options.phase)
+        create_hit(options.phase, options.number)
     elif options.command in ('delete', 'd'):
         delete_hit(options.phase)
     elif options.command in ('print', 'p'):
-        print_hit()
+        hitId = options.assignment
+        if hitId:
+            print_assignment(hitId)
+        else:
+            print_hit()
+    elif options.command in ('approve', 'a'):
+        approve_assignment(options.assignment)
+    elif options.command in ('reject', 'r'):
+        reject_assignment(options.assignment, options.reason)
     else:
         sys.exit(2)
