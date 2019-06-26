@@ -37,10 +37,10 @@ def create_hit(phase, number):
                 Description="Generating questions and answers and verifying question given a shown image",
                 Keywords='image, tagging, machine learning, text generation',
                 Reward = '0.25',
-                MaxAssignments=1,
+                MaxAssignments=2,
                 LifetimeInSeconds=172800,
-                AssignmentDurationInSeconds=6000,
-                AutoApprovalDelayInSeconds=14400,
+                AssignmentDurationInSeconds=60*60*24*10,
+                AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
             )
         # phase 01b
@@ -88,7 +88,7 @@ def create_hit(phase, number):
 
         # some print function for reference
         pprint(new_hit['HIT']['HITGroupId'])
-        print("https://workersandbox.mturk.com/mturk/preview?groupId=", new_hit['HIT']['HITGroupId'])
+        print("https://worker.mturk.com/mturk/preview?groupId=", new_hit['HIT']['HITGroupId'])
         print("HITID = " + new_hit['HIT']['HITId'] + " (Use to Get Results)")
 
 '''
@@ -97,7 +97,7 @@ input argument: N/A
 output print: HIT and Some title
 '''
 def print_hit():
-    print(mturk.list_hits()['HITs'])
+    pprint(mturk.list_hits()['HITs'])
 
 '''
 delete_hit for different
@@ -124,12 +124,19 @@ def delete_hit(phase):
                     HITId=hit_id,
                     ExpireAt=datetime(2015, 1, 1)
                 )
-
-            print("I found for phase1a")
+            if status == 'Unassignable':
+                try:
+                    response = mturk.update_expiration_for_hit(
+                        HITId=hit_id,
+                        ExpireAt = datetime(2015, 1, 1)
+                    )
+                except Exception as e:
+                    print(e)
             # Delete the HIT
             try:
                 mturk.delete_hit(HITId=hit_id)
-            except:
+            except Exception as e:
+                # print(e)
                 print('Not deleted')
             else:
                 print('Deleted')
