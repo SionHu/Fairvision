@@ -256,7 +256,7 @@
                             var res= f.responseText;
                             list = res.split("\n");
                             // alert(list[0].toString() + "||| " + input.toString());
-                            if(list[0] === input){ boo = false; }
+                            if(list.includes(input)){ boo = false; }
                         }
                     }
                 }
