@@ -38,7 +38,6 @@
 </head>
 
 <!--  Navebar  -->
-{% if not PRODUCTION %}
 <div class="nav-container fixed-top">
     <nav id = 'navbar'>
 
@@ -50,7 +49,8 @@
             <a href="{% url 'about' %}" class="nav-link">About</a>
         </div>
 
-        <!--<div class="dropdown ml-2">
+        {% if not PRODUCTION %}
+        <div class="dropdown ml-2">
             <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown">
                         Phase
                     </button>
@@ -60,10 +60,10 @@
               <li><a class="dropdown-item" href="{% url 'phase03' %}" style="color: black">Phase03: Yes or No?</a></li>
                 <li><a class="dropdown-item" href="{% url 'over' %}" style="color: black">Over</a></li>
             </ul>
-        </div>-->
+        </div>
+        {% endif %}
     </nav>
 </div>
-{% endif %}
 
 <!--  End of Navebar  -->
 
