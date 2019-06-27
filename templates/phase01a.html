@@ -146,9 +146,10 @@
             <!-- INPUT BAR -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
                 <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
+                <br><div style="color: yellow"><i class="fa fa-bell"> </i> Ask questions of anything (object, background...) in image</div>
                 <div class="input-group m-3">
-                    Q:
-                    <div class="input-group-prepend ml-2">
+                    Q: 
+                    <div class="input-group-prepend ml-2 mr-2">
                         <select id="sixw" style="border: white 1px solid;background-color: transparent;color: white">
                             <option value="what" style="color: black">What</option>
                             <option value="where" style="color: black">Where</option>
@@ -158,14 +159,14 @@
                             <option value="why" style="color: black">Why</option>
                         </select>
                     </div>
-                    <div class="input-group-prepend ml-2 mr-2">
+                    <!--<div class="input-group-prepend mr-2">
                         <select id="is/are" style="border: white 1px solid;background-color: transparent;color: white">
                             <option value="is" style="color: black">is</option>
                             <option value="are" style="color: black">are</option>
                             <option value="does" style="color: black">does</option>
                             <option value="do" style="color: black">do</option>
                         </select>
-                    </div>
+                    </div>-->
                     <input class="form-control-sm mr-2" id="Q" type="text" name="Q" maxlength="50" size="30">?
                 </div>
                 <div class="input-group ml-3">
@@ -294,11 +295,11 @@
         var listNode_q = document.createElement("ul");
         var listNode_a = document.createElement("ul");
 
-        document.getElementById("is/are").addEventListener("input", function() {
-            var isare = document.getElementById("is/are").value;
-            document.getElementById("it_is/they_are").innerText = isare == "is" ? "It/There is" : "They/There are";
-            console.log(document.getElementById("is/are").value + " " + document.getElementById("it_is/they_are").text);
-        });
+        //document.getElementById("is/are").addEventListener("input", function() {
+          //  var isare = document.getElementById("is/are").value;
+        //    document.getElementById("it_is/they_are").innerText = isare == "is" ? "It/There is" : "They/There are";
+          //  console.log(document.getElementById("is/are").value + " " + document.getElementById("it_is/they_are").text);
+        //});
 
         document.getElementById("add").addEventListener("click", function() {
             //Get the question
@@ -321,6 +322,9 @@
                     alert("Please DO NOT enter meaningless phrases!")
                     break boo;
                 }
+
+                qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
+                aVal = "A: "+ans + ".";
 
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
