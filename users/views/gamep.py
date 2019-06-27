@@ -76,7 +76,7 @@ def phase01a(request, previewMode=False):
 
         Question.objects.filter(id__in=acceptedList).update(isFinal=True)
         #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
-        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, workerID=request.GET['workerId']) for que, ans in zip(questions, answers)])
+        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(str(que.id), que.id), text=ans, workerID=request.GET['workerId']) for que, ans in zip(questions, answers)])
 
         return HttpResponse(status=201)
 

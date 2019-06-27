@@ -38,8 +38,8 @@ def create_hit(phase, number):
                 Keywords='image, tagging, machine learning, text generation',
                 Reward = '0.25',
                 MaxAssignments=2,
-                LifetimeInSeconds=172800,
-                AssignmentDurationInSeconds=60*60*24*10,
+                LifetimeInSeconds=60*60*24*10,
+                AssignmentDurationInSeconds=6000,
                 AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
             )

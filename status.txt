@@ -93,7 +93,7 @@ I have $21.70 in my account
   'MaxAssignments': 2,
   'NumberOfAssignmentsAvailable': 0,
   'NumberOfAssignmentsCompleted': 0,
-  'NumberOfAssignmentsPending': 2,
+  'NumberOfAssignmentsPending': 1,
   'QualificationRequirements': [],
   'Question': '<?xml version="1.0" encoding="UTF-8"?>\n'
               '<ExternalQuestion '
