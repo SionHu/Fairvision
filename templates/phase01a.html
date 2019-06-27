@@ -77,15 +77,15 @@
                     </button>
                 </div>
                 <div class="modal-body" style="color: black">
-                    Our program is focusing on training a better machine learning model of object detection. We collect questions and answers describing the feature of the images, and use the human intelligence to reduce the bias in the image dataset.
+                    Our program is focusing on training a better machine learning model of object detection. We collect questions and answers describing the feature of the images <a style="color: red">(object & background)</a>, and use the human intelligence to reduce the bias in the image dataset.
                     <hr>
                     <h5><a style="color: red">Attention</a> : Your work will <a style="color: red"> get rejected </a>if you do not follow the instruction below.</h5>
                     <hr>
                     <ul id="instruction_list">
-                        <li><a style="color: red">Do not ask same or similar questions </a> listed in the "Previous Questions" section. Come up with something new. </li>
-                        <li><a style="color: red">Do not ask questions about the NAME of the object.</a> For instance, "what is it?", "What is the object?", or "what is the name of the thing?" - We already know that it is a {{ object }}.</li>
-                        <li><a style="color: red">Do not enter profane words.</a> We will automatically detect the content you input.</li>
-                        <li>Your answer should be a simple phrase(not a complete sentence). Example: <a style="color: red">"The background is green" -> "Green"</a> </li>
+                        <li><a style="color: red">Do not ask same or similar questions </a> listed in the "Previous Questions" section.</li>
+                        <li><a style="color: red">Do not ask questions about the NAME of the object.</a> For instance, "what is it?", "What is the object?", or "what is the name of the thing?"</li>
+                        <li>Enter as <a style="color: red">MANY questions</a> as you can.</li>
+                        <li>Answer with a simple phrase. Example: <a style="color: red">"The background is green" -> "Green"</a> </li>
                         <li>Go through <a style="color: red">ALL the questions</a> in the "Previous Questions" section. Click <a style="color: red">"Irrelevant"</a> if the question does not apply to the image you see.</li>
                     </ul>
                 </div>
@@ -145,9 +145,9 @@
 
             <!-- INPUT BAR -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
-                <label style="font-size: x-large">Enter A New Question &amp; Answer Pair</label>
+                <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
                 <div class="input-group m-3">
-                    Q: 
+                    Q:
                     <div class="input-group-prepend ml-2">
                         <select id="sixw" style="border: white 1px solid;background-color: transparent;color: white">
                             <option value="what" style="color: black">What</option>
@@ -229,7 +229,7 @@
             }
 
         </script>
-        
+
         <script>
         $(document).ready(function(){
             if ({{ request.hit.roundnums.phase01a|default:0 }} == 0) {
@@ -241,14 +241,13 @@
 
         <script>
 
-            function myChecker(user_input, index, array) {
+            function myCusChecker(user_input, index, array) {
                 if (user_input == '') return true;
 
                 var input = user_input; // This should be changed to the input from other functions
-
                 var list = []; // used to stor the list from checker.txt
                 var boo = true;
-                var file = "../static/score_checker/list.txt";
+                var file = "../static/score_checker/customized_checker.txt";
                 var f = new XMLHttpRequest();
                 f.open("GET", file, false);
                 f.onreadystatechange = function () {
@@ -256,42 +255,40 @@
                         if(f.status === 200 || f.status == 0) {
                             var res= f.responseText;
                             list = res.split("\n");
-//                            alert(list[1].toString());
+                            // alert(list[0].toString() + "||| " + input.toString());
                             if(list.includes(input)){ boo = false; }
                         }
                     }
                 }
                 f.send(null);
-
-//                alert(boo.toString());
-
                 return boo;
             }
 
             function myChecker(user_input, index, array) {
 
-                var input = user_input; // This should be changed to the input from other functions
-                var list = []; // used to stor the list from checker.txt
                 var boo = true;
-                var file = "../static/score_checker/list.txt";
-                var f = new XMLHttpRequest();
-                f.open("GET", file, false);
-                f.onreadystatechange = function () {
-                    if(f.readyState === 4) {
-                        if(f.status === 200 || f.status == 0) {
-                            var res= f.responseText;
+                var input = user_input; // This should be changed to the input from other functions
+                var list = []; // used to store the content from list.txt (profane words)
+
+                var profane_file = "../static/score_checker/list.txt";
+                var f1 = new XMLHttpRequest();
+                f1.open("GET", profane_file, false);
+
+                f1.onreadystatechange = function () {
+                    if(f1.readyState === 4) {
+                        if(f1.status === 200 || f1.status == 0) {
+                            var res= f1.responseText;
                             list = res.split("\n");
 //                            alert(list[1].toString());
                             if(list.includes(input)){ boo = false; }
                         }
                     }
+
                 }
-                f.send(null);
-
-//                alert(boo.toString());
-
+                f1.send(null);
                 return boo;
             }
+
         //"add" button listener when clicked
         numQA = 0;
         var listNode_q = document.createElement("ul");
@@ -314,13 +311,16 @@
             var ans_list = ans.split(" ");
 
             boo: if (ques !== "" && ans !== "") {
+                qVal = "Q: "+document.getElementById("sixw").value + " " + document.getElementById("is/are").value+ " "+ques+"?"; //gets inputted string
+                aVal = "A: "+ans + ".";
+
                 if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
                     alert("STOP SWEARING, WORKER {{ request.GET.workerId }}!");
                     break boo;
+                }else if (!myCusChecker(qVal) || !myCusChecker(aVal)) {
+                    alert("Please DO NOT enter meaningless phrases!")
+                    break boo;
                 }
-
-                qVal = "Q: "+document.getElementById("sixw").value + " " + document.getElementById("is/are").value+ " "+ques+"?"; //gets inputted string
-                aVal = "A: "+ans + ".";
 
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
