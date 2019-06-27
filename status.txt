@@ -1,0 +1,132 @@
+I am not using googole cloud service!
+I have $21.70 in my account
+[{'AssignmentDurationInSeconds': 864000,
+  'AutoApprovalDelayInSeconds': 259200,
+  'CreationTime': datetime.datetime(2019, 6, 26, 13, 55, 39, tzinfo=tzlocal()),
+  'Description': 'Generating questions and answers and verifying question '
+                 'given a shown image',
+  'Expiration': datetime.datetime(2019, 6, 28, 13, 55, 39, tzinfo=tzlocal()),
+  'HITGroupId': '3UEL82N5URPHNRFKG4VI5DL97FRTNM',
+  'HITId': '3VCK0Q0PO7XF2IJI0XXYAKYPJLY0N1',
+  'HITReviewStatus': 'NotReviewed',
+  'HITStatus': 'Unassignable',
+  'HITTypeId': '3WOK1A2U0LBQDMM61ESBD0YXQS0D1O',
+  'Keywords': 'image, tagging, machine learning, text generation',
+  'MaxAssignments': 2,
+  'NumberOfAssignmentsAvailable': 0,
+  'NumberOfAssignmentsCompleted': 0,
+  'NumberOfAssignmentsPending': 2,
+  'QualificationRequirements': [],
+  'Question': '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<ExternalQuestion '
+              'xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">\n'
+              '  '
+              '<ExternalURL>https://cam2-crowdsourcing.herokuapp.com/phase01a/</ExternalURL>\n'
+              '  <FrameHeight>1000</FrameHeight>\n'
+              '</ExternalQuestion>\n',
+  'Reward': '0.25',
+  'Title': 'Image Labeling With Text'},
+ {'AssignmentDurationInSeconds': 864000,
+  'AutoApprovalDelayInSeconds': 259200,
+  'CreationTime': datetime.datetime(2019, 6, 26, 13, 55, 39, tzinfo=tzlocal()),
+  'Description': 'Generating questions and answers and verifying question '
+                 'given a shown image',
+  'Expiration': datetime.datetime(2019, 6, 28, 13, 55, 39, tzinfo=tzlocal()),
+  'HITGroupId': '3UEL82N5URPHNRFKG4VI5DL97FRTNM',
+  'HITId': '3RSBJ6YZEE9OH7YK4UGWSGLYFXROF7',
+  'HITReviewStatus': 'NotReviewed',
+  'HITStatus': 'Unassignable',
+  'HITTypeId': '3WOK1A2U0LBQDMM61ESBD0YXQS0D1O',
+  'Keywords': 'image, tagging, machine learning, text generation',
+  'MaxAssignments': 2,
+  'NumberOfAssignmentsAvailable': 0,
+  'NumberOfAssignmentsCompleted': 0,
+  'NumberOfAssignmentsPending': 2,
+  'QualificationRequirements': [],
+  'Question': '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<ExternalQuestion '
+              'xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">\n'
+              '  '
+              '<ExternalURL>https://cam2-crowdsourcing.herokuapp.com/phase01a/</ExternalURL>\n'
+              '  <FrameHeight>1000</FrameHeight>\n'
+              '</ExternalQuestion>\n',
+  'Reward': '0.25',
+  'Title': 'Image Labeling With Text'},
+ {'AssignmentDurationInSeconds': 864000,
+  'AutoApprovalDelayInSeconds': 259200,
+  'CreationTime': datetime.datetime(2019, 6, 26, 13, 55, 38, tzinfo=tzlocal()),
+  'Description': 'Generating questions and answers and verifying question '
+                 'given a shown image',
+  'Expiration': datetime.datetime(2019, 6, 28, 13, 55, 38, tzinfo=tzlocal()),
+  'HITGroupId': '3UEL82N5URPHNRFKG4VI5DL97FRTNM',
+  'HITId': '3HJ1EVZS2Q2WY8A7CRWYL216NU6R3A',
+  'HITReviewStatus': 'NotReviewed',
+  'HITStatus': 'Unassignable',
+  'HITTypeId': '3WOK1A2U0LBQDMM61ESBD0YXQS0D1O',
+  'Keywords': 'image, tagging, machine learning, text generation',
+  'MaxAssignments': 2,
+  'NumberOfAssignmentsAvailable': 0,
+  'NumberOfAssignmentsCompleted': 0,
+  'NumberOfAssignmentsPending': 2,
+  'QualificationRequirements': [],
+  'Question': '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<ExternalQuestion '
+              'xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">\n'
+              '  '
+              '<ExternalURL>https://cam2-crowdsourcing.herokuapp.com/phase01a/</ExternalURL>\n'
+              '  <FrameHeight>1000</FrameHeight>\n'
+              '</ExternalQuestion>\n',
+  'Reward': '0.25',
+  'Title': 'Image Labeling With Text'},
+ {'AssignmentDurationInSeconds': 864000,
+  'AutoApprovalDelayInSeconds': 259200,
+  'CreationTime': datetime.datetime(2019, 6, 26, 13, 55, 38, tzinfo=tzlocal()),
+  'Description': 'Generating questions and answers and verifying question '
+                 'given a shown image',
+  'Expiration': datetime.datetime(2019, 6, 28, 13, 55, 38, tzinfo=tzlocal()),
+  'HITGroupId': '3UEL82N5URPHNRFKG4VI5DL97FRTNM',
+  'HITId': '36BTXXLZ2XRHG4TBC51HV7TC1U2R4V',
+  'HITReviewStatus': 'NotReviewed',
+  'HITStatus': 'Unassignable',
+  'HITTypeId': '3WOK1A2U0LBQDMM61ESBD0YXQS0D1O',
+  'Keywords': 'image, tagging, machine learning, text generation',
+  'MaxAssignments': 2,
+  'NumberOfAssignmentsAvailable': 0,
+  'NumberOfAssignmentsCompleted': 0,
+  'NumberOfAssignmentsPending': 2,
+  'QualificationRequirements': [],
+  'Question': '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<ExternalQuestion '
+              'xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">\n'
+              '  '
+              '<ExternalURL>https://cam2-crowdsourcing.herokuapp.com/phase01a/</ExternalURL>\n'
+              '  <FrameHeight>1000</FrameHeight>\n'
+              '</ExternalQuestion>\n',
+  'Reward': '0.25',
+  'Title': 'Image Labeling With Text'},
+ {'AssignmentDurationInSeconds': 864000,
+  'AutoApprovalDelayInSeconds': 259200,
+  'CreationTime': datetime.datetime(2019, 6, 26, 13, 55, 38, tzinfo=tzlocal()),
+  'Description': 'Generating questions and answers and verifying question '
+                 'given a shown image',
+  'Expiration': datetime.datetime(2019, 6, 28, 13, 55, 38, tzinfo=tzlocal()),
+  'HITGroupId': '3UEL82N5URPHNRFKG4VI5DL97FRTNM',
+  'HITId': '3L7SUC0TTWD9K0YIOWIYX59PEVO0M1',
+  'HITReviewStatus': 'NotReviewed',
+  'HITStatus': 'Unassignable',
+  'HITTypeId': '3WOK1A2U0LBQDMM61ESBD0YXQS0D1O',
+  'Keywords': 'image, tagging, machine learning, text generation',
+  'MaxAssignments': 2,
+  'NumberOfAssignmentsAvailable': 0,
+  'NumberOfAssignmentsCompleted': 0,
+  'NumberOfAssignmentsPending': 2,
+  'QualificationRequirements': [],
+  'Question': '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<ExternalQuestion '
+              'xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">\n'
+              '  '
+              '<ExternalURL>https://cam2-crowdsourcing.herokuapp.com/phase01a/</ExternalURL>\n'
+              '  <FrameHeight>1000</FrameHeight>\n'
+              '</ExternalQuestion>\n',
+  'Reward': '0.25',
+  'Title': 'Image Labeling With Text'}]
