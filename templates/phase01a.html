@@ -148,7 +148,7 @@
                 <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
                 <br><div style="color: yellow"><i class="fa fa-bell"> </i> Ask questions of anything (object, background...) in image</div>
                 <div class="input-group m-3">
-                    Q: 
+                    Q:
                     <div class="input-group-prepend ml-2 mr-2">
                         <select id="sixw" style="border: white 1px solid;background-color: transparent;color: white">
                             <option value="what" style="color: black">What</option>
@@ -243,12 +243,11 @@
         <script>
 
             function myCusChecker(user_input, index, array) {
-                if (user_input == '') return true;
 
                 var input = user_input; // This should be changed to the input from other functions
                 var list = []; // used to stor the list from checker.txt
                 var boo = true;
-                var file = "../static/score_checker/customized_checker.txt";
+                var file = "../static/score_checker/cus_list.txt";
                 var f = new XMLHttpRequest();
                 f.open("GET", file, false);
                 f.onreadystatechange = function () {
@@ -312,14 +311,16 @@
             var ans_list = ans.split(" ");
 
             boo: if (ques !== "" && ans !== "") {
-                qVal = "Q: "+document.getElementById("sixw").value + " " + document.getElementById("is/are").value+ " "+ques+"?"; //gets inputted string
+                qVal = "Q: "+document.getElementById("sixw").value + " "+ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
 
                 if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
                     alert("STOP SWEARING, WORKER {{ request.GET.workerId }}!");
                     break boo;
-                }else if (!myCusChecker(qVal) || !myCusChecker(aVal)) {
-                    alert("Please DO NOT enter meaningless phrases!")
+                }
+                else if (!myCusChecker(qVal) || !myCusChecker(aVal)) {
+                    // alert("Please DO NOT enter meaningless phrases!");
+                    alert("Type something meaningful please.");
                     break boo;
                 }
 
