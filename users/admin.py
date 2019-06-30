@@ -413,16 +413,15 @@ class HITAdmin(admin.ModelAdmin):
     actions=[approve, bonus, reject]
 
 class AnswerAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-answers.csv', ['text','isFinal','question'])]
+    actions = [export_csv('phase1-answers.csv', ['id','text','isFinal','question','assignmentID'])]
     list_filter = ('isFinal',)
 
 class AnswerInline(admin.TabularInline):
     model = Answer
     extra = 0
 
-exportQuestions = export_csv('phase1-questions.csv', ['text','isFinal','skipCount','workerID'])
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [exportQuestions]
+    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','assignmentID'])]
     inlines = [
         AnswerInline,
     ]
@@ -437,7 +436,7 @@ class QuestionAdmin(admin.ModelAdmin):
             args=(img.pk,)),
         id))
     image_id.short_description = 'Image ID'
-    list_filter = ('isFinal', 'workerID')
+    list_filter = ('isFinal', 'assignmentID')
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
