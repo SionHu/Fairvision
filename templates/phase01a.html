@@ -62,7 +62,7 @@
                 </a>
             </div>
 
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button id="closeGIF" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
     </div>
     </div>
@@ -72,9 +72,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalScrollableTitle" style="color: black">Instruction</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body" style="color: black">
                     Our program is focusing on training a better machine learning model of object detection. We collect questions and answers describing the feature of the images <a style="color: red">(object & background)</a>, and use the human intelligence to reduce the bias in the image dataset.
@@ -90,7 +87,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="open_next" type="button" class="btn btn-secondary">Close</button>
                 </div>
             </div>
         </div>
@@ -102,21 +99,21 @@
 
         <div class="col-md-6" id="bg-image">
             <!-- IMAGE -->
-            <div class="row mt-3">
+            <div class="row">
                 <div class="col text-center" style="height: 35%;">
-                        <img src="{{ image_url.0 }}" id="img1" class="d-inline-block img-fluid " style="height: 140px; width: 280px">
+                        <img src="{{ url.0 }}" id="img1" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
                 </div>
             </div>
             
             <div class="row mt-3">
                 <div class="col text-center" style="height: 35%;">
-                        <img src="{{ image_url.1 }}" id="img2" class="d-inline-block img-fluid " style="height: 140px; width: 280px">
+                        <img src="{{ url.1 }}" id="img2" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
                 </div>
             </div>
             
             <div class="row mt-3">
                 <div class="col text-center" style="height: 35%;">
-                        <img src="{{ image_url.2 }}" id="img3" class="d-inline-block img-fluid " style="height: 140px; width: 280px">
+                        <img src="{{ url.2 }}" id="img3" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
                 </div>
             </div>
         
@@ -245,6 +242,14 @@
             if ({{ request.hit.roundnums.phase01a|default:0 }} == 0) {
                 $("#agreement").modal();
             }
+        });
+            
+        $("#open_next").click(function() {
+            $("#agreement").modal('hide');
+            $("#myModal").modal('show');
+            setTimeout(function() {
+                $("#closeGIF").show();
+            }, 10000);
         });
         </script>
 

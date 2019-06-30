@@ -81,14 +81,15 @@ def phase01a(request, previewMode=False):
         return HttpResponse(status=201)
 
     # Get rounds played in total and by the current player
-    rounds, (roundsnum,) = popGetList('01a')
+    rounds, roundsnum = popGetList('01a', 3)
 
     if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
         return over(request, 'phase01a')
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
-    serving_img_url = default_storage.url(KEY.format(roundsnum)) or "https://media.giphy.com/media/noPodzKTnZvfW/giphy.gif"
+    # sending 4 images at a time
+    data = [default_storage.url(KEY.format(i)) for i in roundsnum] 
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
 
@@ -99,7 +100,7 @@ def phase01a(request, previewMode=False):
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
     object = KEY.split('/')[1]
-    return render(request, 'phase01a.html', {'url': serving_img_url, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': object})
+    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': object})
 
 '''
 View for phase 01 b
