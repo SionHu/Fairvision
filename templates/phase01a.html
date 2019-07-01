@@ -251,6 +251,14 @@
                 $("#closeGIF").show();
             }, 10000);
         });
+            
+            //input bar listener when key "esc" is hit
+        document.getElementById("agreement").addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 27 ) { //make sure esc is hit
+                document.getElementById("open_next").click(); //basically calls the button click function
+            }
+        });
         </script>
 
 
