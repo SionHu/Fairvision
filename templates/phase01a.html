@@ -321,6 +321,13 @@
             var ques = document.getElementById("Q").value.trim();
             var ans = document.getElementById("A").value.trim();
 
+            var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
+
+            if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
+                var removedWord = ques.substring(0,ques.indexOf(' '));
+                ques = ques.substring(ques.indexOf(' ')+1);
+            }
+
             //Check user input using the checker function
 
             var ques_list = ques.split(" ");
@@ -338,13 +345,6 @@
                     // alert("Please DO NOT enter meaningless phrases!");
                     alert("Type something meaningful please.");
                     break boo;
-                }
-
-                var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
-
-                if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
-                    var removedWord = ques.substring(0,ques.indexOf(' '));
-                    ques = ques.substring(ques.indexOf(' ')+1);
                 }
 
                 qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
