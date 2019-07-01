@@ -1,0 +1,20 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="{{ action }}" />
+    <input type="hidden" name="post" value="yes">
+    {{ form.as_p }}
+    <h2>Objects</h2>
+    <ul>{% for item in items %}
+        <li>{{ item }}</li>
+        <ul>{% for question in item.questions %}
+            <li>{{ question }}</li>
+        {% endfor %}</ul>
+        <input type="hidden" name="_selected_action" value="{{ item.pk }}" />
+    {% endfor %}</ul>
+    <input type="submit" name="apply" value="{{ button }}" />
+</form>
+</form>
+{% endblock %}

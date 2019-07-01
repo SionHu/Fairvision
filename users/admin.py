@@ -1,10 +1,15 @@
+from csgame.storage_backends import mturk
+
 from django.conf import settings
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import transaction
+from django.db.models import Q
+from django.shortcuts import render
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.html import format_html
 
@@ -208,31 +213,216 @@ class SessionAdmin(admin.ModelAdmin):
             args=(user.pk,)),
         user.username))
 
+class HITApprovalForm(forms.Form):
+    reason = forms.CharField(label='Reason for Acceptance', max_length=256, required=False, widget=forms.Textarea(attrs={'cols': 80, 'rows': 20}))
+    bonus = forms.DecimalField(label='Worker Bonus', max_value=1, min_value=0, decimal_places=2, initial='0.00', widget=forms.NumberInput(attrs={'step': 0.01}))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        reason = cleaned_data.get("reason")
+        bonus = cleaned_data.get("bonus")
+
+        if bonus and not reason:
+            raise forms.ValidationError(
+                "If bonus is specified, than a reason is also required."
+            )
+        return cleaned_data
+
+class HITRejectionForm(forms.Form):
+    reason = forms.CharField(label='Reason for Rejection (required)', max_length=256, widget=forms.Textarea(attrs={'cols': 80, 'rows': 20, 'maxlength': 256}))
+
+class HITStatusFilter(admin.SimpleListFilter):
+    title = 'status'
+    parameter_name = 'status'
+    def lookups(self, request, model_admin):
+        return [('*', 'All'), ('None', 'None'), ('Submitted', 'Submitted'), ('Approved', 'Approved'), ('Rejected', 'Rejected')]
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val == '*':
+            return queryset
+        if val == 'None':
+            return queryset.filter(~Q(data__has_key='status') | Q(data__status=''))
+        return queryset.filter(data__status=val)
+    def value(self):
+        value = super().value()
+        return 'Submitted' if value is None else value
+    def choices(self, changelist):
+        yield from ({
+            'selected': self.value() == str(lookup),
+            'query_string': changelist.get_query_string({self.parameter_name: lookup}),
+            'display': title,
+        } for lookup, title in self.lookup_choices)
+
+class HITWorkerFilter(admin.SimpleListFilter):
+    title = 'Worker ID'
+    parameter_name = 'workerID'
+    def lookups(self, request, model_admin):
+        return []
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val is None:
+            return queryset
+        return queryset.filter(data__workerID=val)
+
 class HITAdmin(admin.ModelAdmin):
-    list_display = ('assignment_id', 'hitId', 'workerId', 'data')
-    readonly_fields = ('assignment_id', 'hitId', 'workerId')
+    list_display = ['assignment_id', 'status', 'questions', 'workerID']#('assignment_id', 'hitId', 'workerId', 'data')workerID
+    readonly_fields = ('assignment_id', 'hitID', 'workerID')
     fieldsets = (
         (None, {'fields': ('assignment_id', 'data')}),
     )
+    list_filter = (HITStatusFilter,)
     def has_add_permission(self, request):
         return False
-    def hitId(self, obj):
-        return obj.data.get('hitId')
-    hitId.short_description = "HIT ID"
-    def workerId(self, obj):
-        return obj.data.get('workerId')
-    workerId.short_description = "Worker ID"
+    def questions(self, obj):
+        return format_html('<br>'.join(obj.questions.values_list('text', flat=True)))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.registerAutoField('Feedback', 'RequesterFeedback')
+
+    def changelist_view(self, request, extra_context=None):
+        # Update assignment statuses of any new assignments
+        try:
+            self.assignments = {
+                assignment['AssignmentId']: assignment
+                for hit in mturk.list_hits()['HITs']
+                for assignment in mturk.list_assignments_for_hit(HITId=hit['HITId']).get('Assignments', [])
+            }
+            for obj in HIT.objects.filter(Q(data__has_key='hitId') &~ Q(data__has_key='status')):
+                obj.data['status'] = self.assignments.get(obj.assignment_id, {}).get('AssignmentStatus', '')
+                obj.save()
+        except Exception as e:
+            self.message_user(request, f'Unable to retrieve assignment statuses. {e}', messages.ERROR)
+        return super().changelist_view(request, extra_context=None)
+    def status(self, obj):
+        if '__' in obj.assignment_id:
+            return None
+        if 'hitId' not in obj.data:
+            return None
+        #try:
+        #    assignmentStatus = mturk.get_assignment(AssignmentId=obj.assignment_id).get('Assignment', {}).get('AssignmentStatus', '')
+        #    obj.data['status'] = assignmentStatus
+        #    obj.save()
+        #except Exception as e:
+        #    return None
+        assignmentStatus = self.assignments.get(obj.assignment_id, {}).get('AssignmentStatus', '')
+        # Update assignment statuses of any old assignments
+        if 'status' in obj.data:
+            if assignmentStatus == '':
+                assignmentStatus = obj.data['status']
+            elif obj.data['status'] != assignmentStatus:
+                obj.data['status'] = assignmentStatus
+                obj.save()
+        else:
+            obj.data['status'] = assignmentStatus
+            obj.save()
+        if assignmentStatus is '':
+            return None
+        icon_url = static('admin/img/icon-%s.svg' % {'Rejected': 'no', 'Approved': 'yes', 'Submitted': 'unknown'}[assignmentStatus])
+        return format_html('<img src="{}" alt="{}">', icon_url, assignmentStatus)
+    status.short_description = 'Assignment Status'
+
+    def registerAutoField(self, humanFieldName, fieldName):
+        def field(obj):
+            return self.assignments.get(obj.assignment_id, {}).get(fieldName, '')
+        field.short_description = humanFieldName
+        if not hasattr(self, fieldName):
+            setattr(self, fieldName, field)
+        self.list_display.append(fieldName)
+
+    #self.list_display.remove(fieldName)
+
+    def approve(self, request, queryset):
+        for obj in queryset:
+            try:
+                mturk.approve_assignment(
+                    AssignmentId=obj.assignment_id,
+                    OverrideRejection=True
+                )
+            except Exception as e:
+                self.message_user(request, f'Unable to approve the assignment {obj.assignment_id}. {e}', messages.ERROR)
+    approve.short_description = 'Approve selected hits'
+    def bonus(self, request, queryset):
+        if request.POST.get('post'):
+            form = HITApprovalForm(request.POST)
+            if form.is_valid():
+                for obj in queryset:
+                    try:
+                        #print('successful fake acceptance of ' + str(obj))
+                        if form.cleaned_data['reason']:
+                            mturk.approve_assignment(
+                                AssignmentId=obj.assignment_id,
+                                RequesterFeedback=form.cleaned_data['reason'],
+                                OverrideRejection=True
+                            )
+                        else:
+                            mturk.approve_assignment(
+                                AssignmentId=obj.assignment_id,
+                                OverrideRejection=True
+                            )
+                        obj.data['__cached_status'] = 'Approved'
+                        obj.save()
+                        if form.cleaned_data['bonus']:
+                            #print('successful fake bonus of '+str(form.cleaned_data['bonus']))
+                            mturk.send_bonus(
+                                WorkerId=obj.workerID,
+                                BonusAmount=str(form.cleaned_data['bonus']),
+                                AssignmentId=obj.assignment_id,
+                                Reason=form.cleaned_data['reason'],
+                                UniqueRequestToken=obj.assignment_id
+                            )
+                    except Exception as e:
+                        self.message_user(request, f'Unable to approve the assignment {obj.assignment_id}. {e}', messages.ERROR)
+                return None
+        else:
+            form = HITApprovalForm()
+        return render(request, 'admin/users/hit/hit_form.html', {
+            'items': queryset.order_by('pk'),
+            'form': form,
+            'title': 'Approve selected hits',
+            'action': 'bonus',
+            'button': 'Approve',
+        })
+    bonus.short_description = 'Approve selected hits and send bonus'
+    def reject(self, request, queryset):
+        if request.POST.get('post'):
+            form = HITRejectionForm(request.POST)
+            if form.is_valid():
+                for obj in queryset:
+                    try:
+                        #print('successful fake rejection of ' + str(obj))
+                        mturk.reject_assignment(
+                            AssignmentId=obj.assignment_id,
+                            RequesterFeedback=form.cleaned_data['reason']
+                        )
+                        obj.data['__cached_status'] = 'Rejected'
+                        obj.save()
+                    except Exception as e:
+                        self.message_user(request, f'Unable to reject the assignment {obj.assignment_id}. {e}', messages.ERROR)
+                return None
+        else:
+            form = HITRejectionForm()
+        return render(request, 'admin/users/hit/hit_form.html', {
+            'items': queryset.order_by('pk'),
+            'form': form,
+            'title': 'Reject selected hits',
+            'action': 'reject',
+            'button': 'Reject',
+        })
+    reject.short_description = 'Reject selected hits'
+    actions=[approve, bonus, reject]
 
 class AnswerAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase3-answers.csv', ['text','isFinal','question'])]
+    actions = [export_csv('phase1-answers.csv', ['text','isFinal','question'])]
     list_filter = ('isFinal',)
 
 class AnswerInline(admin.TabularInline):
     model = Answer
     extra = 0
 
+exportQuestions = export_csv('phase1-questions.csv', ['text','isFinal','skipCount','workerID'])
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase3-questions.csv', ['text','isFinal','skipCount','workerID'])]
+    actions = [exportQuestions]
     inlines = [
         AnswerInline,
     ]

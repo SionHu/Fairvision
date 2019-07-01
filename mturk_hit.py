@@ -189,9 +189,9 @@ def print_assignment(hit_id):
                 ).get('Assignments', []))
             except Exception as e:
                 print(e)
-        pprint.pprint(a)
+        pprint(a)
     else:
-        pprint.pprint(mturk.list_assignments_for_hit(
+        pprint(mturk.list_assignments_for_hit(
             HITId=hit_id
         ).get('Assignments', []))
 
@@ -229,6 +229,7 @@ if __name__ == "__main__":
 
     rparser = subparsers.add_parser('reject', help='reject the assignment', aliases=['r'])
     rparser.add_argument('assignment', type=str, metavar='assignment')
+    rparser.add_argument('reason', type=str, metavar='reason')
 
 
     options = parser.parse_args()

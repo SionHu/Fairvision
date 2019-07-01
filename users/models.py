@@ -200,3 +200,14 @@ class Answer(models.Model):
 class HIT(models.Model):
     assignment_id = models.CharField(verbose_name="Assignment ID", max_length=255, blank=False, null=False, primary_key=True)
     data = JSONField()
+    @property
+    def workerID(self):
+        return self.data.get('workerId')
+    @property
+    def hitID(self, obj):
+        return obj.data.get('hitId')
+    @property
+    def questions(self):
+        return Question.objects.filter(workerID=self.workerID)
+    def __str__(self):
+        return self.assignment_id
