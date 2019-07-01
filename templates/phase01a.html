@@ -251,6 +251,14 @@
                 $("#closeGIF").show();
             }, 10000);
         });
+            
+            //input bar listener when key "esc" is hit
+        document.getElementById("agreement").addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 27 ) { //make sure esc is hit
+                document.getElementById("open_next").click(); //basically calls the button click function
+            }
+        });
         </script>
 
 
@@ -308,12 +316,6 @@
         var listNode_q = document.createElement("ul");
         var listNode_a = document.createElement("ul");
 
-        //document.getElementById("is/are").addEventListener("input", function() {
-          //  var isare = document.getElementById("is/are").value;
-        //    document.getElementById("it_is/they_are").innerText = isare == "is" ? "It/There is" : "They/There are";
-          //  console.log(document.getElementById("is/are").value + " " + document.getElementById("it_is/they_are").text);
-        //});
-
         document.getElementById("add").addEventListener("click", function() {
             //Get the question
             var ques = document.getElementById("Q").value.trim();
@@ -336,6 +338,13 @@
                     // alert("Please DO NOT enter meaningless phrases!");
                     alert("Type something meaningful please.");
                     break boo;
+                }
+                
+                var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
+                
+                if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
+                    var removedWord = ques.substring(0,ques.indexOf(' '));
+                    ques = ques.substring(ques.indexOf(' ')+1);
                 }
 
                 qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
