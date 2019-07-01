@@ -62,7 +62,7 @@
                 </a>
             </div>
 
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button id="closeGIF" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
     </div>
     </div>
@@ -72,9 +72,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalScrollableTitle" style="color: black">Instruction</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body" style="color: black">
                     Our program is focusing on training a better machine learning model of object detection. We collect questions and answers describing the feature of the images <a style="color: red">(object & background)</a>, and use the human intelligence to reduce the bias in the image dataset.
@@ -90,7 +87,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="open_next" type="button" class="btn btn-secondary">Close</button>
                 </div>
             </div>
         </div>
@@ -103,17 +100,28 @@
         <div class="col-md-6" id="bg-image">
             <!-- IMAGE -->
             <div class="row">
-                <div class="col" style="text-align: center">
-
-                    <img src="{{ url }}" id="img1" class="d-inline-block img-fluid" style="max-height: 250px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);">
-
+                <div class="col text-center" style="height: 35%;">
+                        <img src="{{ url.0 }}" id="img1" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
                 </div>
             </div>
+            
+            <div class="row mt-3">
+                <div class="col text-center" style="height: 35%;">
+                        <img src="{{ url.1 }}" id="img2" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col text-center" style="height: 35%;">
+                        <img src="{{ url.2 }}" id="img3" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
+                </div>
+            </div>
+        
             <!-- END IMAGE -->
 
             <!-- Previous Q&A List -->
-            <div class="row" style="position:absolute;bottom: 40px;width: 100%">
-                <div class="col-md-10 ml-5 mt-5">
+            <!--<div class="row mb-3" style="width: 100%">
+                <div class="col-md-10 ml-5 mt-3">
                     <div class="card" style="width: 100%; height: 15rem; overflow-y: auto;border: transparent;">
                         <div class="card-title">
                           <a style="font-size: x-large; padding-left: 10px">Previous Questions</a>
@@ -133,7 +141,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
 
         <div class="col-md-6" style="display: none; position: absolute" id="loading-image" alt="Loading..." >
@@ -146,17 +154,15 @@
             <!-- INPUT BAR -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
                 <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
-                <br><div style="color: yellow"><i class="fa fa-bell"> </i> Ask questions of anything (object, background...) in image</div>
+                <br><div style="color: yellow"><i class="fa fa-bell"> </i> Ask about <b>object</b> & <b>background</b> shown in the images</div>
                 <div class="input-group m-3">
                     Q:
                     <div class="input-group-prepend ml-2 mr-2">
                         <select id="sixw" style="border: white 1px solid;background-color: transparent;color: white">
                             <option value="what" style="color: black">What</option>
                             <option value="where" style="color: black">Where</option>
-                            <option value="who" style="color: black">Who</option>
                             <option value="when" style="color: black">When</option>
                             <option value="how" style="color: black">How</option>
-                            <option value="why" style="color: black">Why</option>
                         </select>
                     </div>
                     <!--<div class="input-group-prepend mr-2">
@@ -236,6 +242,14 @@
             if ({{ request.hit.roundnums.phase01a|default:0 }} == 0) {
                 $("#agreement").modal();
             }
+        });
+            
+        $("#open_next").click(function() {
+            $("#agreement").modal('hide');
+            $("#myModal").modal('show');
+            setTimeout(function() {
+                $("#closeGIF").show();
+            }, 10000);
         });
         </script>
 
