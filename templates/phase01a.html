@@ -16,7 +16,7 @@
 
         <!-- The Modal -->
 
-    <div class="modal fade" id="myModal">
+    <div class="modal fade" id="myModal" data-backdrop="static" >
 
     <div class="modal-dialog">
         <div class="modal-content" style="width: 250%; margin-left: -400px;margin-top: 80px">
@@ -67,7 +67,7 @@
     </div>
     </div>
 
-    <div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="agreement" aria-hidden="true">
+    <div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="agreement" aria-hidden="true" data-backdrop="static" >
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -154,9 +154,7 @@
             <!-- INPUT BAR -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
                 <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
-                <br><div style="color: yellow"><i class="fa fa-bell"> </i>
-                  Find the similarities of these images of {{ object|title }}
-                </div>
+                <br><div style="color: yellow"><i class="fa fa-bell"> </i> Ask about <b>object</b> & <b>background</b> shown in the images</div>
                 <div class="input-group m-3">
                     Q:
                     <div class="input-group-prepend ml-2 mr-2">
@@ -240,13 +238,11 @@
         </script>
 
         <script>
-
-          
-          $(document).ready(function(){
+        $(document).ready(function(){
             if ({{ request.hit.roundnums.phase01a|default:0 }} == 0) {
-              $("#agreement").modal();
+                $("#agreement").modal();
             }
-          });
+        });
 
         $("#open_next").click(function() {
             $("#agreement").modal('hide');
@@ -325,14 +321,8 @@
             var ques = document.getElementById("Q").value.trim();
             var ans = document.getElementById("A").value.trim();
 
-            var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
-
-            if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
-                var removedWord = ques.substring(0,ques.indexOf(' '));
-                ques = ques.substring(ques.indexOf(' ')+1);
-            }
-
             //Check user input using the checker function
+
             var ques_list = ques.split(" ");
             var ans_list = ans.split(" ");
 
@@ -348,6 +338,13 @@
                     // alert("Please DO NOT enter meaningless phrases!");
                     alert("Type something meaningful please.");
                     break boo;
+                }
+
+                var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
+
+                if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
+                    var removedWord = ques.substring(0,ques.indexOf(' '));
+                    ques = ques.substring(ques.indexOf(' ')+1);
                 }
 
                 qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
