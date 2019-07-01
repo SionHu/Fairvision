@@ -337,6 +337,16 @@
                     alert("Type something meaningful please.");
                     break boo;
                 }
+                
+                var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
+                console.log(ques_first);
+                
+                if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
+                    var removedWord = ques.substring(0,ques.indexOf(' '));
+                    console.log(removedWord);
+                    ques = ques.substring(ques.indexOf(' ')+1);
+                }
+                console.log(ques);
 
                 qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
