@@ -104,19 +104,19 @@
                         <img src="{{ url.0 }}" id="img1" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
                 </div>
             </div>
-            
+
             <div class="row mt-3">
                 <div class="col text-center" style="height: 35%;">
                         <img src="{{ url.1 }}" id="img2" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
                 </div>
             </div>
-            
+
             <div class="row mt-3">
                 <div class="col text-center" style="height: 35%;">
                         <img src="{{ url.2 }}" id="img3" class="d-inline-block img-fluid " style="max-height: 170px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2)">
                 </div>
             </div>
-        
+
             <!-- END IMAGE -->
 
             <!-- Previous Q&A List -->
@@ -154,7 +154,9 @@
             <!-- INPUT BAR -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
                 <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
-                <br><div style="color: yellow"><i class="fa fa-bell"> </i> Ask about <b>object</b> & <b>background</b> shown in the images</div>
+                <br><div style="color: yellow"><i class="fa fa-bell"> </i>
+                  Find similarities between these images of {{ object|title }}
+                </div>
                 <div class="input-group m-3">
                     Q:
                     <div class="input-group-prepend ml-2 mr-2">
@@ -243,7 +245,7 @@
                 $("#agreement").modal();
             }
         });
-            
+
         $("#open_next").click(function() {
             $("#agreement").modal('hide');
             $("#myModal").modal('show');
@@ -251,7 +253,7 @@
                 $("#closeGIF").show();
             }, 10000);
         });
-            
+
             //input bar listener when key "esc" is hit
         document.getElementById("agreement").addEventListener("keyup", function(event) {
             event.preventDefault();
@@ -321,6 +323,13 @@
             var ques = document.getElementById("Q").value.trim();
             var ans = document.getElementById("A").value.trim();
 
+            var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
+
+            if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
+                var removedWord = ques.substring(0,ques.indexOf(' '));
+                ques = ques.substring(ques.indexOf(' ')+1);
+            }
+
             //Check user input using the checker function
 
             var ques_list = ques.split(" ");
@@ -338,13 +347,6 @@
                     // alert("Please DO NOT enter meaningless phrases!");
                     alert("Type something meaningful please.");
                     break boo;
-                }
-                
-                var ques_first = ques.split(" ",1).join().toLocaleLowerCase();
-                
-                if (ques_first== "what" || ques_first=="where" || ques_first=="when" || ques_first=="how"){
-                    var removedWord = ques.substring(0,ques.indexOf(' '));
-                    ques = ques.substring(ques.indexOf(' ')+1);
                 }
 
                 qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
