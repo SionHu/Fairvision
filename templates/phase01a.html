@@ -418,7 +418,7 @@
                     'data_q': questionArray,  // might change due to gamep.py - phase01a
                     'data_a': answerArray,
                     'validation': resultArr,
-                    'imgnum': [{{ imgnum }}],
+                    'imgnum': {{ imgnum }},
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){}).fail(function() {
                   alert( "An error occurred. Could not submit your data." );
