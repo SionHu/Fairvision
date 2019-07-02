@@ -31,9 +31,10 @@
 
         <div style="text-align: center">
         <form name="mturk" method="post" action="{{ request.COOKIES.submissionUrl }}/mturk/externalSubmit" style="text-align: center">
-            <input type="hidden" name="assignmentId" value={{ request.COOKIES.assignmentid }}>
-            <input type="hidden" name="hitId" value={{ request.hit.hitId }}>
-            <input type="hidden" name="token" value="cam2cdsgame">
+            <input type="hidden" name="assignmentId" value="{{ request.COOKIES.assignmentid }}">
+            <input type="hidden" name="hitId" value="{{ request.hit.hitId }}">
+            <input type="hidden" name="questions" value="{{ request.hit.questions|make_list|escape }}">
+            <input type="hidden" name="answers" value="{{ request.hit.answers|make_list|escape }}">
             <input type="submit" class= "btn btn-lg btn-success" value="Go Back to MTurk" >
         </form>
         </div>

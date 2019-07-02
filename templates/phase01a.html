@@ -19,7 +19,7 @@
     <div class="modal fade" id="myModal" data-backdrop="static" >
 
     <div class="modal-dialog">
-        <div class="modal-content" style="margin-top:10%;width:220%;margin-left:-55%">
+        <div class="modal-content" style="width: 200%; margin-left: -250px; margin-top: 80px">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {% for inst in instructions %}
@@ -182,7 +182,7 @@
                 <div>
                     <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
                 </div>
-                    <div id="alrt"></div>
+                <div id="alrt"></div>
 
             </div>
             <!-- END INPUT BAR -->
@@ -190,7 +190,7 @@
             <hr> <!--  Divider line  -->
 
             <!-- Q&A LIST -->
-            <div class="row m-3" style="padding-top: 30px">
+            <div class="row m-3" style="padding-top: 10px">
                 <div class="col">
                     <div class="rectangle" style="width: 100%; height: 50.5%;height: 15rem;overflow-y: auto;"> <!-- height was 62% -->
                         <div class="card-content mt-2">
@@ -245,15 +245,16 @@
             }
         });
 
-        {% if not user.is_superuser %}
         $("#open_next").click(function() {
             $("#agreement").modal('hide');
+            {% if not user.is_superuser %}
             $("#myModal").modal('show');
+            {% endif %}
             setTimeout(function() {
                 $("#closeGIF").show();
             }, 45000);
         });
-        {% endif %}
+
 
             //input bar listener when key "esc" is hit
         document.getElementById("agreement").addEventListener("keyup", function(event) {
@@ -394,7 +395,7 @@
         //next button listener
         $('#nextbtn').click(function(event){
             // alert("New Images Inbound!")
-            rank();
+            // rank();
             var questionArray = [];
             var answerArray = [];
             if (document.getElementById("list_q").getElementsByTagName("LI").length !== 0) {
