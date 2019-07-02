@@ -246,13 +246,15 @@
             }
         });
 
+        {% if not user.is_superuser %}
         $("#open_next").click(function() {
             $("#agreement").modal('hide');
             $("#myModal").modal('show');
             setTimeout(function() {
                 $("#closeGIF").show();
-            }, 10000);
+            }, 45000);
         });
+        {% endif %}
 
             //input bar listener when key "esc" is hit
         document.getElementById("agreement").addEventListener("keyup", function(event) {
@@ -416,7 +418,7 @@
                     'data_q': questionArray,  // might change due to gamep.py - phase01a
                     'data_a': answerArray,
                     'validation': resultArr,
-                    'imgnum': [{{ imgnum }}],
+                    'imgnum': {{ imgnum }},
                     csrfmiddlewaretoken : CSRFtoken
                 }, function(data){}).fail(function() {
                   alert( "An error occurred. Could not submit your data." );
