@@ -51,7 +51,7 @@ def player_required(func):
             assignmentId = f"{request.user.username}__{uuid.uuid4().hex}"[:31]
             hitId = 'admin'
             workerId = 'admin'
-            return redirect(f"{request.path_info}?assignmentId={assignmentId}&hitId={hitId}&workerId={workerId}")
+            return redirect(f"{request.path_info}?assignmentId={assignmentId}&hitId={hitId}&workerId={workerId}&turkSubmitTo=")
         else:
             return func(request, *args, previewMode=True, **kwargs)
     return wrapper
