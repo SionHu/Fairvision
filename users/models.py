@@ -181,7 +181,7 @@ class Question(models.Model):
     # Count is the nunber of same/redundant Questions count (we will not remove the redundant attrbutes)
     count = models.IntegerField(default=1)
     # ID for reference which questions are for which image
-    imageID = models.CharField(max_length=64, default='Caltech101/airplanes/image_0001.jpg')
+    imageID = ArrayField(models.CharField(max_length=64))
     # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
     skipCount = models.IntegerField(default=0)
     def __str__(self):

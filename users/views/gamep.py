@@ -63,7 +63,7 @@ def phase01a(request, previewMode=False):
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         print("old questions", old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1]), assignmentID=assignmentId) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=[KEY.format(i) for i in postList], assignmentID=assignmentId) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         print("new question", new_Qs)
 
