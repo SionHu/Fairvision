@@ -36,13 +36,12 @@ def player_required(func):
 
             if request.method == 'POST':
                 roundnums[func.__name__] = numInPhase + 1
+                request.hit['hitId'] = request.GET['hitId']
+                request.hit['workerId'] = request.GET['workerId']
                 hitObj.save()
                 return func(request, *args, **kwargs)
             else:
                 if numInPhase >= NUMROUNDS:
-                    request.hit['hitId'] = request.GET['hitId']
-                    request.hit['workerId'] = request.GET['workerId']
-                    hitObj.save()
                     return over(request, func.__name__)
                 else:
                     return func(request, *args, **kwargs)

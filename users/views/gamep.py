@@ -83,7 +83,7 @@ def phase01a(request, previewMode=False):
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01a', 3)
 
-    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
+    if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
         return over(request, 'phase01a')
 
@@ -134,7 +134,7 @@ def phase01b(request, previewMode=False):
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01b', 4)
 
-    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
+    if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         return over(request, 'phase01b')
 
     # sending 4 images at a time
