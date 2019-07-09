@@ -63,7 +63,7 @@ def phase01a(request, previewMode=False):
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         print("old questions", old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=KEY.format(postList[-1]), assignmentID=assignmentId) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=[KEY.format(i) for i in postList], assignmentID=assignmentId) for que in questions])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         print("new question", new_Qs)
 
@@ -83,7 +83,7 @@ def phase01a(request, previewMode=False):
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01a', 3)
 
-    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
+    if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
         return over(request, 'phase01a')
 
@@ -134,7 +134,7 @@ def phase01b(request, previewMode=False):
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01b', 4)
 
-    if len(rounds.post) > ImageModel.objects.filter(img__startswith=KEYRING).count():
+    if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         return over(request, 'phase01b')
 
     # sending 4 images at a time

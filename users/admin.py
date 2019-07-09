@@ -9,6 +9,7 @@ from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render
+from django.template.defaultfilters import filesizeformat
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.html import format_html
@@ -48,7 +49,7 @@ def getFolderChoices():
     return natsorted(setChoices), sort_uniq(objChoices)
 
 class ImageModelForm(forms.ModelForm):
-    img = forms.ImageField(label='Image', widget=forms.FileInput(attrs={'multiple': True}), help_text=('Images to upload to S3 (%.1f MB or less). We only allow JPG files.' % (settings.DATA_UPLOAD_MAX_MEMORY_SIZE / 1048576,)), required=True)
+    img = forms.ImageField(label='Image', widget=forms.FileInput(attrs={'multiple': True}), help_text=(f'Images to upload to S3 ({filesizeformat(settings.DATA_UPLOAD_MAX_MEMORY_SIZE)} or less in total). We only allow JPG files.'), required=True)
     set = forms.CharField(required=True)
     object = forms.CharField(required=True)
 
@@ -433,11 +434,11 @@ class QuestionAdmin(admin.ModelAdmin):
     exclude = ('imageID',)
     def image_id(self, obj):
         id = obj.imageID
-        img = ImageModel.objects.get(img=id)
-        return format_html("<a href={}>{}</a>".format(
+        imgs = ImageModel.objects.filter(img__in=id)
+        return format_html('<br>'.join("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
             args=(img.pk,)),
-        id))
+        img.img) for img in imgs))
     image_id.short_description = 'Image ID'
     list_filter = ('isFinal', 'assignmentID')
 

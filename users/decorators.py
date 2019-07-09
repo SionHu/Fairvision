@@ -36,13 +36,12 @@ def player_required(func):
 
             if request.method == 'POST':
                 roundnums[func.__name__] = numInPhase + 1
+                request.hit['hitId'] = request.GET['hitId']
+                request.hit['workerId'] = request.GET['workerId']
                 hitObj.save()
                 return func(request, *args, **kwargs)
             else:
                 if numInPhase >= NUMROUNDS:
-                    request.hit['hitId'] = request.GET['hitId']
-                    request.hit['workerId'] = request.GET['workerId']
-                    hitObj.save()
                     return over(request, func.__name__)
                 else:
                     return func(request, *args, **kwargs)
@@ -51,7 +50,7 @@ def player_required(func):
             assignmentId = f"{request.user.username}__{uuid.uuid4().hex}"[:31]
             hitId = 'admin'
             workerId = 'admin'
-            return redirect(f"{request.path_info}?assignmentId={assignmentId}&hitId={hitId}&workerId={workerId}")
+            return redirect(f"{request.path_info}?assignmentId={assignmentId}&hitId={hitId}&workerId={workerId}&turkSubmitTo=")
         else:
             return func(request, *args, previewMode=True, **kwargs)
     return wrapper
