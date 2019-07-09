@@ -214,3 +214,10 @@ class HIT(models.Model):
         return Answer.objects.filter(assignmentID=self.assignment_id)
     def __str__(self):
         return self.assignment_id
+
+# The word instructions show in the modal before the worker starts
+class TextInstruction(models.Model):
+    phase=models.CharField(max_length=3)
+    instruction = models.TextField(blank=False,null=False,unique=False)
+    def __str__(self):
+        return self.phase

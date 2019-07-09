@@ -78,10 +78,7 @@
                     <h5><a style="color: red">Attention</a> : Your work will <a style="color: red"> get rejected </a>if you do not follow the instruction below.</h5>
                     <hr>
                     <ul id="instruction_list">
-                        <li><a style="color: red">Do not ask same or similar questions </a>in different rounds.</li>
-                        <li><a style="color: red">Do not ask questions about the NAME of the object.</a> For instance, "what is it?", "What is the object?", or "what is the name of the thing?"</li>
-                        <li>Enter as <a style="color: red">MANY questions</a> as you can.</li>
-                        <li>Answer with a simple phrase. Example: <a style="color: red">"The background is green" -> "Green"</a> </li>
+                        {{ text_inst.instruction|safe }}
                     </ul>
                 </div>
                 <div class="modal-footer">

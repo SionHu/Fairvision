@@ -83,9 +83,7 @@
                     <h5><a style="color: red">Attention</a> : Your work will <a style="color: red"> get rejected </a>if you do not follow the instruction below.</h5>
                     <hr>
                     <ul id="instruction_list">
-                        <li>Answer the question if <a style="color: red">more than 2</a> images have the same answer. Otherwise, click <a style="color: red">"Skip"</a> and go to next question.</li>
-                        <li><a style="color: red">Do not enter profane words.</a> We will detect the content you input.</li>
-                        <li>Your answer should be a simple phrase(not a complete sentence). Example: <a style="color: red">"The background is green" -> "Green"</a> </li>
+                         {{ text_inst.instruction|safe }}
                     </ul>
                 </div>
                 <div class="modal-footer">

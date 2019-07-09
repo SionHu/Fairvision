@@ -16,7 +16,7 @@ from django.utils.html import format_html
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Answer, Question, HIT
+from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Answer, Question, HIT
 
 
 from django import forms
@@ -454,6 +454,7 @@ admin.site.register(ImageModel, ImageModelAdmin)
 admin.site.register(Phase01_instruction)
 admin.site.register(Phase02_instruction)
 admin.site.register(Phase03_instruction)
+admin.site.register(TextInstruction)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Session, SessionAdmin)
