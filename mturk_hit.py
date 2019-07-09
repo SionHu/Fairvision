@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # impoer django settings module to make this script work separately
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
@@ -36,7 +38,7 @@ def create_hit(phase, number):
                 Title="Image Labeling With Text",
                 Description="Generating questions and answers and verifying question given a shown image",
                 Keywords='image, tagging, machine learning, text generation',
-                Reward = '0.04',
+                Reward = '0.15',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=6000,
@@ -88,8 +90,8 @@ def create_hit(phase, number):
 
         # some print function for reference
         pprint(new_hit['HIT']['HITGroupId'])
-        print("https://worker.mturk.com/mturk/preview?groupId=", new_hit['HIT']['HITGroupId'])
-        print("HITID = " + new_hit['HIT']['HITId'] + " (Use to Get Results)")
+        print(f"https://worker.mturk.com/mturk/preview?groupId={new_hit['HIT']['HITGroupId']}")
+        print(f"HITID = {new_hit['HIT']['HITId']} (Use to Get Results)")
 
 '''
 check available hit

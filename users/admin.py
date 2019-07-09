@@ -274,7 +274,10 @@ class HITAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
     def questions(self, obj):
-        return format_html('<br>'.join(obj.questions.values_list('text', flat=True)))
+        return format_html('<br>'.join("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
+            args=(img.id,)),
+        img.text) for img in obj.questions))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
