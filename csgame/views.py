@@ -7,11 +7,14 @@ def profile(request):
     return render(request, 'profile.html')
 
 def over(request, phase=None):
-    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.GET['assignmentId'], defaults={'data': {}})[0]
-    request.hit = hitObj.data
-    output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase)})
-    output.set_cookie('assignmentid', request.GET['assignmentId'])
-    output.set_cookie('submissionUrl', request.GET['turkSubmitTo'])
+    if 'assignmentId' in request.GET:
+        hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.GET['assignmentId'], defaults={'data': {}})[0]
+        request.hit = hitObj.data
+        output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase)})
+        output.set_cookie('assignmentid', request.GET['assignmentId'])
+        output.set_cookie('submissionUrl', request.GET['turkSubmitTo'])
+    else:
+        output = render(request, 'over.html', {'phase': phase, 'roundNums': 0})
     return output
 
 def feedback(request):
