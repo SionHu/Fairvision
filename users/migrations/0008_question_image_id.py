@@ -32,4 +32,9 @@ class Migration(migrations.Migration):
                 )
             ],
         ),
+        migrations.AlterField(
+            model_name='hit',
+            name='data',
+            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, encoder=django.core.serializers.json.DjangoJSONEncoder, null=True),
+        ),
     ]

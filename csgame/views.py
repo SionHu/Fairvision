@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.conf import settings
 from django.http import *
 from django.shortcuts import render_to_response,redirect,render
@@ -20,6 +21,8 @@ def over(request, phase=None):
 def feedback(request):
     hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.COOKIES['assignmentid'], defaults={'data': {}})[0]
     request.hit = hitObj.data
+    request.hit['endTime'] = datetime.now()
+    hitObj.save()
     return render(request, 'feedback.html')
 
 def about(request):

@@ -6,6 +6,7 @@ from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.sessions.models import Session
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
+from django.core.serializers.json import DjangoJSONEncoder
 import os
 
 class CustomUser(AbstractUser):
@@ -199,7 +200,7 @@ class Answer(models.Model):
 
 class HIT(models.Model):
     assignment_id = models.CharField(verbose_name="Assignment ID", max_length=255, blank=False, null=False, primary_key=True)
-    data = JSONField()
+    data = JSONField(blank=True, null=True, encoder=DjangoJSONEncoder)
     @property
     def workerID(self):
         return self.data.get('workerId')

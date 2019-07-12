@@ -25,6 +25,7 @@ from natsort import natsorted
 from ast import literal_eval
 import base64
 import csv
+from datetime import datetime
 import itertools
 from more_itertools import partition
 import operator
@@ -266,7 +267,7 @@ class HITWorkerFilter(admin.SimpleListFilter):
         return queryset.filter(data__workerID=val)
 
 class HITAdmin(admin.ModelAdmin):
-    list_display = ['assignment_id', 'status', 'questions', 'workerID']#('assignment_id', 'hitId', 'workerId', 'data')workerID
+    list_display = ['assignment_id', 'status', 'questions', 'workerID', 'work_time']#('assignment_id', 'hitId', 'workerId', 'data')workerID
     readonly_fields = ('assignment_id', 'hitID', 'workerID')
     fieldsets = (
         (None, {'fields': ('assignment_id', 'data')}),
@@ -279,6 +280,14 @@ class HITAdmin(admin.ModelAdmin):
             reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
             args=(img.id,)),
         img.text) for img in obj.questions))
+    def work_time(self, obj):
+        end = obj.data.get('endTime')
+        start = obj.data.get('startTime')
+        if end and start:
+            mins, secs = divmod((datetime.fromisoformat(end) - datetime.fromisoformat(start)).seconds, 60)
+            return f"{mins} mins {secs} secs"
+        else:
+            return None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
