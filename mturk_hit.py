@@ -41,7 +41,7 @@ def create_hit(phase, number):
                 Reward = '0.15',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
-                AssignmentDurationInSeconds=6000,
+                AssignmentDurationInSeconds=35*60,
                 AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
             )
@@ -61,9 +61,9 @@ def create_hit(phase, number):
                 Keywords='image, tagging',
                 Reward = '0.15',
                 MaxAssignments=1,
-                LifetimeInSeconds=7200,
-                AssignmentDurationInSeconds=6000,
-                AutoApprovalDelayInSeconds=14400,
+                LifetimeInSeconds=60*60*24*10,
+                AssignmentDurationInSeconds=35*60,
+                AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
             )
         else:
@@ -82,14 +82,13 @@ def create_hit(phase, number):
                 Keywords='binary tagging, text verification, computer vision, machine learning',
                 Reward = '0.1',
                 MaxAssignments=1,
-                LifetimeInSeconds=7200,
-                AssignmentDurationInSeconds=6000,
-                AutoApprovalDelayInSeconds=14400,
+                LifetimeInSeconds=60*60*24*10,
+                AssignmentDurationInSeconds=600,
+                AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
             )
 
         # some print function for reference
-        pprint(new_hit['HIT']['HITGroupId'])
         print(f"https://worker.mturk.com/mturk/preview?groupId={new_hit['HIT']['HITGroupId']}")
         print(f"HITID = {new_hit['HIT']['HITId']} (Use to Get Results)")
 
@@ -224,7 +223,7 @@ if __name__ == "__main__":
     dparser.add_argument('phase', **phasesArg)
 
     pparser = subparsers.add_parser('print', help='print hit or assignment status', aliases=['p'])
-    pparser.add_argument('--assignment', type=str, metavar='assignment', help='HIT id to show assignments for.')
+    pparser.add_argument('-a', '--assignment', type=str, metavar='assignment', default='all', nargs='?', help='HIT id to show assignments for.')
 
     aparser = subparsers.add_parser('approve', help='approve the assignment', aliases=['a'])
     aparser.add_argument('assignment', type=str, metavar='assignment')

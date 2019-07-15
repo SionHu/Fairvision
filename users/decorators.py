@@ -1,5 +1,6 @@
 from collections import defaultdict
 from csgame.views import over
+from datetime import datetime
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
@@ -27,7 +28,7 @@ def player_required(func):
             assignmentId = None
 
         if assignmentId:
-            hitObj = HIT.objects.only('data').get_or_create(assignment_id=assignmentId, defaults={'data': {}})[0]
+            hitObj = HIT.objects.only('data').get_or_create(assignment_id=assignmentId, defaults={'data': {'startTime': datetime.now()}})[0]
             request.hit = hitObj.data
 
             roundnums = request.hit.setdefault('roundnums', {})
