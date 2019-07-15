@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.db.models import F
-from users.models import CustomUser, ImageModel, Attribute, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, Question, Answer
+from users.models import CustomUser, ImageModel, Attribute, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Question, Answer
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -95,12 +95,15 @@ def phase01a(request, previewMode=False):
 
     # Get all the instructions
     instructions = Phase01_instruction.get_queryset(Phase01_instruction) or ['none']
+    
+    #Get text instructions
+    text_inst = TextInstruction.objects.get(phase='01a')
 
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
     object = KEY.split('/')[1]
-    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': object})
+    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst,'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': object})
 
 '''
 View for phase 01 b
@@ -142,10 +145,13 @@ def phase01b(request, previewMode=False):
 
     # Get all the insturctions sets
     instructions = Phase02_instruction.get_queryset(Phase02_instruction) or ['none']
+    
+    #Get text instructions
+    text_inst = TextInstruction.objects.get(phase='01b')
 
     questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
