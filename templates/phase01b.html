@@ -15,9 +15,9 @@
     </div>
 
         <!-- The Modal -->
-    <div class="modal fade" id="myModal">
+    <div class="modal fade" id="myModal" data-backdrop="static">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 250%; margin-left: -400px;margin-top: 80px">
+            <div class="modal-content" style="width: 200%; margin-left: -250px; margin-top: 80px">
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
 
                     <ol class="carousel-indicators">
@@ -60,7 +60,7 @@
                     </a>
                 </div>
 
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button id="closeGIF" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -87,7 +87,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="open_next" type="button" class="btn btn-secondary">Close</button>
                 </div>
             </div>
         </div>
@@ -179,6 +179,25 @@
                 $("#agreement").modal();
             }
         });
+
+        $("#open_next").click(function() {
+            $("#agreement").modal('hide');
+            {% if not user.is_superuser %}
+            $("#myModal").modal('show');
+            {% endif %}
+            setTimeout(function() {
+                $("#closeGIF").show();
+            }, 15000);
+        });
+             
+        //input bar listener when key "esc" is hit
+        document.getElementById("agreement").addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 27 ) { //make sure esc is hit
+                document.getElementById("open_next").click(); //basically calls the button click function
+            }
+        });
+             
         </script>
     
         <script>
