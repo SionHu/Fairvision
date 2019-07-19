@@ -173,7 +173,7 @@ def phase03(request, previewMode=False):
         Attribute.objects.filter(word__in=words).update(count=F('count')-1)
 
         return HttpResponse(None)
-    elif request.hit['roundnums'].get(phase03.__name__):
+    elif getattr(request, 'hit', {}).get('roundnums', {}).get(phase03.__name__):
         return over(request, 'phase03')
     else:
         assignmentId = request.GET.get('assignmentId')
