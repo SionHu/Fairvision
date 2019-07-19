@@ -48,7 +48,7 @@ def create_hit(phase, number):
         # phase 01b
         elif(phase == 'phase01b'):
             try:
-                open(file='hitExternal/hitp1b.xml', mode='r').read()
+                question = open(file='hitExternal/hitp1b.xml', mode='r').read()
             except:
                 print()
                 print("----------------------")
@@ -69,7 +69,7 @@ def create_hit(phase, number):
         else:
             # phase 03
             try:
-                open(file='hitExteranl/hitp3.xml', mode='r').read()
+                question = open(file='hitExteranl/hitp3.xml', mode='r').read()
             except:
                 print()
                 print("----------------------")
@@ -80,7 +80,7 @@ def create_hit(phase, number):
                 Title="Binary Selection Question",
                 Description="Vote YES or NO for question provided based on common sense",
                 Keywords='binary tagging, text verification, computer vision, machine learning',
-                Reward = '0.1',
+                Reward = '0.05',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=600,

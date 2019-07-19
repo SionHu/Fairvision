@@ -267,7 +267,7 @@ class HITWorkerFilter(admin.SimpleListFilter):
         return queryset.filter(data__workerID=val)
 
 class HITAdmin(admin.ModelAdmin):
-    list_display = ['assignment_id', 'status', 'questions', 'workerID', 'work_time']#('assignment_id', 'hitId', 'workerId', 'data')workerID
+    list_display = ['assignment_id', 'status', 'questions', 'workerID', 'work_time', 'phase']
     readonly_fields = ('assignment_id', 'hitID', 'workerID')
     fieldsets = (
         (None, {'fields': ('assignment_id', 'data')}),
@@ -334,6 +334,9 @@ class HITAdmin(admin.ModelAdmin):
         icon_url = static('admin/img/icon-%s.svg' % {'Rejected': 'no', 'Approved': 'yes', 'Submitted': 'unknown'}[assignmentStatus])
         return format_html('<img src="{}" alt="{}">', icon_url, assignmentStatus)
     status.short_description = 'Assignment Status'
+
+    def phase(self, obj):
+        return list(obj.data.get('roundnums', {}).keys())[0]
 
     def registerAutoField(self, humanFieldName, fieldName):
         def field(obj):
