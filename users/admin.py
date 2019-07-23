@@ -28,12 +28,16 @@ import base64
 import csv
 from datetime import datetime
 import itertools
-from more_itertools import partition
+from more_itertools import first, partition
 import operator
 from django.http import HttpResponse
 
 def sort_uniq(sequence):
     return map(operator.itemgetter(0), itertools.groupby(natsorted(sequence)))
+
+#datetime.fromisoformat
+def fromisoformat(dt):
+    return datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S.%f")
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -308,7 +312,7 @@ class HITAdmin(admin.ModelAdmin):
         end = obj.data.get('endTime')
         start = obj.data.get('startTime')
         if end and start:
-            mins, secs = divmod((datetime.fromisoformat(end) - datetime.fromisoformat(start)).seconds, 60)
+            mins, secs = divmod((fromisoformat(end) - fromisoformat(start)).seconds, 60)
             return f"{mins} mins {secs} secs"
         else:
             return None
@@ -384,7 +388,7 @@ class HITAdmin(admin.ModelAdmin):
     status.short_description = 'Assignment Status'
 
     def phase(self, obj):
-        return list(obj.data.get('roundnums', {}).keys())[0]
+        return first(obj.data.get('roundnums', []), None)
 
     def registerAutoField(self, humanFieldName, fieldName):
         def field(obj):
