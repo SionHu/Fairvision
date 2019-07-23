@@ -75,6 +75,10 @@ def phase01a(request, previewMode=False):
         print("id_merge is: ", id_merge)
 
         Question.objects.filter(id__in=acceptedList).update(isFinal=True)
+        newQuestions = list(Question.objects.filter(id__in=[que.id for que in questions if que.id in id_merge]))
+        for que in newQuestions:
+            que.mergeParent = id_merge[que.id]
+        Question.objects.bulk_update(newQuestions, ['mergeParent'])
         #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
         answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(str(que.id), que.id), text=ans, assignmentID=assignmentId) for que, ans in zip(questions, answers)])
 
