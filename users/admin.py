@@ -21,18 +21,23 @@ from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase0
 
 from django import forms
 from natsort import natsorted
+from mturk_hit import create_hit, hitDescriptions
 
 from ast import literal_eval
 import base64
 import csv
 from datetime import datetime
 import itertools
-from more_itertools import partition
+from more_itertools import first, partition
 import operator
 from django.http import HttpResponse
 
 def sort_uniq(sequence):
     return map(operator.itemgetter(0), itertools.groupby(natsorted(sequence)))
+
+#datetime.fromisoformat
+def fromisoformat(dt):
+    return datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S.%f")
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -233,6 +238,31 @@ class HITApprovalForm(forms.Form):
 class HITRejectionForm(forms.Form):
     reason = forms.CharField(label='Reason for Rejection (required)', max_length=256, widget=forms.Textarea(attrs={'cols': 80, 'rows': 20, 'maxlength': 256}))
 
+class HITCreationForm(forms.ModelForm):
+    PHASE_CHOICES = [
+        ('phase01a', 'Phase 1a'),
+        ('phase01b', 'Phase 1b'),
+        ('phase03', 'Phase 3'),
+    ]
+    phase = forms.ChoiceField(label='Phase', choices=PHASE_CHOICES, initial='phase01a')
+    count = forms.DecimalField(label='Number of HITs', min_value=1, decimal_places=0, initial='1')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['assignment_id'].initial = 'ASSIGNMENT_ID_NOT_AVAILABLE'
+        self.fields['data'].initial = {'_':''}
+
+    class Meta:
+        model = HIT
+        exclude = ()
+        #widgets = {'assignment_id': forms.HiddenInput(), 'data': forms.HiddenInput()}
+
+    def save(self, *args, **kwargs):
+        #create_hit(self.cleaned_data['phase'], self.cleaned_data['count'])
+        print("did it")
+        HIT.objects.filter(assignment_id='ASSIGNMENT_ID_NOT_AVAILABLE').delete()
+        return super().save(*args, **kwargs)
+
 class HITStatusFilter(admin.SimpleListFilter):
     title = 'status'
     parameter_name = 'status'
@@ -249,7 +279,7 @@ class HITStatusFilter(admin.SimpleListFilter):
         value = super().value()
         return 'Submitted' if value is None else value
     def choices(self, changelist):
-        yield from ({
+        return ({
             'selected': self.value() == str(lookup),
             'query_string': changelist.get_query_string({self.parameter_name: lookup}),
             'display': title,
@@ -273,8 +303,6 @@ class HITAdmin(admin.ModelAdmin):
         (None, {'fields': ('assignment_id', 'data')}),
     )
     list_filter = (HITStatusFilter,)
-    def has_add_permission(self, request):
-        return False
     def questions(self, obj):
         return format_html('<br>'.join("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
@@ -284,7 +312,7 @@ class HITAdmin(admin.ModelAdmin):
         end = obj.data.get('endTime')
         start = obj.data.get('startTime')
         if end and start:
-            mins, secs = divmod((datetime.fromisoformat(end) - datetime.fromisoformat(start)).seconds, 60)
+            mins, secs = divmod((fromisoformat(end) - fromisoformat(start)).seconds, 60)
             return f"{mins} mins {secs} secs"
         else:
             return None
@@ -292,6 +320,30 @@ class HITAdmin(admin.ModelAdmin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.registerAutoField('Feedback', 'RequesterFeedback')
+
+    def get_form(self, request, obj=None, **kwargs):
+        defaults = {}
+        if obj is None:
+            defaults['form'] = HITCreationForm
+            if not messages.get_messages(request):
+                hits = mturk.list_hits()['HITs']
+                hitCounts = ((name, sum(1 for hit in hits if hit['HITStatus'] == 'Unassignable' and hit['Description'] == desc)) for name, desc in hitDescriptions.items())
+                hitCountHuman = [f"{str(count)} {name}" for name, count in hitCounts if count]
+                if hitCountHuman:
+                    if len(hitCountHuman) == 1:
+                        hitsHuman = hitCountHuman[0]
+                    elif len(hitCountHuman) == 2:
+                        hitsHuman = f"{hitCountHuman[0]} and {hitCountHuman[1]}"
+                    else:
+                        hitsHuman = f"{', '.join(hitCountHuman[:-1])}, and {hitCountHuman[-1]}"
+                    self.message_user(request, f"There are {hitsHuman} HITs that are still in progress. Only proceed if you want more.", messages.WARNING)
+        else:
+            self.fieldsets = (
+                (None, {'fields': ('assignment_id', 'data')}),
+            )
+            self.readonly_fields = ('assignment_id',) # 'hitID', 'workerID'
+        defaults.update(kwargs)
+        return super().get_form(request, obj, **defaults)
 
     def changelist_view(self, request, extra_context=None):
         # Update assignment statuses of any new assignments
@@ -336,7 +388,7 @@ class HITAdmin(admin.ModelAdmin):
     status.short_description = 'Assignment Status'
 
     def phase(self, obj):
-        return list(obj.data.get('roundnums', {}).keys())[0]
+        return first(obj.data.get('roundnums', []), None)
 
     def registerAutoField(self, humanFieldName, fieldName):
         def field(obj):
@@ -437,13 +489,13 @@ class AnswerInline(admin.TabularInline):
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','assignmentID'])]
+    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','assignmentID','mergeParent'])]
     inlines = [
         AnswerInline,
     ]
 
-    readonly_fields = ('image_id',)
-    exclude = ('imageID',)
+    readonly_fields = ('image_id', 'merge_parent', 'merge_children')
+    exclude = ('imageID', 'mergeParent')
     def image_id(self, obj):
         id = obj.imageID
         imgs = ImageModel.objects.filter(img__in=id)
@@ -452,7 +504,19 @@ class QuestionAdmin(admin.ModelAdmin):
             args=(img.pk,)),
         img.img) for img in imgs))
     image_id.short_description = 'Image ID'
-    list_filter = ('isFinal', 'assignmentID')
+    def merge_parent(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(obj._meta.app_label, obj._meta.model_name),
+            args=(obj.mergeParent,)),
+        Question.objects.get(id=obj.mergeParent)) if obj.mergeParent else "Question is final")
+    def merge_children(self, obj):
+        children = Question.objects.filter(mergeParent=obj.id)
+        return format_html('<br>'.join("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(obj._meta.app_label, obj._meta.model_name),
+            args=(child.id,)),
+        child) for child in children))
+    list_filter = ('isFinal', 'assignmentID',)
+    list_display = ('text', 'merge_children')
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

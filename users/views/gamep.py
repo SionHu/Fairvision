@@ -3,7 +3,8 @@ from csgame.views import over
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
-from django.db.models import F
+from django.db import transaction
+from django.db.models.expressions import Case, F, Value, When
 from users.models import CustomUser, ImageModel, Attribute, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Question, Answer
 
 from django.contrib.auth.admin import UserAdmin
@@ -70,13 +71,28 @@ def phase01a(request, previewMode=False):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        # THIS IS THE PROBLEM!!!!!!!!!!!!!!!
-        acceptedList, id_merge = send__receive_data(new_Qs, old_Qs)
+        acceptedList, id_merge, id_move = send__receive_data(new_Qs, old_Qs)
+        id_merge = {int(k): v for k, v in id_merge.items()}
+        id_move = {int(k): v for k, v in id_move.items()}
+        print("acceptedList is: ", acceptedList)
         print("id_merge is: ", id_merge)
+        print("id_move is: ", id_move)
 
         Question.objects.filter(id__in=acceptedList).update(isFinal=True)
         #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
-        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(str(que.id), que.id), text=ans, assignmentID=assignmentId) for que, ans in zip(questions, answers)])
+
+        # Store id_merge under mergeParent in the database
+        id_merge_sql = Case(*[When(id=new, then=Value(old)) for new, old in id_merge.items()])
+        Question.objects.filter(id__in=id_merge).update(mergeParent=id_merge_sql)
+
+        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, assignmentID=assignmentId) for que, ans in zip(questions, answers)])
+
+        with transaction.atomic():
+            id_move_sql = Case(*[When(question_id=bad, then=Value(good)) for bad, good in id_move.items()])
+            Answer.objects.filter(question_id__in=id_move).update(question_id=id_move_sql)
+            id_move_sql = Case(*[When(id=bad, then=Value(good)) for bad, good in id_move.items()])
+            Question.objects.filter(id__in=id_move).update(isFinal=False, mergeParent=id_move_sql)
+            Question.objects.filter(id__in=id_move.values()).update(isFinal=True)
 
         return HttpResponse(status=201)
 

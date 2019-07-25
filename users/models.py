@@ -179,8 +179,8 @@ class Question(models.Model):
     text = models.CharField(max_length=64, blank=False, null=False)
     # Boolean telling where this is the final questions for the rest of the phases
     isFinal = models.BooleanField(default=False)
-    # Count is the nunber of same/redundant Questions count (we will not remove the redundant attrbutes)
-    count = models.IntegerField(default=1)
+    # The old question that this question was merged to
+    mergeParent = models.IntegerField(default=0)
     # ID for reference which questions are for which image
     imageID = ArrayField(models.CharField(max_length=64))
     # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
