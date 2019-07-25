@@ -511,10 +511,18 @@ class QuestionAdmin(admin.ModelAdmin):
         Question.objects.get(id=obj.mergeParent)) if obj.mergeParent else "Question is final")
     def merge_children(self, obj):
         children = Question.objects.filter(mergeParent=obj.id)
-        return format_html('<br>'.join("<a href={}>{}</a>".format(
+        if children:
+            return format_html(f'<li>{"</li><li>".join(self._merge_children(child) for child in children)}</li>')
+        return format_html("No children")
+    def _merge_children(self, obj):
+        children = Question.objects.filter(mergeParent=obj.id)
+        me = "<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(obj._meta.app_label, obj._meta.model_name),
-            args=(child.id,)),
-        child) for child in children))
+            args=(obj.id,)),
+        obj)
+        if children:
+            return f'{me}<ul><li>{"</li><li>".join(self._merge_children(child) for child in children)}</li></ul>'
+        return me
     list_filter = ('isFinal', 'assignmentID',)
     list_display = ('text', 'merge_children')
 
