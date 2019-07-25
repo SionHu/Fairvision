@@ -489,12 +489,12 @@ class AnswerInline(admin.TabularInline):
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','assignmentID'])]
+    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','assignmentID','mergeParent'])]
     inlines = [
         AnswerInline,
     ]
 
-    readonly_fields = ('image_id', 'merge_parent')
+    readonly_fields = ('image_id', 'merge_parent', 'merge_children')
     exclude = ('imageID', 'mergeParent')
     def image_id(self, obj):
         id = obj.imageID
@@ -509,7 +509,14 @@ class QuestionAdmin(admin.ModelAdmin):
             reverse('admin:{}_{}_change'.format(obj._meta.app_label, obj._meta.model_name),
             args=(obj.mergeParent,)),
         Question.objects.get(id=obj.mergeParent)) if obj.mergeParent else "Question is final")
-    list_filter = ('isFinal', 'assignmentID')
+    def merge_children(self, obj):
+        children = Question.objects.filter(mergeParent=obj.id)
+        return format_html('<br>'.join("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(obj._meta.app_label, obj._meta.model_name),
+            args=(child.id,)),
+        child) for child in children))
+    list_filter = ('isFinal', 'assignmentID',)
+    list_display = ('text', 'merge_children')
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

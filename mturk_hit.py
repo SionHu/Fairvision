@@ -16,6 +16,12 @@ import argparse
 
 from datetime import datetime
 
+hitDescriptions = {
+    'phase01a': "Generating questions and answers and verifying question given a shown image",
+    'phase01b': "Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful",
+    'phase03': "Vote YES or NO for question provided based on common sense",
+}
+
 '''
 create hits assignments with phase01a, phase01b and available rounds number
 create hits assigmments with phase03 only with MaxAssignments defined by us.(Like 50?)
@@ -36,7 +42,7 @@ def create_hit(phase, number):
             # create new hit
             new_hit = mturk.create_hit(
                 Title="Image Labeling With Text",
-                Description="Generating questions and answers and verifying question given a shown image",
+                Description=hitDescriptions['phase01a'],
                 Keywords='image, tagging, machine learning, text generation',
                 Reward = '0.15',
                 MaxAssignments=1,
@@ -57,7 +63,7 @@ def create_hit(phase, number):
             # create new hit
             new_hit = mturk.create_hit(
                 Title="Knowledge Answer With Image",
-                Description="Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful",
+                Description=hitDescriptions['phase01b'],
                 Keywords='image, tagging',
                 Reward = '0.15',
                 MaxAssignments=1,
@@ -78,7 +84,7 @@ def create_hit(phase, number):
             # create new hit
             new_hit = mturk.create_hit(
                 Title="Binary Selection Question",
-                Description="Vote YES or NO for question provided based on common sense",
+                Description=hitDescriptions['phase03'],
                 Keywords='binary tagging, text verification, computer vision, machine learning',
                 Reward = '0.05',
                 MaxAssignments=1,
@@ -118,7 +124,7 @@ def delete_hit(phase):
         description = mturk.get_hit(HITId=hit_id)['HIT']['Description']
 
         # delete phase01a
-        if phase == 'phase01a' and description == 'Generating questions and answers and verifying question given a shown image':
+        if phase == 'phase01a' and description == hitDescriptions['phase01a']:
             # If HIT is active then set it to expire immediately
             if status=='Assignable':
                 response = mturk.update_expiration_for_hit(
@@ -141,7 +147,7 @@ def delete_hit(phase):
                 print('Not deleted')
             else:
                 print('Deleted')
-        elif phase == 'phase01b' and description == 'Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful':
+        elif phase == 'phase01b' and description == hitDescriptions['phase01b']:
 
             # If HIT is active then set it to expire immediately
             if status=='Assignable':
@@ -158,7 +164,7 @@ def delete_hit(phase):
                 print('Not deleted')
             else:
                 print('Deleted')
-        elif phase == 'phase03' and description == 'Vote YES or NO for question provided based on common sense':
+        elif phase == 'phase03' and description == hitDescriptions['phase03']:
             # If HIT is active then set it to expire immediately
             if status=='Assignable':
                 response = mturk.update_expiration_for_hit(
