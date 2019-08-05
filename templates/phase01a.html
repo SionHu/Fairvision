@@ -65,26 +65,30 @@
         </div>
     </div>
     </div>
+        
+    <div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="agreement" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
 
-    <div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="agreement" aria-hidden="true" data-backdrop="static" >
-        <div class="modal-dialog modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle" style="color: black">Instruction</h5>
-                </div>
-                <div class="modal-body" style="color: black">
-                    Our program is focusing on training a better machine learning model of object detection. We collect questions and answers describing the feature of the images <a style="color: red">(object & background)</a>, and use the human intelligence to reduce the bias in the image dataset.
-                    <hr>
-                    <h5><a style="color: red">Attention</a> : Your work will <a style="color: red"> get rejected </a>if you do not follow the instruction below.</h5>
-                    <hr>
-                    <ul id="instruction_list">
-                        {{ text_inst.instruction|safe }}
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button id="open_next" type="button" class="btn btn-secondary">Close</button>
+        <!--Content-->
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle" style="color: black">Instruction</h5>
+            </div>
+
+            <!--Body-->
+            <div class="modal-body mb-0 p-0">
+                <div class="embed-responsive embed-responsive-4by3 z-depth-1-half">
+                    <iframe class="embed-responsive-item" src="https://docs.google.com/document/d/e/2PACX-1vQaueSP6uT8fbadGMXxmuQDPcb7vQcuriNlUutcjbgTA8z4RtR_6HzGJS4pVb2KELhGJIR1CGaS7baG/pub?embedded=true"
+                    allowfullscreen></iframe>
                 </div>
             </div>
+            
+            <div class="modal-footer">
+                <button id="open_next" type="button" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+        
         </div>
     </div>
 
@@ -183,7 +187,7 @@
                 <div>
                     <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
                 </div>
-                <div id="alrt"></div>
+                <div id="alrt" style="color: yellow"></div>
 
             </div>
             <!-- END INPUT BAR -->
@@ -421,7 +425,7 @@
             // rank();
             var questionArray = [];
             var answerArray = [];
-            if (document.getElementById("list_q").getElementsByTagName("LI").length !== 0) {
+            if (document.getElementById("list_q").getElementsByTagName("LI").length > 1) {
                 //retrieve the values and store it
                 $('#list_q LI').each(function(){
                     questionArray.push($(this).text());
@@ -467,7 +471,7 @@
             }
             else{
                 //alert("Please enter at least one Q&A pair!");
-                document.getElementById("alrt").innerHTML = "Please enter at least one Q&amp;A pair!";
+                document.getElementById("alrt").innerHTML = "Please enter at least TWO Q&amp;A pairs!";
             }
         })
         //delete button listener

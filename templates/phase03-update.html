@@ -8,11 +8,20 @@
 {% block scripts %}
 <script>
     $(document).ready(function(){
-        $("#myModal").modal('show');
-        setTimeout(function() {
-            $("#closeGIF").show();
-        }, 15000);
-    });
+            if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
+                $("#agreement").modal();
+            }
+        });
+
+        $("#open_next").click(function() {
+            $("#agreement").modal('hide');
+            {% if not user.is_superuser %}
+            $("#myModal").modal('show');
+            {% endif %}
+            setTimeout(function() {
+                $("#closeGIF").show();
+            }, 15000);
+        });
 
 </script>
 <script>
@@ -127,6 +136,33 @@
         </div>
     </div>
 </div>
+    
+<div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="agreement" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+
+    <!--Content-->
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalScrollableTitle" style="color: black">Instruction</h5>
+        </div>
+
+        <!--Body-->
+        <div class="modal-body mb-0 p-0">
+            <div class="embed-responsive embed-responsive-4by3 z-depth-1-half">
+                <iframe class="embed-responsive-item" src="https://docs.google.com/document/d/e/2PACX-1vSxAc2lDHrT20uMc2rIgN_l9sjQKESgHmXCIR1CJAp5_ZUATy7KT6Fzo0uVMMUu9Xz52LTR1nLSIZFd/pub?embedded=true"
+                allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button id="open_next" type="button" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+
+    </div>
+</div>
+
 
 <hr> <!--  Divider line  -->
 
