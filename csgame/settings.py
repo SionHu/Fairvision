@@ -68,7 +68,7 @@ try:
     }
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
-    KEY = my_env.get('KEY', 'Cam2/Wolf/image_{:04d}.jpg')
+    KEY = my_env.get('KEY', 'Caltech101/airplanes/image_{:04d}.jpg')
     print(KEY);
     KEYRING = KEY.rsplit('/', 1)[0]+'/'
     OBJECT_NAME_PLURAL = my_env.get('OBJECT_NAME_PLURAL', KEY.split('/')[1]+'s')
