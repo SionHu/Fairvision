@@ -356,6 +356,12 @@
                 f1.send(null);
                 return boo;
             }
+            
+            function RedundChecker(question, total_input){
+                var boo = true;
+                if(total_input.includes(question)){ boo = false; }
+                return boo;
+            }
 
         //"add" button listener when clicked
         numQA = 0;
@@ -363,6 +369,8 @@
         var listNode_a = document.createElement("ul");
 
         document.getElementById("add").addEventListener("click", function() {
+            //get the local storage of questions & answers
+            var total_list = JSON.parse(window.localStorage.getItem("total_list"));
             //Get the question
             var ques = document.getElementById("Q").value.trim();
             var ans = document.getElementById("A").value.trim();
@@ -391,6 +399,9 @@
                     // alert("Please DO NOT enter meaningless phrases!");
                     alert("Type something meaningful please.");
                     break boo;
+                }
+                else if (!RedundChecker(qVal, JSON.stringify(total_list))){
+                    alert("Please do not enter the same question.");
                 }
 
                 qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
@@ -423,8 +434,7 @@
                 numQA++;
                 }
             
-            //get the local storage of questions & answers
-            var total_list = JSON.parse(window.localStorage.getItem("total_list"));
+            
             //add the new Q&A to the array
             total_list.push(liNode.innerHTML);
             //store the current array of input
