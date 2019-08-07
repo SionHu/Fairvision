@@ -105,13 +105,13 @@ def phase01a(request, previewMode=False):
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     # sending 4 images at a time
-    data = [default_storage.url(KEY.format(i)) for i in roundsnum] 
+    data = [default_storage.url(KEY.format(i)) for i in roundsnum]
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
 
     # Get all the instructions
     instructions = Phase01_instruction.get_queryset(Phase01_instruction) or ['none']
-    
+
     #Get text instructions
     text_inst = TextInstruction.objects.get(phase='01a')
 
@@ -149,6 +149,10 @@ def phase01b(request, previewMode=False):
                 new_Ans = Answer.objects.create(text=answer, question=que, assignmentID=assignmentId)
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
+            # Check if the question has skip count reach some threshold (5 for example), isFinal=False
+            QQ = Question.objects.get(text=question)
+            if QQ.skipCount >= 5:
+                Question.objects.filter(text=question).update(isFinal=False)
 
     # Get rounds played in total and by the current player
     rounds, roundsnum = popGetList('01b', 4)
@@ -161,7 +165,7 @@ def phase01b(request, previewMode=False):
 
     # Get all the insturctions sets
     instructions = Phase02_instruction.get_queryset(Phase02_instruction) or ['none']
-    
+
     #Get text instructions
     text_inst = TextInstruction.objects.get(phase='01b')
 
