@@ -307,23 +307,22 @@ class HITCreationForm(forms.ModelForm):
         ('phase01b', 'Phase 1b'),
         ('phase03', 'Phase 3'),
     ]
+    assignment_id = forms.CharField(widget=forms.HiddenInput(), initial='ASSIGNMENT_ID_NOT_AVAILABLE')
+    data = forms.CharField(widget=forms.HiddenInput(), initial="{'_':''}")
     phase = forms.ChoiceField(label='Phase', choices=PHASE_CHOICES, initial='phase01a')
     count = forms.DecimalField(label='Number of HITs', min_value=1, decimal_places=0, initial='1')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['assignment_id'].initial = 'ASSIGNMENT_ID_NOT_AVAILABLE'
-        self.fields['data'].initial = {'_':''}
 
     class Meta:
         model = HIT
         exclude = ()
-        #widgets = {'assignment_id': forms.HiddenInput(), 'data': forms.HiddenInput()}
+
+    def __init__(self, *args, **kwargs):
+        HIT.objects.filter(assignment_id='ASSIGNMENT_ID_NOT_AVAILABLE').delete()
+        super().__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         #create_hit(self.cleaned_data['phase'], self.cleaned_data['count'])
         print("did it")
-        HIT.objects.filter(assignment_id='ASSIGNMENT_ID_NOT_AVAILABLE').delete()
         return super().save(*args, **kwargs)
 
 class HITStatusFilter(admin.SimpleListFilter):
@@ -363,7 +362,7 @@ class HITAdmin(admin.ModelAdmin):
     list_display = ['assignment_id', 'status', 'questions', 'workerID', 'work_time', 'phase']
     readonly_fields = ('assignment_id', 'hitID', 'workerID')
     fieldsets = (
-        (None, {'fields': ('assignment_id', 'data')}),
+        (None, {'fields': ('assignment_id', 'data', 'phase', 'count')}),
     )
     list_filter = (HITStatusFilter,)
     def questions(self, obj):
@@ -563,7 +562,7 @@ class QuestionAdmin(admin.ModelAdmin):
     exclude = ('imageID', 'mergeParent')
     def image_id(self, obj):
         id = obj.imageID
-        imgs = ImageModel.objects.filter(img__in=id)
+        imgs = ImageModel.objects.filter(img__in=id) if id else []
         return format_html('<br>'.join("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
             args=(img.pk,)),

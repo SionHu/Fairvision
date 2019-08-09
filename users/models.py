@@ -209,8 +209,8 @@ class HIT(models.Model):
     def workerID(self):
         return self.data.get('workerId')
     @property
-    def hitID(self, obj):
-        return obj.data.get('hitId')
+    def hitID(self):
+        return self.data.get('hitId')
     @property
     def questions(self):
         return self.question_set

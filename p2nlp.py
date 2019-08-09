@@ -12,7 +12,7 @@ django.setup()
 from users.models import Question, Answer, Attribute
 from django.db.models import F
 from phase2_reducer import AnswerReducer
-from users.views.rephrasing import rephrase
+from users.views.rephrasing import rephrase_new as rephrase
 
 '''
 script function for phase02
