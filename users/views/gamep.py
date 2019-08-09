@@ -19,7 +19,9 @@ import csv, os
 import botocore
 from botocore.client import Config
 import random
+import requests
 import json
+
 
 # self-defined decorators for crowd worker and admin/staff be able to work
 from ..decorators import player_required
@@ -52,21 +54,34 @@ def phase01a(request, previewMode=False):
 
         questions = [s[3:] for s in questions] # strip off 'Q: ' # map(itemgetter(slice(3, None)), questions)
         answers = [a[3:-1] for a in answers] # strip off 'A: ' and period # map(itemgetter(slice(3, -1)), answers)
-        print("I got questions: ", questions)
-        print("I got answers: ", answers)
+        # print("I got questions: ", questions)
+        # print("I got answers: ", answers)
         # retrieve the json data for updating skip count for the previous questions
         validation_list = request.POST.getlist('data[]')
+        baseURL = 'https://api.textgears.com/check.php'
 
+        correct_qs = []
+        for q in questions:
+            text=q.replace(' ', '+')
+            url = baseURL + '?text=' + text + '&key=SFCKdx4GHmSC1j6H'
+            response = requests.get(url)
+            wordsC = response.json()
+            # print(wordsC)
+            for err in wordsC['errors']:
+                bad = err['bad']
+                good = err['better'][0]
+                q = q.replace(bad, good)
+            correct_qs.append(q)
 
         Question.objects.filter(text__in=validation_list).update(skipCount=F('skipCount')-1)
 
         # Query list for the old data in the table
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
-        print("old questions", old_Qs)
+        # print("old questions", old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=[KEY.format(i) for i in postList], assignmentID=assignmentId) for que in questions])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=[KEY.format(i) for i in postList], assignmentID=assignmentId) for que in correct_qs])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
-        print("new question", new_Qs)
+        # print("new question", new_Qs)
 
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
@@ -74,9 +89,9 @@ def phase01a(request, previewMode=False):
         acceptedList, id_merge, id_move = send__receive_data(new_Qs, old_Qs)
         id_merge = {int(k): v for k, v in id_merge.items()}
         id_move = {int(k): v for k, v in id_move.items()}
-        print("acceptedList is: ", acceptedList)
-        print("id_merge is: ", id_merge)
-        print("id_move is: ", id_move)
+        # print("acceptedList is: ", acceptedList)
+        #print("id_merge is: ", id_merge)
+        # print("id_move is: ", id_move)
 
         Question.objects.filter(id__in=acceptedList).update(isFinal=True)
         #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)

@@ -200,7 +200,7 @@
                     <div class="rectangle" style="width: 100%; height: 50.5%;height: 15rem;overflow-y: auto;"> <!-- height was 62% -->
                         <div class="card-content mt-2">
                             <div class="row-md-11">
-                                <ul><a id="list_all"></a></ul>
+                                <ul id="list_all"></ul>
                                 <ul hidden id="list_a" ></ul>
                                 <ul hidden id="list_q" ></ul>
                             </div>
@@ -267,20 +267,35 @@
 
         <script>
         $(document).ready(function(){
+            var list = [];
             if ({{ request.hit.roundnums.phase01a|default:0 }} == 0) {
                 $("#agreement").modal();
+                localStorage.removeItem("total_list");
+                localStorage.setItem("total_list",JSON.stringify(list));
+            }
+            //Get the array of previous input
+            list = JSON.parse(window.localStorage.getItem("total_list"));
+            // Create the list
+            var listNode = document.getElementById('list_all');
+            for (var i = 0; i < list.length; i++) {
+                // Create the list item:
+                var item = document.createElement('li');
+                // Set its contents:
+                item.appendChild(document.createTextNode(list[i]));
+                // Add it to the list:
+                listNode.appendChild(item);
             }
         });
 
-        $("#open_next").click(function() {
-            $("#agreement").modal('hide');
-            {% if not user.is_superuser %}
-            $("#myModal").modal('show');
-            {% endif %}
-            setTimeout(function() {
-                $("#closeGIF").show();
-            }, 15000);
-        });
+                $("#open_next").click(function() {
+                    $("#agreement").modal('hide');
+                    {% if not user.is_superuser %}
+                    $("#myModal").modal('show');
+                    {% endif %}
+                    setTimeout(function() {
+                        $("#closeGIF").show();
+                    }, 15000);
+                });
 
 
             //input bar listener when key "esc" is hit
@@ -341,6 +356,12 @@
                 f1.send(null);
                 return boo;
             }
+            
+            function RedundChecker(question, total_input){
+                var boo = true;
+                if(total_input.includes(question)){ boo = false; }
+                return boo;
+            }
 
         //"add" button listener when clicked
         numQA = 0;
@@ -348,6 +369,8 @@
         var listNode_a = document.createElement("ul");
 
         document.getElementById("add").addEventListener("click", function() {
+            //get the local storage of questions & answers
+            var total_list = JSON.parse(window.localStorage.getItem("total_list"));
             //Get the question
             var ques = document.getElementById("Q").value.trim();
             var ans = document.getElementById("A").value.trim();
@@ -377,6 +400,10 @@
                     alert("Type something meaningful please.");
                     break boo;
                 }
+                else if (!RedundChecker(qVal, JSON.stringify(total_list))){
+                    alert("Please do not enter the same question.");
+                    break boo;
+                }
 
                 qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
                 aVal = "A: "+ans + ".";
@@ -384,6 +411,8 @@
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
                 var txtVal = qVal + ' \n' + aVal;
+                txt_q = txt_q.replace(/\?/g,'');
+                txt_a = txt_a.replace(/\./g,'');
 
                 var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI"),
@@ -407,9 +436,15 @@
                 // If the input of Q&A is valid, increment numQA counter
                 numQA++;
                 }
+            
+            
+            //add the new Q&A to the array
+            total_list.push(liNode.innerHTML);
+            //store the current array of input
+            localStorage.setItem("total_list",JSON.stringify(total_list));
 
-                document.getElementById("Q").value = ""; //clear entry field
-                document.getElementById("A").value = ""; //clear entry field
+            document.getElementById("Q").value = ""; //clear entry field
+            document.getElementById("A").value = ""; //clear entry field
         });
 
         //input bar listener when key "enter" is hit
@@ -433,16 +468,13 @@
                 $('#list_a LI').each(function(){
                     answerArray.push($(this).text());
                 });
-                console.log(resultArr);
                 //remove the list
                 $('li').remove();
                 // get the value of CSRF token
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-                console.log(questionArray);
-                console.log(answerArray);
                 //post method
                 $.post(window.location, {
-                    'data_q': questionArray,  // might change due to gamep.py - phase01a
+                    'data_q': questionArray,
                     'data_a': answerArray,
                     'validation': resultArr,
                     'imgnum': {{ imgnum }},
