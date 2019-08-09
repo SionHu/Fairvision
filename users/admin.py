@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import render
 from django.template.defaultfilters import filesizeformat
 from django.templatetags.static import static
@@ -145,13 +145,19 @@ def export_csv(filename, field_names):
 
         # output data
         for obj in queryset:
-            writer.writerow([getattr(obj, field) for field in field_names])
+            writer.writerow([getattr(obj, field) if hasattr(obj, field) else getattr(self, field)(obj) for field in field_names])
         return response
     export.short_description = "Export selected %(verbose_name_plural)s as csv"
     return export
 
 class AttributeAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase3-attributes.csv', ['word','count'])]
+    def weight(self, obj):
+        if not hasattr(self, 'total'):
+            self.total = Attribute.objects.aggregate(Sum('count'))['count__sum']
+        return f"{abs(obj.count / self.total):.2f}"
+    fields = ('word', 'count')
+    list_display = ('word', 'count', 'weight')
+    actions = [export_csv('phase3-attributes.csv', ['word','count','weight'])]
 
 try:
     from jsoneditor.forms import JSONEditor
@@ -320,6 +326,8 @@ class HITAdmin(admin.ModelAdmin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.registerAutoField('Feedback', 'RequesterFeedback')
+    def has_add_permission(self, request):
+        return False
 
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
