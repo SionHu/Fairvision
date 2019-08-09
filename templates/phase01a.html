@@ -411,6 +411,8 @@
                 var txt_q = qVal; //inputted text
                 var txt_a = aVal;
                 var txtVal = qVal + ' \n' + aVal;
+                txt_q = txt_q.replace(/\?/g,'');
+                txt_a = txt_a.replace(/\./g,'');
 
                 var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI"),
