@@ -7,7 +7,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import F, Q, Func, Sum, FloatField
+from django.db.models.functions import Cast
 from django.shortcuts import render
 from django.template.defaultfilters import filesizeformat
 from django.templatetags.static import static
@@ -32,12 +33,36 @@ from more_itertools import first, partition
 import operator
 from django.http import HttpResponse
 
+####
+# FUNCTIONS INCLUDED FOR BACKWARD COMPATIBILITY
+if hasattr(datetime, 'fromisoformat'):
+    # added in Python 3.7
+    fromisoformat = datetime.fromisoformat
+else:
+    def fromisoformat(dt):
+        return datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S.%f")
+
+try:
+    # added in Django 2.2
+    from django.db.models.functions import Abs
+except:
+    from django.db.models.lookups import Transform
+    class Abs(Transform):
+        function = 'ABS'
+        lookup_name = 'abs'
+
+try:
+    # replace Django's JSON widget with a better one
+    from jsoneditor.forms import JSONEditor
+    from django.contrib.postgres.forms import JSONField
+    JSONField.widget = JSONEditor
+except:
+    JSONEditor = forms.Textarea
+#
+####
+
 def sort_uniq(sequence):
     return map(operator.itemgetter(0), itertools.groupby(natsorted(sequence)))
-
-#datetime.fromisoformat
-def fromisoformat(dt):
-    return datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S.%f")
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -145,20 +170,32 @@ def export_csv(filename, field_names):
 
         # output data
         for obj in queryset:
-            writer.writerow([getattr(obj, field) for field in field_names])
+            writer.writerow([getattr(self, field)(obj) if hasattr(self, field) else getattr(obj, field) for field in field_names])
         return response
     export.short_description = "Export selected %(verbose_name_plural)s as csv"
     return export
 
-class AttributeAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase3-attributes.csv', ['word','count'])]
+class Round2(Func):
+    # https://stackoverflow.com/a/55905983
+    function = 'ROUND'
+    arity = 2
+    arg_joiner = '::numeric, '
 
-try:
-    from jsoneditor.forms import JSONEditor
-    from django.contrib.postgres.forms import JSONField
-    JSONField.widget = JSONEditor
-except:
-    JSONEditor = forms.Textarea
+    def as_sqlite(self, compiler, connection, **extra_context):
+        return super().as_sqlite(compiler, connection, arg_joiner=", ", **extra_context)
+
+class AttributeAdmin(admin.ModelAdmin):
+    #def get_queryset(self, request):
+    #    qs = super().get_queryset(request)
+    #    sum = Attribute.objects.all().aggregate(Sum('count'))['count__sum']
+    #    return qs.annotate(bias=Round2(Abs(Cast(F('count'), FloatField()) / float(sum)), 2))
+    #def bias(self, obj):
+    #    return f"{obj.bias:.2f}"
+    def weight(self, obj):
+        return f"{obj.answer.weight:.2f}"
+    fields = ('word', 'count', 'answer')
+    list_display = ('word', 'count', 'weight')
+    actions = [export_csv('phase3-attributes.csv', ['word','count','weight'])]
 
 class PhaseForm(forms.ModelForm):
     class Meta:
@@ -320,6 +357,8 @@ class HITAdmin(admin.ModelAdmin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.registerAutoField('Feedback', 'RequesterFeedback')
+    def has_add_permission(self, request):
+        return False
 
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
@@ -512,10 +551,18 @@ class QuestionAdmin(admin.ModelAdmin):
         Question.objects.get(id=obj.mergeParent)) if obj.mergeParent else "Question is final")
     def merge_children(self, obj):
         children = Question.objects.filter(mergeParent=obj.id)
-        return format_html('<br>'.join("<a href={}>{}</a>".format(
+        if children:
+            return format_html(f'<li>{"</li><li>".join(self._merge_children(child) for child in children)}</li>')
+        return format_html("No children")
+    def _merge_children(self, obj):
+        children = Question.objects.filter(mergeParent=obj.id)
+        me = "<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(obj._meta.app_label, obj._meta.model_name),
-            args=(child.id,)),
-        child) for child in children))
+            args=(obj.id,)),
+        obj)
+        if children:
+            return f'{me}<ul><li>{"</li><li>".join(self._merge_children(child) for child in children)}</li></ul>'
+        return me
     list_filter = ('isFinal', 'assignmentID',)
     list_display = ('text', 'merge_children')
 
