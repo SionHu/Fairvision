@@ -84,9 +84,9 @@ class AnswerReducer:
             lens = [(k,len(v)) for k, v in old_new_pairs.items()]
             lens.sort(key=itemgetter(1)) # sort by number of matching questions
             if len(lens) == 0 or (len(lens) == 2 and lens[0][1] == lens[1][1]):
-                qid_to_ans[question] = []
+                qid_to_ans[question] = [None, 0]
             else:
-                qid_to_ans[question] = lens[0][0]
+                qid_to_ans[question] = lens[0]
         return qid_to_ans
 
 

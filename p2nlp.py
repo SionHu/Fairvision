@@ -31,13 +31,13 @@ def phase02():
     test_obj.grouper()
     result_dict = test_obj.reduce_within_groups()
 
-    for q, a in result_dict.items():
+    for q, (a, count) in result_dict.items():
         print("a is: ", a)
-        Answer.objects.filter(text=a, question_id=q).update(isFinal=True, count=F('count') + 1)
+        Answer.objects.filter(text=a, question_id=q).update(isFinal=True, count=count)
     print("Update successfully!")
 
 if __name__ == "__main__":
     phase02()
     # rephrase and import into attributes we have
     for answer in Answer.objects.filter(isFinal=True):
-        Attribute.objects.get_or_create(word=rephrase(answer.question.text, answer.text))
+        Attribute.objects.get_or_create(word=rephrase(answer.question.text, answer.text), answer=answer)

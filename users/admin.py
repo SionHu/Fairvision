@@ -7,7 +7,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import transaction
-from django.db.models import Q, Sum
+from django.db.models import F, Q, Func, Sum, FloatField
+from django.db.models.functions import Cast
 from django.shortcuts import render
 from django.template.defaultfilters import filesizeformat
 from django.templatetags.static import static
@@ -32,12 +33,36 @@ from more_itertools import first, partition
 import operator
 from django.http import HttpResponse
 
+####
+# FUNCTIONS INCLUDED FOR BACKWARD COMPATIBILITY
+if hasattr(datetime, 'fromisoformat'):
+    # added in Python 3.7
+    fromisoformat = datetime.fromisoformat
+else:
+    def fromisoformat(dt):
+        return datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S.%f")
+
+try:
+    # added in Django 2.2
+    from django.db.models.functions import Abs
+except:
+    from django.db.models.lookups import Transform
+    class Abs(Transform):
+        function = 'ABS'
+        lookup_name = 'abs'
+
+try:
+    # replace Django's JSON widget with a better one
+    from jsoneditor.forms import JSONEditor
+    from django.contrib.postgres.forms import JSONField
+    JSONField.widget = JSONEditor
+except:
+    JSONEditor = forms.Textarea
+#
+####
+
 def sort_uniq(sequence):
     return map(operator.itemgetter(0), itertools.groupby(natsorted(sequence)))
-
-#datetime.fromisoformat
-def fromisoformat(dt):
-    return datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S.%f")
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -145,26 +170,32 @@ def export_csv(filename, field_names):
 
         # output data
         for obj in queryset:
-            writer.writerow([getattr(obj, field) if hasattr(obj, field) else getattr(self, field)(obj) for field in field_names])
+            writer.writerow([getattr(self, field)(obj) if hasattr(self, field) else getattr(obj, field) for field in field_names])
         return response
     export.short_description = "Export selected %(verbose_name_plural)s as csv"
     return export
 
+class Round2(Func):
+    # https://stackoverflow.com/a/55905983
+    function = 'ROUND'
+    arity = 2
+    arg_joiner = '::numeric, '
+
+    def as_sqlite(self, compiler, connection, **extra_context):
+        return super().as_sqlite(compiler, connection, arg_joiner=", ", **extra_context)
+
 class AttributeAdmin(admin.ModelAdmin):
+    #def get_queryset(self, request):
+    #    qs = super().get_queryset(request)
+    #    sum = Attribute.objects.all().aggregate(Sum('count'))['count__sum']
+    #    return qs.annotate(bias=Round2(Abs(Cast(F('count'), FloatField()) / float(sum)), 2))
+    #def bias(self, obj):
+    #    return f"{obj.bias:.2f}"
     def weight(self, obj):
-        if not hasattr(self, 'total'):
-            self.total = Attribute.objects.aggregate(Sum('count'))['count__sum']
-        return f"{abs(obj.count / self.total):.2f}"
-    fields = ('word', 'count')
+        return f"{obj.answer.weight:.2f}"
+    fields = ('word', 'count', 'answer')
     list_display = ('word', 'count', 'weight')
     actions = [export_csv('phase3-attributes.csv', ['word','count','weight'])]
-
-try:
-    from jsoneditor.forms import JSONEditor
-    from django.contrib.postgres.forms import JSONField
-    JSONField.widget = JSONEditor
-except:
-    JSONEditor = forms.Textarea
 
 class PhaseForm(forms.ModelForm):
     class Meta:

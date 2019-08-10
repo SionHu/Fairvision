@@ -58,8 +58,9 @@ def delete_file(sender, instance, *args, **kwargs):
 
 # Phase 03: attributes that we ask and decide for dataset
 class Attribute(models.Model):
-    word = models.CharField(max_length=200, primary_key=True)
+    word = models.CharField(max_length=200)
     count = models.IntegerField(default=0)
+    answer = models.ForeignKey('Answer', on_delete=models.CASCADE)
 
 class ImageModel(models.Model):
     class Meta:
@@ -197,6 +198,9 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     def __str__(self):
         return self.text
+    @property
+    def weight(self):
+        return self.count / self.question.answer_set.count()
 
 class HIT(models.Model):
     assignment_id = models.CharField(verbose_name="Assignment ID", max_length=255, blank=False, null=False, primary_key=True)
