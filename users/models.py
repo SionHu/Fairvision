@@ -61,6 +61,9 @@ class Attribute(models.Model):
     word = models.CharField(max_length=200, unique=True)
     count = models.IntegerField(default=0)
     answer = models.OneToOneField('Answer', on_delete=models.CASCADE, limit_choices_to={'isFinal': True}, primary_key=True, related_name='rephrased')
+    @property
+    def weight(self):
+        return self.answer.count / self.answer.question.answer_set.count()
 
 class ImageModel(models.Model):
     class Meta:
@@ -198,9 +201,6 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     def __str__(self):
         return self.text
-    @property
-    def weight(self):
-        return self.count / self.question.answer_set.count()
 
 class HIT(models.Model):
     assignment_id = models.CharField(verbose_name="Assignment ID", max_length=255, blank=False, null=False, primary_key=True)

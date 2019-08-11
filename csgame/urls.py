@@ -24,6 +24,7 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    path('admin/users/experiment', player.downloadExperiment),
     path('', home.home, name='home'),
 
     path('accounts/', include('django.contrib.auth.urls')),

@@ -1,14 +1,17 @@
 from csgame.storage_backends import mturk
 
+from django import forms
 from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
-from django.db import transaction
-from django.db.models import F, Q, Func, Sum, FloatField
+from django.db import connection, transaction
+from django.db.migrations.loader import MigrationLoader
+from django.db.models import F, Q, Func, Sum, FloatField, Model
 from django.db.models.functions import Cast
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.defaultfilters import filesizeformat
 from django.templatetags.static import static
@@ -17,11 +20,9 @@ from django.utils.html import format_html
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, ImageModel, Attribute, Phase, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Answer, Question, HIT
+from .models import CustomUser, ImageModel, Attribute, Phase, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Answer, Question, HIT
 
 
-from django import forms
-from natsort import natsorted
 from mturk_hit import create_hit, hitDescriptions
 
 from ast import literal_eval
@@ -31,7 +32,14 @@ from datetime import datetime
 import itertools
 from more_itertools import first, partition
 import operator
-from django.http import HttpResponse
+from natsort import natsorted
+import tempfile
+import zipfile
+
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl.writer.excel import save_virtual_workbook
 
 ####
 # FUNCTIONS INCLUDED FOR BACKWARD COMPATIBILITY
@@ -191,8 +199,8 @@ class AttributeAdmin(admin.ModelAdmin):
     #    return qs.annotate(bias=Round2(Abs(Cast(F('count'), FloatField()) / float(sum)), 2))
     #def bias(self, obj):
     #    return f"{obj.bias:.2f}"
-    def weight(self, obj):
-        return f"{obj.answer.weight:.2f}"
+    def Weight(self, obj):
+        return f"{obj.weight:.2f}"
     def Answer(self, obj):
         return format_html("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(Answer._meta.app_label, Answer._meta.model_name),
@@ -203,13 +211,17 @@ class AttributeAdmin(admin.ModelAdmin):
             reverse('admin:{}_{}_change'.format(Question._meta.app_label, Question._meta.model_name),
             args=(obj.answer.question.pk,)),
         obj.answer.question))
+    def get_fields(self, request, obj=None):
+        if obj: # editing an existing object
+            return self.fields + ('question', 'Answer')
+        return self.fields + ('answer',)
     def get_readonly_fields(self, request, obj=None):
         if obj: # editing an existing object
             return self.readonly_fields + ('question', 'Answer')
         return self.readonly_fields
-    fields = ('word', 'count', 'question', 'Answer')
-    list_display = ('word', 'count', 'weight')
-    actions = [export_csv('phase3-attributes.csv', ['word','count','weight'])]
+    fields = ('word', 'count')
+    list_display = ('word', 'count', 'Weight')
+    actions = [export_csv('phase3-attributes.csv', ['word','count','Weight'])]
 
 class PhaseForm(forms.ModelForm):
     class Meta:
@@ -580,9 +592,138 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('text', 'merge_children')
 
 
+class ExperimentAdmin(admin.ModelAdmin):
+    def exportData(self, request, queryset):
+        if len(queryset) == 1:
+            experiment = queryset[0]
+            response = HttpResponse(ExperimentAdmin.exportOneExperiment(experiment), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment;filename=experiment-{experiment}.xlsx'
+        else:
+            with tempfile.SpooledTemporaryFile() as tmp:
+                with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as archive:
+                    for experiment in queryset:
+                        archive.writestr(f'experiment-{experiment}.xlsx', ExperimentAdmin.exportOneExperiment(experiment))
+                tmp.seek(0)
+                response = HttpResponse(tmp.read(), content_type='application/x-zip-compressed')
+                response['Content-Disposition'] = 'attachment;filename=experiments.zip'
+        return response
+    actions = [exportData]
+
+    @classmethod
+    def exportOneExperiment(cls, experiment):
+        # Read data from database
+        all = HIT.objects.count()
+        submitted = HIT.objects.filter(data__status='Submitted').count()
+        accepted = HIT.objects.filter(data__status='Accepted').count()
+        rejected = HIT.objects.filter(data__status='Rejected').count()
+        status = ';'.join([i for _, i in MigrationLoader(connection=connection, ignore_no_migrations=True).graph.leaf_nodes('users')])
+
+        # Put data on first sheet
+        book = Workbook() #write_only=True
+        metasheet = book.active #book.create_sheet("Experiment Information")
+        metasheet.title = "Experiment Information"
+        metasheet.append(("Experiment ID", -1)) #experiment.id
+        metasheet.append(("Start Date", -2)) #experiment.start
+        metasheet.append(("End Date", -3 or "Ongoing")) #experiment.end
+        metasheet.append(("Export Date", datetime.now()))
+        metasheet.append((None, None))
+        metasheet.append(("HITs Created", -4)) #experiment.hits
+        metasheet.append(("HITs Attempted", all))
+        metasheet.append(("HITs Completed", submitted + accepted + rejected))
+        metasheet.append(("HITs Accepted", accepted))
+        metasheet.append(("HITs Rejected", rejected))
+        metasheet.append((None, None))
+        metasheet.append(("Migration Status", status))
+        metasheet.sheet_state = 'hidden'
+
+        # Create the other sheets
+        questions = cls.exportSheet(book,
+            Question.objects.all().order_by('-isFinal', 'id'),
+            'id','text','isFinal','skipCount','hit','mergeParent',
+            mergeParent=None
+        )
+        answers = cls.exportSheet(book,
+            Answer.objects.all().order_by('-isFinal', 'id'),
+            'id','text','isFinal','question','hit',
+            question=questions,
+        )
+        attributes = cls.exportSheet(book,
+            Attribute.objects.all().order_by('count'),
+            'word','count','weight','question:answer.question','answer',
+            question=questions,
+            answer=answers,
+        )
+
+        return save_virtual_workbook(book)
+
+    tableStyle = TableStyleInfo(name='TableStyleMedium2', showRowStripes=True)
+    @classmethod
+    def exportSheet(cls, book, qs, *cols, **links):
+        name = qs.model._meta.verbose_name_plural.title()
+        sheet = book.create_sheet(name)
+        listqs = list(qs)
+        lastCol = get_column_letter(len(cols))
+
+        # Parse column names
+        cols = cls.getFields(cols)
+
+        # Add header
+        sheet.freeze_panes = 'A2'
+        sheet.append([col[0] for col in cols])
+
+        # Import data
+        for i, obj in enumerate(listqs, 2):
+            for j, (colName, colGetter) in enumerate(cols, 1):
+                val = colGetter(obj)
+                link = links.get(colName)
+                cell = sheet.cell(i, j, str(val) if isinstance(val, Model) else val)
+                if link:
+                    try:
+                        rowId = link[1].index(val) + 2
+                        cell.hyperlink = f"#{link[0]}!A{rowId}:{link[2]}{rowId}"
+                    except ValueError:
+                        pass
+
+        # Create recursive links
+        recursive_links = [k for k, v in links.items() if v is None]
+        if recursive_links:
+            for j, (colName, colGetter) in enumerate(cols, 1):
+                if colName in recursive_links:
+                    for i, obj in enumerate(listqs, 2):
+                        val = colGetter(obj)
+                        cell = sheet.cell(i, j)
+                        try:
+                            val = val if isinstance(val, qs.model) else qs.model.objects.get(pk=val)
+                            rowId = listqs.index(val) + 2
+                            cell.hyperlink = f"#{name}!A{rowId}:{lastCol}{rowId}"
+                        except ValueError:
+                            pass
+                        except qs.model.DoesNotExist:
+                            pass
+
+        # Create table object
+        #sheet.add_table(Table(ref=sheet.calculate_dimension(), displayName=name, tableStyleInfo=cls.tableStyle))
+
+        # Create model data for linking
+        return (name, listqs, lastCol)
+
+    @classmethod
+    def getFields(cls, names):
+        fields = []
+        for name in names:
+            #if '%' in name: # eval is scary. Please be friendly.
+            #    header, field = name.split(';', 2)
+            #    fields.append((header, eval(field)))
+            if ':' in name:
+                header, field = name.split(':')
+                fields.append((header, operator.attrgetter(field)))
+            else:
+                fields.append((name, operator.attrgetter(name)))
+        return fields
+
+
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
-admin.site.register(PhaseBreak)
 admin.site.register(Phase, PhaseAdmin)
 
 admin.site.register(Attribute, AttributeAdmin)
