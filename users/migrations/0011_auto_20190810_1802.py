@@ -4,39 +4,56 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-firstAnswer = 0
-
 class Migration(migrations.Migration):
 
     dependencies = [
         ('users', '0010_auto_20190723_1559'),
     ]
 
-    def storeFirstAnswer(apps, schema_editor):
-        Answer = apps.get_model("users", "Answer")
-        global firstAnswer
-        firstAnswer = Answer.objects.all()[0].id
-    def getFirstAnswer():
-        global firstAnswer
-        return firstAnswer
+    def checkNoAttr(apps, schema_editor):
+        Attribute = apps.get_model("users", "Attribute")
+        db_alias = schema_editor.connection.alias
+        if Attribute.objects.using(db_alias).count() != 0:
+            raise ValueError('Attributes exist in the database. This migration cannot take place ' +
+                'unless the database is empty. Please save all attributes, clear the database, and ' +
+                'try again.')
 
     operations = [
+        migrations.RunPython(checkNoAttr, migrations.RunPython.noop, elidable=True),
         migrations.AlterField(
             model_name='attribute',
             name='word',
-            field=models.CharField(max_length=200),
+            field=models.CharField(max_length=200, unique=True),
         ),
-        migrations.RunPython(storeFirstAnswer, migrations.RunPython.noop, elidable=True),
         migrations.AddField(
             model_name='attribute',
             name='answer',
-            field=models.ForeignKey(default=getFirstAnswer, on_delete=django.db.models.deletion.CASCADE, to='users.Answer'),
+            field=models.OneToOneField(default=0, limit_choices_to={'isFinal': True}, on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='rephrased', serialize=False, to='users.Answer'),
             preserve_default=False,
         ),
-        migrations.AddField(
-            model_name='attribute',
-            name='id',
-            field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
-            preserve_default=False,
-        ),
+        migrations.RunSQL(
+            migrations.RunSQL.noop,
+            state_operations=[
+                migrations.AddField(
+                    model_name='answer',
+                    name='hit',
+                    field=models.ForeignKey(db_column='assignmentID', default=0, on_delete=django.db.models.deletion.CASCADE, to='users.HIT'),
+                    preserve_default=False,
+                ),
+                migrations.AddField(
+                    model_name='question',
+                    name='hit',
+                    field=models.ForeignKey(db_column='assignmentID', default=0, on_delete=django.db.models.deletion.CASCADE, to='users.HIT'),
+                    preserve_default=False,
+                ),
+                migrations.RemoveField(
+                    model_name='answer',
+                    name='assignmentID',
+                ),
+                migrations.RemoveField(
+                    model_name='question',
+                    name='assignmentID',
+                ),
+            ], elidable=True
+        )
     ]

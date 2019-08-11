@@ -193,7 +193,21 @@ class AttributeAdmin(admin.ModelAdmin):
     #    return f"{obj.bias:.2f}"
     def weight(self, obj):
         return f"{obj.answer.weight:.2f}"
-    fields = ('word', 'count', 'answer')
+    def Answer(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(Answer._meta.app_label, Answer._meta.model_name),
+            args=(obj.answer.pk,)),
+        obj.answer))
+    def question(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:{}_{}_change'.format(Question._meta.app_label, Question._meta.model_name),
+            args=(obj.answer.question.pk,)),
+        obj.answer.question))
+    def get_readonly_fields(self, request, obj=None):
+        if obj: # editing an existing object
+            return self.readonly_fields + ('question', 'Answer')
+        return self.readonly_fields
+    fields = ('word', 'count', 'question', 'Answer')
     list_display = ('word', 'count', 'weight')
     actions = [export_csv('phase3-attributes.csv', ['word','count','weight'])]
 
@@ -520,15 +534,15 @@ class HITAdmin(admin.ModelAdmin):
     actions=[approve, bonus, reject]
 
 class AnswerAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-answers.csv', ['id','text','isFinal','question','assignmentID'])]
-    list_filter = ('isFinal',)
+    actions = [export_csv('phase1-answers.csv', ['id','text','isFinal','question','hit'])]
+    list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter))
 
 class AnswerInline(admin.TabularInline):
     model = Answer
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','assignmentID','mergeParent'])]
+    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','hit','mergeParent'])]
     inlines = [
         AnswerInline,
     ]
@@ -562,7 +576,7 @@ class QuestionAdmin(admin.ModelAdmin):
         if children:
             return f'{me}<ul><li>{"</li><li>".join(self._merge_children(child) for child in children)}</li></ul>'
         return me
-    list_filter = ('isFinal', 'assignmentID',)
+    list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter))
     list_display = ('text', 'merge_children')
 
 
