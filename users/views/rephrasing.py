@@ -1,4 +1,4 @@
-from csgame.nlp_loader import nlp
+# from csgame.nlp_loader import nlp
 
 PREPOSITIONS = ("aboard", "about", "above", "across", "after", "against",
     "along", "amid", "among", "around", "as", "at", "before", "behind",

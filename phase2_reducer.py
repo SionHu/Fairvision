@@ -92,10 +92,37 @@ class AnswerReducer:
 
 if __name__ == "__main__":
     questions = [
+        ["how does a plane travel", 1],
+        ["what are the airplanes powered by", 2],
+        # ["what are those big machines", 3],
+        # ["what color is the background of the airplane pics", 4],
+        # ["what Direction are these planes facing", 5],
+        # ["what is near the airplane background", 6],
+        # ["what is the colour of the second plane",7 ],
+        # ["what is the purpose of these planes", 8],
+        # ["what position level are the airplanes at", 9],
+        # ["where are the airplanes", 10],
+        # ["where are the flags logo located on the planes", 11],
+        # ["where these pictures were taken", 12]
+    ]
+    answers = [
+        ["flying", 1],
+        ["the plane is traveled by flying", 1],
+        ["flying in the air", 1],
+        ["electricity", 2],
+        ["gasoline", 2],
+        ["fuel", 2]
+        # ["airplanes", 3],
+        # ["green", 4],
+        # ["right to me", 5],
+        # ["airport", 6]
+    ]
+
+    old_questions = [
         ["What is the color of the cat", 1],
         ["How many legs does the cat have", 2]
     ]
-    answers = [
+    old_answers = [
         ["The color is blue", 1],
         ["the cat is blue", 1],
         ["The sheep is pink", 1],
