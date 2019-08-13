@@ -90,7 +90,7 @@ def create_hit(phase, number):
         else:
             # phase 03
             try:
-                question = open(file='hitExteranl/hitp3.xml', mode='r').read()
+                question = open(file='hitExternal/hitp3.xml', mode='r').read()
             except:
                 print()
                 print("----------------------")

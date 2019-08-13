@@ -1,4 +1,4 @@
-from django.conf import settings
+from csgame.nlp_loader import nlp
 
 PREPOSITIONS = ("aboard", "about", "above", "across", "after", "against",
     "along", "amid", "among", "around", "as", "at", "before", "behind",
@@ -11,7 +11,6 @@ PREPOSITIONS = ("aboard", "about", "above", "across", "after", "against",
     "until", "up", "upon", "versus", "via", "with", "within", "without")
 TWO_WORD_PREPOSITIONS = ("left of", "right of", "close to", "back to",
     "counter to", "far from", "other than")
-IMG_PROMPT = settings.OBJECT_NAME_PLURAL
 
 def rephraseList(qaDict):
     return [rephrase(*i) for i in qaDict.items()]
@@ -39,8 +38,8 @@ def getFirstIndex(input, matches=PREPOSITIONS):
             return index
     return None
 def rephrase_old(q, a):
-    _, is_are, *q_words = q.split()
-    fragment = ' '.join(q_words)[:-1]
+    _, is_are, *q_words = q.rstrip(' ?').split()
+    fragment = ' '.join(q_words)
     if a.endswith(fragment):
         a = a[:len(a)-len(fragment)-1]
     if getFirstIndex(['as', 'has', 'is'], a.split()):
@@ -50,6 +49,72 @@ def rephrase_old(q, a):
     else:
         return ' '.join(['With most', IMG_PROMPT, fragment, is_are, a]) + "."
 
+def rephrase_new(q, a):
+    q = q.rstrip(' ?')
+    qwords = q.split()
+
+    # Choose what to do by question word.
+    qqword = qwords[0].lower()
+    if qqword == 'what':
+        qmain = ' '.join(qwords[1:])
+        qdoc = nlp(qmain)
+
+        # If the verb comes first, put the answer before it
+        qverb = [token for token in qdoc if token.pos_ == 'VERB']
+        if qverb and qmain.startswith(str(qverb[0])):
+            out = ' '.join([a, *qwords[1:]])
+        else:
+            # TODO: Move verb after attr and before prep. Move nsubj after that and put the answer last.
+            ...
+            out = ' '.join([a, *qwords[1:]])
+    elif qqword == 'who':
+        out = ' '.join([a, *qwords[1:]])
+    elif qqword == 'when':
+        out = ' '.join([*qwords[1:], a])
+        # Adjustment needed
+    elif qqword == 'where':
+        out = ' '.join([*qwords[1:], 'by', a])
+        # Adjustment needed?
+    elif qqword == 'how':
+        if qwords[1].lower() in ('many', 'much'):
+            qmain = ' '.join(qwords[2:])
+            qdoc = nlp(qmain)
+
+            # If the first phrase is a noun, replace it
+            qnoun = list(qdoc.noun_chunks)
+            if qnoun:
+                qnoun0 = qnoun[0].text
+                if a.endswith(qnoun0):
+                    out = q.replace(qnoun0, a, 1)
+                else:
+                    out = a + ' ' + qmain
+        elif qwords[1].lower() in ('does', 'do'):
+            qmain = ' '.join(qwords[2:])
+            qdoc = nlp(qmain)
+            # TODO: Verb tense needs to change
+            out = ' '.join([qmain, 'by', a])
+            # Adjustment needed?
+        else:
+            # TODO: Think about more complex sentence structures in the future
+            ...
+            out = ' '.join([*qwords[1:], 'by', a])
+    elif qqword == 'why':
+        if a.startswith("because"):
+            out = ' '.join([*qwords, a])
+        else:
+            out = ' '.join([*qwords, 'because', a])
+    else:
+        # TODO: Think about more complex sentence structures in the future
+        ...
+        out = ' '.join([a, 'is', *qwords[1:]])
+
+    #if out.endswith("are there"):
+    #    out = "there are " + out[:-10]
+    #if out.endswith("is there"):
+    #    out = "there is " + out[:-10]
+    #out = out.replace("are there on ", "are on ").replace("is there on ", "is on ")
+    return  ' '.join(['With most', IMG_PROMPT, out]) + "."
+
 if __name__ == '__main__':
     IMG_PROMPT = input('Objects: ') + ','
     print()
@@ -58,3 +123,6 @@ if __name__ == '__main__':
         a = input('A: ')
         print(rephrase_old(q, a))
         print()
+else:
+    from django.conf import settings
+    IMG_PROMPT = settings.OBJECT_NAME_PLURAL + ','

@@ -79,7 +79,7 @@ def phase01a(request, previewMode=False):
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         # print("old questions", old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=[KEY.format(i) for i in postList], assignmentID=assignmentId) for que in correct_qs])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=[KEY.format(i) for i in postList], hit_id=assignmentId) for que in correct_qs])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         # print("new question", new_Qs)
 
@@ -100,7 +100,7 @@ def phase01a(request, previewMode=False):
         id_merge_sql = Case(*[When(id=new, then=Value(old)) for new, old in id_merge.items()])
         Question.objects.filter(id__in=id_merge).update(mergeParent=id_merge_sql)
 
-        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, assignmentID=assignmentId) for que, ans in zip(questions, answers)])
+        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, hit_id=assignmentId) for que, ans in zip(questions, answers)])
 
         with transaction.atomic():
             id_move_sql = Case(*[When(question_id=bad, then=Value(good)) for bad, good in id_move.items()])
@@ -161,7 +161,7 @@ def phase01b(request, previewMode=False):
             if answer != " ":
                 print("answer is: ", answer)
                 que = Question.objects.get(text=question, isFinal=True)
-                new_Ans = Answer.objects.create(text=answer, question=que, assignmentID=assignmentId)
+                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId)
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
             # Check if the question has skip count reach some threshold (5 for example), isFinal=False

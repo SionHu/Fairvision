@@ -58,9 +58,12 @@ def delete_file(sender, instance, *args, **kwargs):
 
 # Phase 03: attributes that we ask and decide for dataset
 class Attribute(models.Model):
-    word = models.CharField(max_length=200)
+    word = models.CharField(max_length=200, unique=True)
     count = models.IntegerField(default=0)
-    answer = models.ForeignKey('Answer', on_delete=models.CASCADE)
+    answer = models.OneToOneField('Answer', on_delete=models.CASCADE, limit_choices_to={'isFinal': True}, primary_key=True, related_name='rephrased')
+    @property
+    def weight(self):
+        return self.answer.count / self.answer.question.answer_set.count()
 
 class ImageModel(models.Model):
     class Meta:
@@ -176,7 +179,7 @@ class PhaseBreak(models.Model):
 # New design, QA pairs for phase 1 that will be collected from the crowd workers
 # It could be redundant, so count will be number of the merged ones after merging (we could make a script to create the models updating)
 class Question(models.Model):
-    assignmentID = models.CharField(max_length=32, blank=False, null=False)
+    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID')
     text = models.CharField(max_length=64, blank=False, null=False)
     # Boolean telling where this is the final questions for the rest of the phases
     isFinal = models.BooleanField(default=False)
@@ -190,7 +193,7 @@ class Question(models.Model):
         return self.text
 
 class Answer(models.Model):
-    assignmentID = models.CharField(max_length=32, blank=False, null=False)
+    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID')
     text = models.CharField(max_length=64, blank=False, null=False, unique=False)
     isFinal = models.BooleanField(default=False)
     count = models.IntegerField(default=1)
@@ -198,9 +201,6 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     def __str__(self):
         return self.text
-    @property
-    def weight(self):
-        return self.count / self.question.answer_set.count()
 
 class HIT(models.Model):
     assignment_id = models.CharField(verbose_name="Assignment ID", max_length=255, blank=False, null=False, primary_key=True)
@@ -209,14 +209,14 @@ class HIT(models.Model):
     def workerID(self):
         return self.data.get('workerId')
     @property
-    def hitID(self, obj):
-        return obj.data.get('hitId')
+    def hitID(self):
+        return self.data.get('hitId')
     @property
     def questions(self):
-        return Question.objects.filter(assignmentID=self.assignment_id)
+        return self.question_set
     @property
     def answers(self):
-        return Answer.objects.filter(assignmentID=self.assignment_id)
+        return self.answer_set
     def __str__(self):
         return self.assignment_id
 

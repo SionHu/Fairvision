@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.shortcuts import redirect
+from django.http import HttpResponse
 from django.views.generic import CreateView
 
 from ..forms import PlayerSignUpForm
@@ -22,3 +23,13 @@ class PlayerSignUpView(CreateView):
         user = form.save()
         login(self.request, user)
         return redirect('home')
+
+@login_required
+def downloadExperiment(request):
+    if request.user.is_staff:
+        from users.admin import ExperimentAdmin
+        response = HttpResponse(ExperimentAdmin.exportOneExperiment(None), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment;filename=experiment.xlsx'
+        return response
+        # with open("out.xlsx", 'wb') as file:
+        # 	file.write(ExperimentAdmin.exportOneExperiment(None))
