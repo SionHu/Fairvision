@@ -97,19 +97,19 @@
     <!-- Modal for showing images-->
     <div class="modal fade" id="img-model-1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
-          <img src="{{ url.0 }}" id="img1" class="img-solid" style="cursor: zoom-out; height: 400px">
+          <img src="{{ url.0 }}" id="img1" class="img-solid" style="cursor: zoom-out; width: 400%;">
       </div>
     </div>
 
     <div class="modal fade" id="img-model-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
-        <img src="{{ url.1 }}" id="img2" class="img-solid" style="cursor: zoom-out; height: 400px">
+        <img src="{{ url.1 }}" id="img2" class="img-solid" style="cursor: zoom-out; width: 400%">
       </div>
     </div>
 
     <div class="modal fade" id="img-model-3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
-        <img src="{{ url.2 }}" id="img2" class="img-solid" style="cursor: zoom-out; height: 400px">
+        <img src="{{ url.2 }}" id="img2" class="img-solid" style="cursor: zoom-out; width: 400%">
       </div>
     </div>
 
@@ -356,7 +356,7 @@
                 f1.send(null);
                 return boo;
             }
-            
+
             function RedundChecker(question, total_input){
                 var boo = true;
                 if(total_input.includes(question)){ boo = false; }
@@ -436,8 +436,8 @@
                 // If the input of Q&A is valid, increment numQA counter
                 numQA++;
                 }
-            
-            
+
+
             //add the new Q&A to the array
             total_list.push(liNode.innerHTML);
             //store the current array of input
