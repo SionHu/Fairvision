@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script>
 
     var dict = {}
@@ -30,7 +30,7 @@
         }, function(data){}).fail(function() {
           alert( "An error occurred. Could not submit your data." );
         });
-    
+
         // reload the webpage to set new images
         var countdown = 200;  // your countdown in milliseconds
 
@@ -57,8 +57,9 @@
 
 <div class="row">
     <div class="col">
-    <h2> Yes or No?
+    <h2> Bias Judgment
         <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agreement">Instruction</button>
     </h2>
     </div>
     <div class="col">
@@ -70,9 +71,9 @@
 </div>
 
  <!-- The Modal -->
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="myModal" data-backdrop="static">
     <div class="modal-dialog">
-        <div class="modal-content" style="width: 250%; margin-left: -400px;margin-top: 80px">
+        <div class="modal-content" style="width: 200%; margin-left: -250px; margin-top: 80px">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
 
                 <ol class="carousel-indicators">
@@ -115,10 +116,37 @@
                 </a>
             </div>
 
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button id="closeGIF" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="agreement" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+
+    <!--Content-->
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalScrollableTitle" style="color: black">Instruction</h5>
+        </div>
+
+        <!--Body-->
+        <div class="modal-body mb-0 p-0">
+            <div class="embed-responsive embed-responsive-4by3 z-depth-1-half">
+                <iframe class="embed-responsive-item" src="https://docs.google.com/document/d/e/2PACX-1vSxAc2lDHrT20uMc2rIgN_l9sjQKESgHmXCIR1CJAp5_ZUATy7KT6Fzo0uVMMUu9Xz52LTR1nLSIZFd/pub?embedded=true"
+                allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button id="open_next" type="button" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+
+    </div>
+</div>
+
 
 <hr> <!--  Divider line  -->
 
@@ -156,5 +184,24 @@
 </div>
 
 </div> <!--  Container  -->
+
+<script>
+    $(document).ready(function(){
+            if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
+                $("#agreement").modal();
+            }
+        });
+
+        $("#open_next").click(function() {
+            $("#agreement").modal('hide');
+            {% if not user.is_superuser %}
+            $("#myModal").modal('show');
+            {% endif %}
+            setTimeout(function() {
+                $("#closeGIF").show();
+            }, 15000);
+        });
+
+</script>
 
 {% endblock %}

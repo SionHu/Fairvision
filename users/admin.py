@@ -516,6 +516,7 @@ class HITAdmin(admin.ModelAdmin):
             'button': 'Approve',
         })
     bonus.short_description = 'Approve selected hits and send bonus'
+    
     def reject(self, request, queryset):
         if request.POST.get('post'):
             form = HITRejectionForm(request.POST)

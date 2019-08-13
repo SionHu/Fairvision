@@ -1,3 +1,7 @@
 .modal.and.carousel {
   position: fixed; 
 }
+
+#closeGIF {
+  display: none;
+}

@@ -44,12 +44,20 @@ def create_hit(phase, number):
                 Title="Image Labeling With Text",
                 Description=hitDescriptions['phase01a'],
                 Keywords='image, tagging, machine learning, text generation',
-                Reward = '0.15',
+                Reward = '0.65',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=35*60,
                 AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
+                QualificationRequirements=[
+                    {
+                        # this id is used on sandbox only
+                        'QualificationTypeId': '35GMP5037THJHV0T9M9KDA2DDPV39S',
+                        'Comparator': 'Exists',
+                        'ActionsGuarded': 'Accept',
+                    }
+                ]
             )
         # phase 01b
         elif(phase == 'phase01b'):
@@ -71,6 +79,13 @@ def create_hit(phase, number):
                 AssignmentDurationInSeconds=35*60,
                 AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
+                QualificationRequirements=[
+                    {
+                        'QualificationTypeId': '3N5C8MI2ZEJ9BNRIJS5ZGY370LE2GC',
+                        'Comparator': 'Exists',
+                        'ActionsGuarded': 'Accept',
+                    }
+                ]
             )
         else:
             # phase 03
@@ -92,6 +107,13 @@ def create_hit(phase, number):
                 AssignmentDurationInSeconds=600,
                 AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
+                QualificationRequirements=[
+                    {
+                        'QualificationTypeId': '3N5C8MI2ZEJ9BNRIJS5ZGY370LE2GC',
+                        'Comparator': 'Exists',
+                        'ActionsGuarded': 'Accept',
+                    }
+                ]
             )
 
         # some print function for reference

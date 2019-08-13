@@ -2,7 +2,8 @@ from datetime import datetime
 from django.conf import settings
 from django.http import *
 from django.shortcuts import render_to_response,redirect,render
-from users.models import HIT
+from users.models import HIT, Question
+import requests
 
 def profile(request):
     return render(request, 'profile.html')
