@@ -187,14 +187,14 @@
 
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <div style="height: 200px; padding-left: 20px;padding-top: 30px;padding-right: 50px; font-size: large">
+                                    <div style="height: 200px; padding-left: 50px;padding-top: 20px;padding-right: 50px; font-size: large">
                                     There are <i style="color: yellow">10{{ question_list.count }}</i> questions you should answer. <hr>
                                     Answer the question and click ">" arrow to go to the next question.
                                     </div>
                                 </div>
                                 {% for preq in question_list %}
                                 <div class="carousel-item">
-                                    <div style="height: 200px; padding-left: 20px;padding-top: 30px;padding-right: 40px; font-size: large">
+                                    <div style="height: 200px; padding-left: 50px;padding-top: 45px;padding-right: 40px; font-size: large">
                                     Q: {{ preq }}<br><br>
                                     A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter0 }}" type="text" maxlength="30">
                                     <label class = "form-check-label" for="skip">
@@ -204,6 +204,11 @@
                                 </div>
                                 {% endfor %}
                             </div>
+                            
+                            <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
 
                             <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
