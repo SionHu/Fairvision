@@ -1,0 +1,32 @@
+<AnswerKey xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/AnswerKey.xsd">
+  <Question>
+    <QuestionIdentifier>eng_write</QuestionIdentifier>
+    <AnswerOption>
+      <SelectionIdentifier>yes</SelectionIdentifier>
+      <AnswerScore>1</AnswerScore>
+    </AnswerOption>
+
+    <AnswerOption>
+      <SelectionIdentifier>no</SelectionIdentifier>
+      <AnswerScore>0</AnswerScore>
+    </AnswerOption>
+  </Question>
+
+  <Question>
+    <QuestionIdentifier>eng_write</QuestionIdentifier>
+    <AnswerOption>
+      <SelectionIdentifier>yes</SelectionIdentifier>
+      <AnswerScore>1</AnswerScore>
+    </AnswerOption>
+
+    <AnswerOption>
+      <SelectionIdentifier>no</SelectionIdentifier>
+      <AnswerScore>0</AnswerScore>
+    </AnswerOption>
+  </Question>
+  <QualificationValueMapping>
+  <PercentageMapping>
+    <MaximumSummedScore>2</MaximumSummedScore>
+  </PercentageMapping>
+  </QualificationValueMapping>
+</AnswerKey>

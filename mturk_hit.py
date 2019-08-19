@@ -53,8 +53,9 @@ def create_hit(phase, number):
                 QualificationRequirements=[
                     {
                         # this id is used on sandbox only
-                        'QualificationTypeId': '35GMP5037THJHV0T9M9KDA2DDPV39S',
-                        'Comparator': 'Exists',
+                        'QualificationTypeId': '3RFK03H8OOY27NKQF8V6GYAQACIM0F',
+                        'Comparator': 'GreaterThanOrEqualTo',
+                        'IntegerValues':[50],
                         'ActionsGuarded': 'Accept',
                     }
                 ]
@@ -81,8 +82,9 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '3N5C8MI2ZEJ9BNRIJS5ZGY370LE2GC',
-                        'Comparator': 'Exists',
+                        'QualificationTypeId': '3RFK03H8OOY27NKQF8V6GYAQACIM0F',
+                        'Comparator': 'GreaterThanOrEqualTo',
+                        'IntegerValues':[50],
                         'ActionsGuarded': 'Accept',
                     }
                 ]
@@ -236,6 +238,32 @@ def reject_assignment(assignment_id, reason):
         RequesterFeedback=reason
     )
 
+def create_qualification(phase):
+    if phase == 'phase01a' or phase == 'phase01b':
+        try:
+            questions = open(file='qualifyT/testP1.xml', mode='r').read()
+            answers = open(file='qualifyT/ansP1.xml', mode='r').read()
+        except:
+            print()
+            print("----------------------")
+            print('Error: no file found!')
+            exit(1)
+        qual_resp = mturk.create_qualification_type(
+            Name = 'English writing proficient test',
+            Keywords = 'test, qualifcation, English writing skills',
+            Description = "This is a test consists of 10 questions to decide your level of your english writing ability, you need to get at least 5 correct to be qualified",
+            QualificationTypeStatus = 'Active',
+            Test=questions,
+            AnswerKey=answers,
+            TestDurationInSeconds=600
+        )
+    else:
+        qual_resp = mturk.create_qualification_type(
+            Name = 'English reading proficient test'
+        )
+    print(qual_resp['QualificationType']['QualificationTypeId'])
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
@@ -260,6 +288,9 @@ if __name__ == "__main__":
     rparser.add_argument('assignment', type=str, metavar='assignment')
     rparser.add_argument('reason', type=str, metavar='reason')
 
+    # a parser that will be only needed once for create a qualificatio for each of the 3 phases
+    qparser = subparsers.add_parser('qualify', help='create a qualification type for different 3 phases', aliases=['q'])
+    qparser.add_argument('phase', **phasesArg)
 
     options = parser.parse_args()
 
@@ -279,5 +310,7 @@ if __name__ == "__main__":
         approve_assignment(options.assignment)
     elif options.command in ('reject', 'r'):
         reject_assignment(options.assignment, options.reason)
+    elif options.command in ('qualify', 'q'):
+        create_qualification(options.phase)
     else:
         sys.exit(2)
