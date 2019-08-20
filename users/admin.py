@@ -245,6 +245,8 @@ class PhaseAdmin(admin.ModelAdmin):
     )
     def has_add_permission(self, request):
         return False
+    def has_change_permission(self, request, obj=None):
+        return False
 
 class SessionForm(forms.ModelForm):
     decoded_data = forms.CharField(widget=JSONEditor)
@@ -721,6 +723,10 @@ class ExperimentAdmin(admin.ModelAdmin):
                 fields.append((name, operator.attrgetter(name)))
         return fields
 
+    def has_add_permission(self, request):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
 
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)

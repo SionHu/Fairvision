@@ -388,8 +388,10 @@
             var ans_list = ans.split(" ");
 
             boo: if (ques !== "" && ans !== "") {
-                qVal = "Q: "+document.getElementById("sixw").value + " "+ques+"?"; //gets inputted string
-                aVal = "A: "+ans + ".";
+                var txt_q = document.getElementById("sixw").value + " "+ques;
+                var txt_a = ans;
+                var qVal = "Q: "+txt_q+"?"; //gets inputted string
+                var aVal = "A: "+ans + ".";
 
                 if (!ques_list.every(myChecker) || !ans_list.every(myChecker)) {
                     alert("STOP SWEARING, WORKER {{ request.GET.workerId }}!");
@@ -405,14 +407,7 @@
                     break boo;
                 }
 
-                qVal = "Q: "+document.getElementById("sixw").value + " " +ques+"?"; //gets inputted string
-                aVal = "A: "+ans + ".";
-
-                var txt_q = qVal; //inputted text
-                var txt_a = aVal;
                 var txtVal = qVal + ' \n' + aVal;
-                txt_q = txt_q.replace(/\?/g,'');
-                txt_a = txt_a.replace(/\./g,'');
 
                 var listNode_q = document.getElementById('list_q'),
                     liNode_q = document.createElement("LI"),
@@ -435,7 +430,6 @@
 
                 // If the input of Q&A is valid, increment numQA counter
                 numQA++;
-                }
 
 
             //add the new Q&A to the array
@@ -445,6 +439,7 @@
 
             document.getElementById("Q").value = ""; //clear entry field
             document.getElementById("A").value = ""; //clear entry field
+                }
         });
 
         //input bar listener when key "enter" is hit
@@ -468,8 +463,6 @@
                 $('#list_a LI').each(function(){
                     answerArray.push($(this).text());
                 });
-                //remove the list
-                $('li').remove();
                 // get the value of CSRF token
                 var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
                 //post method
@@ -512,12 +505,16 @@
             //var arrlen = document.getElementById("list_q").childNodes.length;
             var attrlist_q = document.getElementById("list_q");
             var attrlist_a = document.getElementById("list_a");
+            var qa_len = document.getElementById("list_a").childNodes.length;
             var arrlen = document.getElementById("list_all").childNodes.length;
             var attrlist = document.getElementById("list_all");
-            if (arrlen != 0) {
+            if (qa_len != 0) {
                 attrlist.removeChild(attrlist.childNodes[arrlen - 1]);
-                attrlist_q.removeChild(attrlist_q.childNodes[arrlen - 1]);
-                attrlist_a.removeChild(attrlist_a.childNodes[arrlen - 1]);
+                attrlist_q.removeChild(attrlist_q.childNodes[qa_len - 1]);
+                attrlist_a.removeChild(attrlist_a.childNodes[qa_len - 1]);
+                var total_list = JSON.parse(window.localStorage.getItem("total_list"));
+                total_list.pop();
+                localStorage.setItem("total_list",JSON.stringify(total_list));
             }
         })
         </script>
