@@ -51,8 +51,8 @@ def popGetList(phase, count=1):
         count -= len(getList)
         # Create a new GET list if necesary
         postList = rounds.post
-        imgids = map(attrgetter('imgid'), ImageModel.objects.filter(img__startswith=KEYRING))
-        getList = [i for i in imgids if i not in postList]
+        imgids = ImageModel.objects.filter(img__startswith=KEYRING).values_list('id', flat=True)
+        getList = [i for i in imgids if i not in postList and i not in nextImage]
         random.shuffle(getList)
     else:
         nextImage = []
