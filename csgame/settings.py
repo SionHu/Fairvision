@@ -41,7 +41,11 @@ try:
     IS_PRODUCTION_SITE = strtobool(my_env['IS_PRODUCTION_SITE'])
     TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
     IS_GOOGLE_CLOUD = strtobool(my_env.get('IS_GOOGLE_CLOUD', 'False'))
-    NUMROUNDS = int(my_env.get('NUMROUNDS', '5'))
+    NUMROUNDS = {
+        'phase01a': int(my_env.get('NUMROUNDS_STEP1', my_env.get('NUMROUNDS', '5'))), # step 1
+        'phase01b': int(my_env.get('NUMROUNDS_STEP2', '5')), # step 2
+        'phase03': 1 # step 3
+    }
 
     # if not on google cloud
     if not IS_GOOGLE_CLOUD:

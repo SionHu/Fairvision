@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_delete
@@ -8,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.core.serializers.json import DjangoJSONEncoder
 import os
+import random
 
 class CustomUser(AbstractUser):
     # bools to keep track of types of users
@@ -156,11 +158,35 @@ class Phase03_instruction(models.Model):
 
 # Global variable of round number for phase01 and phase02
 class Phase(models.Model):
-    phase = models.CharField(max_length=10, primary_key=True)
+    phase = models.CharField(max_length=1, primary_key=True)
     get = ArrayField(models.IntegerField(), blank=True, default=list)
     post = ArrayField(models.IntegerField(), blank=True, default=list)
+    imgset = ArrayField(models.IntegerField(), blank=True, default=list)
     def __str__(self):
         return self.phase
+    @classmethod
+    def rawUpdate(cls, field, value, condition):
+        return cls.objects.raw(f'UPDATE users_phase SET {field} = {value} WHERE {condition}')
+    @staticmethod
+    def safeget(phase):
+        rounds, isNew = Phase.objects.get_or_create(phase=phase)
+        if isNew:
+            imgsets = list(ImageModel.objects.filter(img__startswith=settings.KEYRING).values_list('id', flat=True))
+            postLen, trunLen = divmod(len(imgsets), 4)
+
+            # Truncate shuffled list to a multiple of 4 length
+            random.shuffle(imgsets)
+            if trunLen:
+                del imgsets[-trunLen:]
+            rounds.imgset = imgsets
+
+            # Create empty list to store image set gets
+            rounds.get = [0] * postLen
+
+            # Create empty list to store image set posts
+            rounds.post = [0] * postLen
+            rounds.save()
+        return rounds
 
 # Array indices for recursion list of phase02
 class listArray(models.Model):
@@ -179,7 +205,7 @@ class PhaseBreak(models.Model):
 # New design, QA pairs for phase 1 that will be collected from the crowd workers
 # It could be redundant, so count will be number of the merged ones after merging (we could make a script to create the models updating)
 class Question(models.Model):
-    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID')
+    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID', related_name='questions')
     text = models.CharField(max_length=64, blank=False, null=False)
     # Boolean telling where this is the final questions for the rest of the phases
     isFinal = models.BooleanField(default=False)
@@ -193,12 +219,14 @@ class Question(models.Model):
         return self.text
 
 class Answer(models.Model):
-    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID')
+    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID', related_name='answers')
     text = models.CharField(max_length=64, blank=False, null=False, unique=False)
     isFinal = models.BooleanField(default=False)
     count = models.IntegerField(default=1)
     # on_delete set to cascade because we would not delete django models until we export and finalize the data and save.
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    # was the answer created on step 1
+    step1 = models.BooleanField(default=False)
     def __str__(self):
         return self.text
 
@@ -211,12 +239,6 @@ class HIT(models.Model):
     @property
     def hitID(self):
         return self.data.get('hitId')
-    @property
-    def questions(self):
-        return self.question_set
-    @property
-    def answers(self):
-        return self.answer_set
     def __str__(self):
         return self.assignment_id
 

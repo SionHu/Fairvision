@@ -25,7 +25,7 @@ import json
 
 # self-defined decorators for crowd worker and admin/staff be able to work
 from ..decorators import player_required
-from .roundsgenerator import popGetList, pushPostList
+from .roundsgenerator import pushPostList, popGetList, step2_push, step2_pop, getLeastAnsweredQuestions
 
 
 # We should set up in backend manually
@@ -46,7 +46,7 @@ def phase01a(request, previewMode=False):
     assignmentId = request.GET.get('assignmentId')
     # Need to check
     if request.method == 'POST':
-        postList = pushPostList(request, '01a')
+        postList = pushPostList(request)
 
         # Get the Q and Ans for the current question, they should be at least one Q&A for all of the set
         questions = request.POST.getlist('data_q[]')
@@ -98,7 +98,7 @@ def phase01a(request, previewMode=False):
         id_merge_sql = Case(*[When(id=new, then=Value(old)) for new, old in id_merge.items()])
         Question.objects.filter(id__in=id_merge).update(mergeParent=id_merge_sql)
 
-        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, hit_id=assignmentId) for que, ans in zip(questions, answers)])
+        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, hit_id=assignmentId, step1=True) for que, ans in zip(questions, answers)])
 
         with transaction.atomic():
             id_move_sql = Case(*[When(question_id=bad, then=Value(good)) for bad, good in id_move.items()])
@@ -110,7 +110,7 @@ def phase01a(request, previewMode=False):
         return HttpResponse(status=201)
 
     # Get rounds played in total and by the current player
-    rounds, roundsnum = popGetList('01a', 3)
+    rounds, roundsnum = popGetList(ImageModel.objects.filter(img__startswith=KEYRING).values_list('id', flat=True))
 
     if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
@@ -132,7 +132,7 @@ def phase01a(request, previewMode=False):
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst,'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': OBJECT_NAME_PLURAL})
+    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst,'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS[phase01a.__name__], 'object': OBJECT_NAME_PLURAL})
 
 '''
 View for phase 01 b
@@ -147,7 +147,8 @@ def phase01b(request, previewMode=False):
     if request.method == 'POST':
         # Get the answer array for different
         # Update the rounds posted for phase 01b
-        pushPostList(request, '01b')
+        step2_push(request)
+        #pushPostList(request, '²')
 
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST.get('data[dict]'))
@@ -159,18 +160,23 @@ def phase01b(request, previewMode=False):
             if answer != " ":
                 print("answer is: ", answer)
                 que = Question.objects.get(text=question, isFinal=True)
-                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId)
+                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, step1=False)
             else:
-                Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
+                Question.objects.filter(text=question, isFinal=True).update(skipCount=F('skipCount')+1)
             # Check if the question has skip count reach some threshold (5 for example), isFinal=False
-            QQ = Question.objects.get(text=question)
+            QQ = Question.objects.get(text=question, isFinal=True)
             if QQ.skipCount >= 5:
-                Question.objects.filter(text=question).update(isFinal=False)
+                QQ.isFinal = False
+                QQ.save()
+
+        return HttpResponse(status=201)
 
     # Get rounds played in total and by the current player
-    rounds, roundsnum = popGetList('01b', 4)
+    roundsnum, imin, stopGame = step2_pop()
+    #rounds, questions = popGetList(Question.objects.filter(isFinal=True).values_list('id', flat=True), NUMROUNDS[phase01b.__name__], '²')
+    questions = getLeastAnsweredQuestions(NUMROUNDS[phase01b.__name__])
 
-    if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
+    if stopGame or not questions:
         return over(request, 'phase01b')
 
     # sending 4 images at a time
@@ -183,9 +189,10 @@ def phase01b(request, previewMode=False):
     #Get text instructions
     text_inst = TextInstruction.objects.get(phase='01b')
 
-    questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
+    #allQuestions = dict(Question.objects.filter(id__in=[*ids for ids in questions]).values_list('id', 'text'))
+    #questions = [[allQuestions[id] for id in ids] for ids in questions]
 
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': roundsnum, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'PRODUCTION': PRODUCTION, 'NUMROUNDS': 1})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
@@ -206,9 +213,7 @@ def phase03(request, previewMode=False):
         words = request.POST.getlist('data[]')
         Attribute.objects.filter(word__in=words).update(count=F('count')-1)
 
-        return HttpResponse(None)
-    elif getattr(request, 'hit', {}).get('roundnums', {}).get(phase03.__name__):
-        return over(request, 'phase03')
+        return HttpResponse(status=201)
     else:
         assignmentId = request.GET.get('assignmentId')
         attributes = list(Attribute.objects.values_list('word', flat=True))

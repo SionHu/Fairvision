@@ -241,7 +241,7 @@ class PhaseAdmin(admin.ModelAdmin):
 #    form = PhaseForm
     readonly_fields = ('phase',)
     fieldsets = (
-        (None, {'fields': ('phase', 'get', 'post')}),
+        (None, {'fields': ('phase', 'get', 'post', 'imgset')}),
     )
     def has_add_permission(self, request):
         return False

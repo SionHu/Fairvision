@@ -42,7 +42,7 @@ def player_required(func):
                 hitObj.save()
                 return func(request, *args, **kwargs)
             else:
-                if numInPhase >= NUMROUNDS:
+                if numInPhase >= NUMROUNDS[func.__name__]:
                     return over(request, func.__name__)
                 else:
                     return func(request, *args, **kwargs)
