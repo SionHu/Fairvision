@@ -29,8 +29,8 @@ from .roundsgenerator import popGetList, pushPostList
 
 
 # We should set up in backend manually
-KEY = settings.KEY
 KEYRING = settings.KEYRING
+OBJECT_NAME_PLURAL = settings.OBJECT_NAME_PLURAL
 NUMROUNDS = settings.NUMROUNDS
 PRODUCTION = settings.IS_PRODUCTION_SITE
 
@@ -52,8 +52,6 @@ def phase01a(request, previewMode=False):
         questions = request.POST.getlist('data_q[]')
         answers = request.POST.getlist('data_a[]')
 
-        questions = [s[3:] for s in questions] # strip off 'Q: ' # map(itemgetter(slice(3, None)), questions)
-        answers = [a[3:-1] for a in answers] # strip off 'A: ' and period # map(itemgetter(slice(3, -1)), answers)
         # print("I got questions: ", questions)
         # print("I got answers: ", answers)
         # retrieve the json data for updating skip count for the previous questions
@@ -79,7 +77,7 @@ def phase01a(request, previewMode=False):
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         # print("old questions", old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=[KEY.format(i) for i in postList], hit_id=assignmentId) for que in correct_qs])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=list(ImageModel.objects.filter(id__in=postList)), hit_id=assignmentId) for que in correct_qs])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         # print("new question", new_Qs)
 
@@ -120,7 +118,8 @@ def phase01a(request, previewMode=False):
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     # sending 4 images at a time
-    data = [default_storage.url(KEY.format(i)) for i in roundsnum]
+    data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
+    data.extend([None] * (3 - len(data)))
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
 
@@ -133,8 +132,7 @@ def phase01a(request, previewMode=False):
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    object = KEY.split('/')[1]
-    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst,'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': object})
+    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst,'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS, 'object': OBJECT_NAME_PLURAL})
 
 '''
 View for phase 01 b
@@ -176,7 +174,8 @@ def phase01b(request, previewMode=False):
         return over(request, 'phase01b')
 
     # sending 4 images at a time
-    data = [default_storage.url(KEY.format(i)) for i in roundsnum]
+    data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
+    data.extend([None] * (4 - len(data)))
 
     # Get all the insturctions sets
     instructions = Phase02_instruction.get_queryset(Phase02_instruction) or ['none']
