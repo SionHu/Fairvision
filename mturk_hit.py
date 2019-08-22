@@ -53,7 +53,7 @@ def create_hit(phase, number):
                 QualificationRequirements=[
                     {
                         # this id is used on sandbox only
-                        'QualificationTypeId': '3RFK03H8OOY27NKQF8V6GYAQACIM0F',
+                        'QualificationTypeId': '31U92A8DCPK4Y3YKWXG0UMDSNIRXFE',
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[50],
                         'ActionsGuarded': 'Accept',
@@ -82,7 +82,7 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '3RFK03H8OOY27NKQF8V6GYAQACIM0F',
+                        'QualificationTypeId': '31U92A8DCPK4Y3YKWXG0UMDSNIRXFE',
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[50],
                         'ActionsGuarded': 'Accept',
@@ -111,8 +111,9 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '3N5C8MI2ZEJ9BNRIJS5ZGY370LE2GC',
-                        'Comparator': 'Exists',
+                        'QualificationTypeId': '35OXBT565G8STKHD8N0BMIMIY3F2VX',
+                        'Comparator': 'GreaterThanOrEqualTo',
+                        'IntegerValues':[50],
                         'ActionsGuarded': 'Accept',
                     }
                 ]
@@ -258,8 +259,22 @@ def create_qualification(phase):
             TestDurationInSeconds=600
         )
     else:
+        try:
+            questions = open(file='qualifyT/testP3.xml', mode='r').read()
+            answers = open(file='qualifyT/ansP3.xml', mode='r').read()
+        except:
+            print()
+            print("----------------------")
+            print('Error: no file found!')
+            exit(1)
         qual_resp = mturk.create_qualification_type(
-            Name = 'English reading proficient test'
+            Name = 'English reading proficient test',
+            Keywords = 'test, qualifcation, English writing skills',
+            Description = "This is a test consists of 10 questions to decide your level of your english reading ability, you need to get at least 5 correct to be qualified",
+            QualificationTypeStatus = 'Active',
+            Test=questions,
+            AnswerKey=answers,
+            TestDurationInSeconds=600
         )
     print(qual_resp['QualificationType']['QualificationTypeId'])
 
