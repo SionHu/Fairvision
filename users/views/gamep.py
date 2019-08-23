@@ -163,7 +163,7 @@ def phase01b(request, previewMode=False):
             else:
                 Question.objects.filter(text=question).update(skipCount=F('skipCount')+1)
             # Check if the question has skip count reach some threshold (5 for example), isFinal=False
-            QQ = Question.objects.get(text=question)
+            QQ = Question.objects.get(text=question, isFinal=True)
             if QQ.skipCount >= 5:
                 Question.objects.filter(text=question).update(isFinal=False)
 
