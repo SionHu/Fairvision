@@ -53,7 +53,7 @@ def create_hit(phase, number):
                 QualificationRequirements=[
                     {
                         # this id is used on sandbox only
-                        'QualificationTypeId': '31U92A8DCPK4Y3YKWXG0UMDSNIRXFE',
+                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
@@ -82,7 +82,7 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '31U92A8DCPK4Y3YKWXG0UMDSNIRXFE',
+                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
@@ -111,7 +111,7 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '35TOCVOB5FZ8HBFUODU53NUZ7JM230',
+                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
