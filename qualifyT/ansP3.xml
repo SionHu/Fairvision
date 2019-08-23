@@ -26,12 +26,12 @@
 
     <AnswerOption>
       <SelectionIdentifier>3</SelectionIdentifier>
-      <AnswerScore>0</AnswerScore>
+      <AnswerScore>1</AnswerScore>
     </AnswerOption>
 
     <AnswerOption>
       <SelectionIdentifier>4</SelectionIdentifier>
-      <AnswerScore>1</AnswerScore>
+      <AnswerScore>0</AnswerScore>
     </AnswerOption>
 
     <AnswerOption>
@@ -80,7 +80,7 @@
 
     <AnswerOption>
       <SelectionIdentifier>3</SelectionIdentifier>
-      <AnswerScore>1</AnswerScore>
+      <AnswerScore>0</AnswerScore>
     </AnswerOption>
 
     <AnswerOption>
@@ -93,16 +93,21 @@
     <QuestionIdentifier>q6</QuestionIdentifier>
     <AnswerOption>
       <SelectionIdentifier>1</SelectionIdentifier>
-      <AnswerScore>0</AnswerScore>
-    </AnswerOption>
-
-    <AnswerOption>
-      <SelectionIdentifier>2</SelectionIdentifier>
       <AnswerScore>1</AnswerScore>
     </AnswerOption>
 
     <AnswerOption>
+      <SelectionIdentifier>2</SelectionIdentifier>
+      <AnswerScore>0</AnswerScore>
+    </AnswerOption>
+
+    <AnswerOption>
       <SelectionIdentifier>3</SelectionIdentifier>
+      <AnswerScore>0</AnswerScore>
+    </AnswerOption>
+
+    <AnswerOption>
+      <SelectionIdentifier>4</SelectionIdentifier>
       <AnswerScore>0</AnswerScore>
     </AnswerOption>
 
@@ -119,10 +124,34 @@
       <SelectionIdentifier>2</SelectionIdentifier>
       <AnswerScore>0</AnswerScore>
     </AnswerOption>
+
+    <AnswerOption>
+      <SelectionIdentifier>3</SelectionIdentifier>
+      <AnswerScore>0</AnswerScore>
+    </AnswerOption>
+
+    <AnswerOption>
+      <SelectionIdentifier>4</SelectionIdentifier>
+      <AnswerScore>0</AnswerScore>
+    </AnswerOption>
   </Question>
 
   <Question>
     <QuestionIdentifier>q8</QuestionIdentifier>
+    <AnswerOption>
+      <SelectionIdentifier>1</SelectionIdentifier>
+      <AnswerScore>0</AnswerScore>
+    </AnswerOption>
+
+    <AnswerOption>
+      <SelectionIdentifier>2</SelectionIdentifier>
+      <AnswerScore>1</AnswerScore>
+    </AnswerOption>
+
+  </Question>
+
+  <Question>
+    <QuestionIdentifier>q9</QuestionIdentifier>
     <AnswerOption>
       <SelectionIdentifier>1</SelectionIdentifier>
       <AnswerScore>0</AnswerScore>
@@ -137,18 +166,10 @@
       <SelectionIdentifier>3</SelectionIdentifier>
       <AnswerScore>1</AnswerScore>
     </AnswerOption>
-  </Question>
 
-  <Question>
-    <QuestionIdentifier>q9</QuestionIdentifier>
     <AnswerOption>
-      <SelectionIdentifier>1</SelectionIdentifier>
+      <SelectionIdentifier>4</SelectionIdentifier>
       <AnswerScore>0</AnswerScore>
-    </AnswerOption>
-
-    <AnswerOption>
-      <SelectionIdentifier>2</SelectionIdentifier>
-      <AnswerScore>1</AnswerScore>
     </AnswerOption>
   </Question>
 
@@ -167,7 +188,7 @@
 
   <QualificationValueMapping>
   <PercentageMapping>
-    <MaximumSummedScore>11</MaximumSummedScore>
+    <MaximumSummedScore>10</MaximumSummedScore>
   </PercentageMapping>
   </QualificationValueMapping>
 </AnswerKey>

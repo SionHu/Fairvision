@@ -24,7 +24,7 @@ hitDescriptions = {
 
 '''
 create hits assignments with phase01a, phase01b and available rounds number
-create hits assigmments with phase03 only with MaxAssignments defined by us.(Like 50?)
+create hits assigmments with phase03 only with MaxAssignments defined by us.(Like 60?)
 input: phase round number
 output: HITID and HIITGroupID for preview link
 '''
@@ -55,7 +55,7 @@ def create_hit(phase, number):
                         # this id is used on sandbox only
                         'QualificationTypeId': '31U92A8DCPK4Y3YKWXG0UMDSNIRXFE',
                         'Comparator': 'GreaterThanOrEqualTo',
-                        'IntegerValues':[50],
+                        'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
                     }
                 ]
@@ -84,7 +84,7 @@ def create_hit(phase, number):
                     {
                         'QualificationTypeId': '31U92A8DCPK4Y3YKWXG0UMDSNIRXFE',
                         'Comparator': 'GreaterThanOrEqualTo',
-                        'IntegerValues':[50],
+                        'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
                     }
                 ]
@@ -111,9 +111,9 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '35OXBT565G8STKHD8N0BMIMIY3F2VX',
+                        'QualificationTypeId': '35TOCVOB5FZ8HBFUODU53NUZ7JM230',
                         'Comparator': 'GreaterThanOrEqualTo',
-                        'IntegerValues':[50],
+                        'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
                     }
                 ]
@@ -242,21 +242,21 @@ def reject_assignment(assignment_id, reason):
 def create_qualification(phase):
     if phase == 'phase01a' or phase == 'phase01b':
         try:
-            questions = open(file='qualifyT/testP1.xml', mode='r').read()
-            answers = open(file='qualifyT/ansP1.xml', mode='r').read()
+            questions = open(file='qualifyT/testP3.xml', mode='r').read()
+            answers = open(file='qualifyT/ansP3.xml', mode='r').read()
         except:
             print()
             print("----------------------")
             print('Error: no file found!')
             exit(1)
         qual_resp = mturk.create_qualification_type(
-            Name = 'English writing proficient test',
+            Name = 'English comprehension writing test',
             Keywords = 'test, qualifcation, English writing skills',
-            Description = "This is a test consists of 10 questions to decide your level of your english writing ability, you need to get at least 5 correct to be qualified",
+            Description = "This is a test consists of 10 questions to decide your level of your english comprehension in writing, you need to get at least 6 correct to be qualified",
             QualificationTypeStatus = 'Active',
             Test=questions,
             AnswerKey=answers,
-            TestDurationInSeconds=600
+            TestDurationInSeconds=300
         )
     else:
         try:
@@ -268,13 +268,13 @@ def create_qualification(phase):
             print('Error: no file found!')
             exit(1)
         qual_resp = mturk.create_qualification_type(
-            Name = 'English reading proficient test',
-            Keywords = 'test, qualifcation, English writing skills',
-            Description = "This is a test consists of 10 questions to decide your level of your english reading ability, you need to get at least 5 correct to be qualified",
+            Name = 'English comprehension reading test',
+            Keywords = 'test, qualifcation, English reading skills',
+            Description = "This is a test consists of 10 questions to decide your level of your english comprehension in writing, you need to get at least 6 correct to be qualified",
             QualificationTypeStatus = 'Active',
             Test=questions,
             AnswerKey=answers,
-            TestDurationInSeconds=600
+            TestDurationInSeconds=300
         )
     print(qual_resp['QualificationType']['QualificationTypeId'])
 

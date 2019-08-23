@@ -7,7 +7,7 @@
     <IsRequired>true</IsRequired>
     <QuestionContent>
       <Title> Is the following sentence punctuated properly? </Title>
-      <Text>Whenever I eat bananas, I feel like a monkey.</Text>
+      <Text>The dogs in these images under are small the grass.</Text>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
@@ -32,7 +32,7 @@
     <DisplayName>Q2</DisplayName>
     <IsRequired>true</IsRequired>
     <QuestionContent>
-      <Title> Which of the following doesn’t name parts of speech? </Title>
+      <Title> In the past, smartphones ______ not common in the world. </Title>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
@@ -41,26 +41,27 @@
 
           <Selection>
             <SelectionIdentifier>1</SelectionIdentifier>
-            <Text>Adjectives</Text>
+            <Text>is</Text>
           </Selection>
+
           <Selection>
             <SelectionIdentifier>2</SelectionIdentifier>
-            <Text>Adverbs</Text>
+            <Text>are</Text>
           </Selection>
 
           <Selection>
             <SelectionIdentifier>3</SelectionIdentifier>
-            <Text>Subjects</Text>
+            <Text>were</Text>
           </Selection>
 
           <Selection>
             <SelectionIdentifier>4</SelectionIdentifier>
-            <Text>Dogs</Text>
+            <Text>am</Text>
           </Selection>
 
           <Selection>
             <SelectionIdentifier>5</SelectionIdentifier>
-            <Text>Prepositions</Text>
+            <Text>within</Text>
           </Selection>
 
         </Selections>
@@ -99,8 +100,7 @@
     <DisplayName>Q4</DisplayName>
     <IsRequired>true</IsRequired>
     <QuestionContent>
-      <Title> Is the following group of words a phrase or a clause? </Title>
-      <Text>over the river</Text>
+      <Title> Microscopes make things bigger than ______. </Title>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
@@ -108,11 +108,19 @@
         <Selections>
           <Selection>
             <SelectionIdentifier>1</SelectionIdentifier>
-            <Text>Phrase</Text>
+            <Text>really are</Text>
           </Selection>
           <Selection>
             <SelectionIdentifier>2</SelectionIdentifier>
-            <Text>Clause</Text>
+            <Text>are really</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>3</SelectionIdentifier>
+            <Text>they are really</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>4</SelectionIdentifier>
+            <Text>they really are</Text>
           </Selection>
         </Selections>
       </SelectionAnswer>
@@ -125,30 +133,30 @@
     <DisplayName>Q5</DisplayName>
     <IsRequired>true</IsRequired>
     <QuestionContent>
-      <Title> What two things does every sentence need? </Title>
+      <Title> Refrigerating meat _____ the spread of bacteria. </Title>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
-        <StyleSuggestion>checkbox</StyleSuggestion>
+        <StyleSuggestion>radiobutton</StyleSuggestion>
         <Selections>
 
           <Selection>
             <SelectionIdentifier>1</SelectionIdentifier>
-            <Text>  Person</Text>
+            <Text>slowing</Text>
           </Selection>
           <Selection>
             <SelectionIdentifier>2</SelectionIdentifier>
-            <Text>  Verb/Predicate</Text>
+            <Text>slows</Text>
           </Selection>
 
           <Selection>
             <SelectionIdentifier>3</SelectionIdentifier>
-            <Text>  Subject</Text>
+            <Text>is slowed</Text>
           </Selection>
 
           <Selection>
             <SelectionIdentifier>4</SelectionIdentifier>
-            <Text>  Cat</Text>
+            <Text>to slow</Text>
           </Selection>
 
         </Selections>
@@ -162,8 +170,7 @@
     <DisplayName>Q6</DisplayName>
     <IsRequired>true</IsRequired>
     <QuestionContent>
-      <Title> Name the error in the following sentence. </Title>
-      <Text>Spitting out hot lava, my friend took photos as the volcano erupted.</Text>
+      <Title> The house ______ with a strong base. </Title>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
@@ -171,15 +178,19 @@
         <Selections>
           <Selection>
             <SelectionIdentifier>1</SelectionIdentifier>
-            <Text>Sentence Fragment</Text>
+            <Text>was built</Text>
           </Selection>
           <Selection>
             <SelectionIdentifier>2</SelectionIdentifier>
-            <Text>Misplaced Modifier</Text>
+            <Text>has built</Text>
           </Selection>
           <Selection>
             <SelectionIdentifier>3</SelectionIdentifier>
-            <Text>Comma Splice</Text>
+            <Text>are built</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>4</SelectionIdentifier>
+            <Text>built</Text>
           </Selection>
         </Selections>
       </SelectionAnswer>
@@ -192,7 +203,7 @@
     <DisplayName>Q7</DisplayName>
     <IsRequired>true</IsRequired>
     <QuestionContent>
-      <Title> Which sentence is punctuated properly? </Title>
+      <Title> The color ______ those cats on the tree is white. </Title>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
@@ -200,11 +211,19 @@
         <Selections>
           <Selection>
             <SelectionIdentifier>1</SelectionIdentifier>
-            <Text>The students wanted indoor recess; the teachers wanted outdoor recess.</Text>
+            <Text>of</Text>
           </Selection>
           <Selection>
             <SelectionIdentifier>2</SelectionIdentifier>
-            <Text>The students wanted indoor recess, the teachers wanted outdoor recess.</Text>
+            <Text>for</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>3</SelectionIdentifier>
+            <Text>is</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>4</SelectionIdentifier>
+            <Text>are</Text>
           </Selection>
         </Selections>
       </SelectionAnswer>
@@ -217,7 +236,7 @@
     <DisplayName>Q8</DisplayName>
     <IsRequired>true</IsRequired>
     <QuestionContent>
-      <Title> "Who" is a pronoun used for ________. "Whom" is a pronoun used for ________. </Title>
+      <Title> Your friends won’t be late, _____? </Title>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
@@ -225,15 +244,11 @@
         <Selections>
           <Selection>
             <SelectionIdentifier>1</SelectionIdentifier>
-            <Text>objects;subjects</Text>
+            <Text>are they</Text>
           </Selection>
           <Selection>
             <SelectionIdentifier>2</SelectionIdentifier>
-            <Text>cats;dogs</Text>
-          </Selection>
-          <Selection>
-            <SelectionIdentifier>3</SelectionIdentifier>
-            <Text>subjects;objects</Text>
+            <Text>will they</Text>
           </Selection>
         </Selections>
       </SelectionAnswer>
@@ -246,7 +261,7 @@
     <DisplayName>Q9</DisplayName>
     <IsRequired>true</IsRequired>
     <QuestionContent>
-      <Title>Which sentence is written in the passive voice? </Title>
+      <Title> Vegetables are an excellent source _____ vitamins. </Title>
     </QuestionContent>
     <AnswerSpecification>
       <SelectionAnswer>
@@ -254,12 +269,21 @@
         <Selections>
           <Selection>
             <SelectionIdentifier>1</SelectionIdentifier>
-            <Text>The flock of birds quickly flew away.</Text>
+            <Text>have</Text>
           </Selection>
           <Selection>
             <SelectionIdentifier>2</SelectionIdentifier>
-            <Text>The letter had been delivered to the wrong address.</Text>
+            <Text>where</Text>
           </Selection>
+          <Selection>
+            <SelectionIdentifier>3</SelectionIdentifier>
+            <Text>of</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>4</SelectionIdentifier>
+            <Text>contain</Text>
+          </Selection>
+
         </Selections>
       </SelectionAnswer>
     </AnswerSpecification>
