@@ -196,7 +196,7 @@
                                 <div class="carousel-item">
                                     <div style="height: 200px; padding-left: 50px;padding-top: 45px;padding-right: 40px; font-size: large">
                                     Q: {{ preq }}<br><br>
-                                    A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter0 }}" type="text" maxlength="30">
+                                    A: <input class="form-control-sm ml-2" id="newA{{ forloop.counter0 }}" type="text" maxlength="30" autocomplete="on">
                                     <label class = "form-check-label" for="skip">
                                     <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ forloop.counter0 }}">
                                     Skip</label>
@@ -226,45 +226,36 @@
                 <div style="padding: 10px; text-align: center; font-size: 20px;">Round {{ request.hit.roundnums.phase01b|default:0|add:1 }} of {{ NUMROUNDS }}</div>
                 <div id="alrt"></div>
                 </div>
-
-            <!-- Question List  !: Need Modification - just a template example, will be a for loop in the future -->
-            <!--
-            <div class="row">
-                <div class="col mt-3 ml-3">
-                    <label style="font-size: x-large">Questions List </label>
-                    <i class="fa fa-bell-o ml-2"></i>Scroll down to see all questions
-                    <div class="rectangle" style="width: 100%; overflow-y: auto;">
-                        <div class="card-content">
-                            <ul id="pre-list">
-                                <br>
-                                {% for preq in question_list %}
-                                <li>Q: {{ preq }}<br>
-                                A: <input class="form-control-sm ml-2" id = "newA{{ forloop.counter0 }}" type="text" maxlength="30">
-                                <label class = "form-check-label" for="skip">
-                                <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ forloop.counter0 }}">
-                                Skip</label>
-                                </li> <hr style="width: 90%;">
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <ul hidden id="list_answer" ></ul>
-                    {% if not previewMode %}
-                    <button id="nextbtn" class="btn btn-warning float-right mt-2" >Next</button>
-                    {% endif %}
-                    <div style="padding: 10px; text-align: center; font-size: 20px;">Round {{ request.hit.roundnums.phase01b|default:0|add:1 }} of {{ NUMROUNDS }}</div>
-                    <div id="alrt"></div>
-                </div>
-            </div>
--->
             <!-- End Question List -->
         </div>
 
         <form>
         {% csrf_token %}
         </form>
-
+            
         <script>
+        //autocomplete function
+	    var availableTags = [
+	        "Internet Explorer",
+	        "Firefox",
+	        "Chrome",
+	        "Opera",
+	        "Safari"
+	    ];
+	    
+        var qs = {{ question_list|safe }};
+            
+        $(function() {
+            for (i = 0; i < qs.length; i++) {
+                $("#newA"+i).autocomplete({
+                    source: availableTags
+                });
+            }
+        });  
+	
+	   </script>
+            
+        <script>            
         $(document).ready(function(){
             if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
                 $("#agreement").modal();
@@ -315,10 +306,8 @@
 
         function checkEmpty(){
             for (var q = 0; q < qs.length; q++) {
-                //console.log(q);
                 if(document.getElementById("skip"+q).checked == false && document.getElementById("newA"+q).value==""){
                     flag = 1;
-                    // alert("Empty answer!");
                 }
             }
         }
@@ -326,9 +315,8 @@
         //next button listener
         $('#nextbtn').click(function(event){
             //alert("New Images Inbound!")
-
+            flag = 0;
             checkEmpty();
-            // console.log(flag);
             if (flag == 0){
                 rank();
                 // get the value of CSRF token
