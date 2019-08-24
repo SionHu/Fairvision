@@ -371,7 +371,7 @@ class HITAdmin(admin.ModelAdmin):
         return format_html('<br>'.join("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
             args=(img.id,)),
-        img.text) for img in obj.questions))
+        img.text) for img in obj.questions.all()))
     def work_time(self, obj):
         end = obj.data.get('endTime')
         start = obj.data.get('startTime')
@@ -518,7 +518,7 @@ class HITAdmin(admin.ModelAdmin):
             'button': 'Approve',
         })
     bonus.short_description = 'Approve selected hits and send bonus'
-    
+
     def reject(self, request, queryset):
         if request.POST.get('post'):
             form = HITRejectionForm(request.POST)
