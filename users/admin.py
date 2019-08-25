@@ -556,7 +556,7 @@ class AnswerInline(admin.TabularInline):
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','skipCount','hit','mergeParent'])]
+    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','hit','mergeParent'])]
     inlines = [
         AnswerInline,
     ]
@@ -641,7 +641,7 @@ class ExperimentAdmin(admin.ModelAdmin):
         # Create the other sheets
         questions = cls.exportSheet(book,
             Question.objects.all().order_by('-isFinal', 'id'),
-            'id','text','isFinal','skipCount','hit','mergeParent',
+            'id','text','isFinal','hit','mergeParent',
             mergeParent=None
         )
         answers = cls.exportSheet(book,
