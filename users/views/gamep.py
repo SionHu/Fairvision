@@ -71,8 +71,6 @@ def phase01a(request, previewMode=False):
                 q = q.replace(bad, good)
             correct_qs.append(q)
 
-        Question.objects.filter(text__in=validation_list).update(skipCount=F('skipCount')-1)
-
         # Query list for the old data in the table
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         # print("old questions", old_Qs)
