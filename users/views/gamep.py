@@ -154,7 +154,7 @@ def phase01b(request, previewMode=False):
         dictionary = json.loads(request.POST.get('data[dict]'))
         print("I got the QA dict: ", dictionary)
 
-        for imgset, (question, answer) in zip(imgsets, dictionary.items()):
+        for imgset, (question, answer) in zip(imgsets, dictionary):
             print("Answer: ", answer)
             # if the answer is not empty, add into database
             que = Question.objects.get(text=question, isFinal=True)

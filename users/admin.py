@@ -728,6 +728,27 @@ class ExperimentAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
+    def pre_validate_step1(self):
+        countImgs = ImageModel.objects.filter(img__contains=settings.KEYRING).count()
+        if countImgs % 3 == 1 or countImgs % 4 == 1:
+            raise forms.ValidationError('The number of images in a dataset is not allowed to be 1 more than a multiple of 3 or 4 for Steps 1 and 2 to run.')
+
+    def pre_validate_step2(self):
+        countQs = Question.objects.filter(isFinal=True)
+        minQs = settings.NUMROUNDS[phase01b.__name__]
+        if countQs < 1:
+            raise forms.ValidationError('The number of images in a dataset is not allowed to be 1 more than a multiple of 3 or 4 for Steps 1 and 2 to run.')
+        elif countQs < minQs:
+            self.message_user(request, f"There are {countQs} questions that were created in Step 1. It is recommended that you get at least {minQs} before continuing.", messages.WARNING)
+
+    def pre_validate_step3(self):
+        countQs = Question.objects.filter(isFinal=True)
+        countAs = Attribute.objects.count()
+        if countQs != countAs:
+            raise forms.ValidationError('The answer reducing NLP script was not run correctly. Please delete all Attribute objects and rerun the script.')
+        elif countAs < 1:
+            raise forms.ValidationError('Step 1 was not run yet. Please finish Steps 1 and 2 before going on to Step 3.')
+
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Zipfile)
 admin.site.register(Phase, PhaseAdmin)

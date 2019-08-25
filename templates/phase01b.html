@@ -167,7 +167,7 @@
                             <ol class="carousel-indicators" style="margin-bottom: 0px;">
                                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                                 {% for preq in question_list %}
-                                <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0}}"></li>
+                                <li data-target="#myCarousel" data-slide-to="{{ forloop.counter}}"></li>
                                 {% endfor %}
                             </ol>
 
@@ -276,17 +276,17 @@
 
         var dict = {}
             var resultArr = {
-                "dict" : {},
+                "dict" : [],
             }
 		var qs = {{ question_list|safe }};
         // Function that create the dictionary for QA pairs
         function rank(){
             for (var i = 0; i < qs.length; i++) {
                 if(document.getElementById("skip"+i).checked == true){
-                    resultArr['dict'][qs[i]] = "";
+                    resultArr['dict'].push([qs[i], ""]);
                 }
                 else{
-                    resultArr['dict'][qs[i]] = document.getElementById("newA"+i).value.trim();
+                    resultArr['dict'].push([qs[i], document.getElementById("newA"+i).value.trim()]);
                 }
             }
             resultArr['dict']= JSON.stringify(resultArr['dict']);

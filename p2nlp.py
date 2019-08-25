@@ -19,17 +19,11 @@ script function for phase02
 '''
 def phase02():
     # Get all the queries for answer and question from database
-    questions = Question.objects.filter(isFinal=True)
-    answers = Answer.objects.all()
-    # Make the list with requirements
-    question_list = [[que.text, que.id] for que in questions]
-    answer_list = [[ans.text, ans.question.id] for ans in answers]
+    answer_list = Answer.objects.values_list('text', 'question_id')
     # print("answer list: ", answer_list)
 
 
-    test_obj = AnswerReducer(questions=question_list, answers=answer_list)
-    test_obj.grouper()
-    result_dict = test_obj.reduce_within_groups()
+    result_dict = AnswerReducer().reduce_within_groups(answer_list)
 
     for q, (a, count) in result_dict.items():
         print("a is: ", a)
