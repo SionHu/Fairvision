@@ -123,7 +123,7 @@ def step2_pop(count=1):
         # Find the first available question for the imageset
         questions.append(Question.objects.filter(Q(isFinal=True) & ~Q(id__in=Subquery(
             Answer.objects.filter(imgset=imin).values_list('question_id', flat=True)
-        ))).first())
+        ))).order_by('?').first())
 
     rounds.save()
     return imgs, sets, questions, postMin >= numQs
