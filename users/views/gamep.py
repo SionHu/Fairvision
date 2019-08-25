@@ -56,19 +56,19 @@ def phase01a(request, previewMode=False):
         # print("I got answers: ", answers)
         # retrieve the json data for updating skip count for the previous questions
         validation_list = request.POST.getlist('data[]')
-        baseURL = 'https://api.textgears.com/check.php'
 
         correct_qs = []
         for q in questions:
             text=q.replace(' ', '+')
-            url = baseURL + '?text=' + text + '&key=SFCKdx4GHmSC1j6H'
+            url = f'https://api.textgears.com/check.php?text={text}&key=SFCKdx4GHmSC1j6H'
             response = requests.get(url)
             wordsC = response.json()
             # print(wordsC)
             for err in wordsC['errors']:
                 bad = err['bad']
-                good = err['better'][0]
-                q = q.replace(bad, good)
+                good = err['better']
+                if good:
+                    q = q.replace(bad, good[0])
             correct_qs.append(q)
 
         # Query list for the old data in the table
