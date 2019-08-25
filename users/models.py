@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_delete
@@ -156,9 +157,10 @@ class Phase03_instruction(models.Model):
 
 # Global variable of round number for phase01 and phase02
 class Phase(models.Model):
-    phase = models.CharField(max_length=10, primary_key=True)
+    phase = models.CharField(max_length=1, primary_key=True)
     get = ArrayField(models.IntegerField(), blank=True, default=list)
     post = ArrayField(models.IntegerField(), blank=True, default=list)
+    imgset = ArrayField(models.IntegerField(), blank=True, default=list)
     def __str__(self):
         return self.phase
 
@@ -179,7 +181,7 @@ class PhaseBreak(models.Model):
 # New design, QA pairs for phase 1 that will be collected from the crowd workers
 # It could be redundant, so count will be number of the merged ones after merging (we could make a script to create the models updating)
 class Question(models.Model):
-    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID')
+    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID', related_name='questions')
     text = models.CharField(max_length=64, blank=False, null=False)
     # Boolean telling where this is the final questions for the rest of the phases
     isFinal = models.BooleanField(default=False)
@@ -187,18 +189,18 @@ class Question(models.Model):
     mergeParent = models.IntegerField(default=0)
     # ID for reference which questions are for which image
     imageID = ArrayField(models.CharField(max_length=64))
-    # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
-    skipCount = models.IntegerField(default=0)
     def __str__(self):
         return self.text
 
 class Answer(models.Model):
-    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID')
-    text = models.CharField(max_length=64, blank=False, null=False, unique=False)
+    hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID', related_name='answers')
+    text = models.CharField(max_length=64, blank=True, null=False, unique=False)
     isFinal = models.BooleanField(default=False)
     count = models.IntegerField(default=1)
     # on_delete set to cascade because we would not delete django models until we export and finalize the data and save.
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    # was the answer created on step 1
+    imgset = models.IntegerField(default=-1)
     def __str__(self):
         return self.text
 
@@ -211,12 +213,6 @@ class HIT(models.Model):
     @property
     def hitID(self):
         return self.data.get('hitId')
-    @property
-    def questions(self):
-        return self.question_set
-    @property
-    def answers(self):
-        return self.answer_set
     def __str__(self):
         return self.assignment_id
 

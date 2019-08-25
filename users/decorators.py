@@ -13,7 +13,7 @@ import uuid
 
 
 NUMROUNDS = settings.NUMROUNDS
-
+ROUNDSMAX = {k:1 if k == 'phase01b' else v for k, v in NUMROUNDS.items()}
 
 def player_required(func):
     '''
@@ -42,7 +42,7 @@ def player_required(func):
                 hitObj.save()
                 return func(request, *args, **kwargs)
             else:
-                if numInPhase >= NUMROUNDS:
+                if numInPhase >= ROUNDSMAX[func.__name__]:
                     return over(request, func.__name__)
                 else:
                     return func(request, *args, **kwargs)

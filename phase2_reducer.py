@@ -20,25 +20,15 @@ class AnswerReducer:
     """
     Class to contain all methods to reduce the redundancy for answers
     """
-    def __init__(self, answers=None, questions=None):
-        """
-        Class initializer.
-        """
-        self.answers = answers
-        self.questions = questions
-        self.grouped_questions = {}
-
-    def grouper(self):
+    def grouper(self, answers):
         """
         Method to group the answers based on their ID to a given question
         :return: Count of groups made
         """
-        for each in self.answers:
-            if each[1] in self.grouped_questions.keys():
-                self.grouped_questions[each[1]].append(each[0])
-            else:
-                # print("Came here")
-                self.grouped_questions.setdefault(each[1], [each[0]])
+        grouped_questions = defaultdict(list)
+        for text, qid in answers:
+            grouped_questions[qid].append(text)
+        return grouped_questions
 
     def remove_redundant_answers(self, answers):
         """
@@ -72,14 +62,14 @@ class AnswerReducer:
 
         return old_new_pairs
 
-    def reduce_within_groups(self):
+    def reduce_within_groups(self, answers):
         """
         Reduces answers in groups and returns the answers.
         Example if three out of 4 answers are similar then it will make those into a group and give them
         :return: common answer and its id
         """
         qid_to_ans = {}
-        for question, answers in self.grouped_questions.items():
+        for question, answers in self.grouper(answers).items():
             old_new_pairs = self.remove_redundant_answers(answers)
             lens = [(k,len(v)) for k, v in old_new_pairs.items()]
             lens.sort(key=itemgetter(1)) # sort by number of matching questions
@@ -130,7 +120,5 @@ if __name__ == "__main__":
         ["The cat has 4 legs", 2],
         ["The cat has four legs", 2]
     ]
-    test_obj = AnswerReducer(questions=questions, answers=answers)
-    test_obj.grouper()
-    i = test_obj.reduce_within_groups()
+    i = AnswerReducer().reduce_within_groups(answers)
     print(i)
