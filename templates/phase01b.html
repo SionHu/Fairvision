@@ -283,10 +283,10 @@
         function rank(){
             for (var i = 0; i < qs.length; i++) {
                 if(document.getElementById("skip"+i).checked == true){
-                    resultArr['dict'][qs[i]] = " ";
+                    resultArr['dict'][qs[i]] = "";
                 }
                 else{
-                    resultArr['dict'][qs[i]] = document.getElementById("newA"+i).value;
+                    resultArr['dict'][qs[i]] = document.getElementById("newA"+i).value.trim();
                 }
             }
             resultArr['dict']= JSON.stringify(resultArr['dict']);

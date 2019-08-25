@@ -189,14 +189,12 @@ class Question(models.Model):
     mergeParent = models.IntegerField(default=0)
     # ID for reference which questions are for which image
     imageID = ArrayField(models.CharField(max_length=64))
-    # skipCount is the number of times people hit skips(if it reach the threshold we treat this question as outlier)
-    skipCount = models.IntegerField(default=0)
     def __str__(self):
         return self.text
 
 class Answer(models.Model):
     hit = models.ForeignKey('HIT', on_delete=models.CASCADE, db_column='assignmentID', related_name='answers')
-    text = models.CharField(max_length=64, blank=False, null=False, unique=False)
+    text = models.CharField(max_length=64, blank=True, null=False, unique=False)
     isFinal = models.BooleanField(default=False)
     count = models.IntegerField(default=1)
     # on_delete set to cascade because we would not delete django models until we export and finalize the data and save.

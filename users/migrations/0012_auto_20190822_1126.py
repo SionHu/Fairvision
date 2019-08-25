@@ -42,4 +42,13 @@ class Migration(migrations.Migration):
             name='imgset',
             field=models.IntegerField(default=-1),
         ),
+        migrations.RemoveField(
+            model_name='question',
+            name='skipCount',
+        ),
+        migrations.AlterField(
+            model_name='answer',
+            name='text',
+            field=models.CharField(blank=True, max_length=64),
+        ),
     ]

@@ -70,12 +70,13 @@ def popGetList(fullList, count=3, phase='1', recycle=False):
 
 @transaction.atomic
 def step2_push(request):
-    imgset = int(request.POST.getlist('imgnum[]')[0])
+    imgsets = [int(i) for i in request.POST.getlist('imgnum[]')]
     a = Phase.objects.select_for_update().get(phase='2')
-    a.post[imgset] += 1
+    for imgset in imgsets:
+        a.post[imgset] += 1
     a.save()
     #Phase.rawUpdate(f'post[{imgset}]', f'post[{imgset}] + 1', "phase = '2'")
-    return imgset
+    return imgsets
 
 @transaction.atomic
 def step2_pop(count=1):

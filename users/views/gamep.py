@@ -147,25 +147,21 @@ def phase01b(request, previewMode=False):
     if request.method == 'POST':
         # Get the answer array for different
         # Update the rounds posted for phase 01b
-        imgset = step2_push(request)
+        imgsets = step2_push(request)
         #pushPostList(request, '²')
 
         # get the dictionary from the front-end back
         dictionary = json.loads(request.POST.get('data[dict]'))
         print("I got the QA dict: ", dictionary)
 
-        for question, answer in dictionary.items():
+        for imgset, (question, answer) in zip(imgsets, dictionary.items()):
             print("Answer: ", answer)
             # if the answer is not empty, add into database
-            if answer != " ":
-                print("answer is: ", answer)
-                que = Question.objects.get(text=question, isFinal=True)
-                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
-            else:
-                Question.objects.filter(text=question, isFinal=True).update(skipCount=F('skipCount')+1)
+            que = Question.objects.get(text=question, isFinal=True)
+            new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
             # Check if the question has skip count reach some threshold (5 for example), isFinal=False
             QQ = Question.objects.get(text=question, isFinal=True)
-            if QQ.skipCount >= 5:
+            if QQ.answers.filter(text='').count() >= 5:
                 QQ.isFinal = False
                 QQ.save()
 
