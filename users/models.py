@@ -9,7 +9,6 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.core.serializers.json import DjangoJSONEncoder
 import os
-import random
 
 class CustomUser(AbstractUser):
     # bools to keep track of types of users
@@ -164,29 +163,6 @@ class Phase(models.Model):
     imgset = ArrayField(models.IntegerField(), blank=True, default=list)
     def __str__(self):
         return self.phase
-    @classmethod
-    def rawUpdate(cls, field, value, condition):
-        return cls.objects.raw(f'UPDATE users_phase SET {field} = {value} WHERE {condition}')
-    @staticmethod
-    def safeget(phase):
-        rounds, isNew = Phase.objects.get_or_create(phase=phase)
-        if isNew:
-            imgsets = list(ImageModel.objects.filter(img__startswith=settings.KEYRING).values_list('id', flat=True))
-            postLen, trunLen = divmod(len(imgsets), 4)
-
-            # Truncate shuffled list to a multiple of 4 length
-            random.shuffle(imgsets)
-            if trunLen:
-                del imgsets[-trunLen:]
-            rounds.imgset = imgsets
-
-            # Create empty list to store image set gets
-            rounds.get = [0] * postLen
-
-            # Create empty list to store image set posts
-            rounds.post = [0] * postLen
-            rounds.save()
-        return rounds
 
 # Array indices for recursion list of phase02
 class listArray(models.Model):
@@ -226,7 +202,7 @@ class Answer(models.Model):
     # on_delete set to cascade because we would not delete django models until we export and finalize the data and save.
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     # was the answer created on step 1
-    step1 = models.BooleanField(default=False)
+    imgset = models.IntegerField(default=-1)
     def __str__(self):
         return self.text
 

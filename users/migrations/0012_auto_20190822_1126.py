@@ -13,11 +13,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='answer',
-            name='step1',
-            field=models.BooleanField(default=False),
-        ),
-        migrations.AddField(
             model_name='phase',
             name='imgset',
             field=django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), blank=True, default=list, size=None),
@@ -41,5 +36,10 @@ class Migration(migrations.Migration):
             model_name='question',
             name='hit',
             field=models.ForeignKey(db_column='assignmentID', on_delete=django.db.models.deletion.CASCADE, related_name='questions', to='users.HIT'),
+        ),
+        migrations.AddField(
+            model_name='answer',
+            name='imgset',
+            field=models.IntegerField(default=-1),
         ),
     ]

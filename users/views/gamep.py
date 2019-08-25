@@ -25,7 +25,7 @@ import json
 
 # self-defined decorators for crowd worker and admin/staff be able to work
 from ..decorators import player_required
-from .roundsgenerator import pushPostList, popGetList, step2_push, step2_pop, getLeastAnsweredQuestions
+from .roundsgenerator import pushPostList, popGetList, step2_push, step2_pop
 
 
 # We should set up in backend manually
@@ -98,7 +98,7 @@ def phase01a(request, previewMode=False):
         id_merge_sql = Case(*[When(id=new, then=Value(old)) for new, old in id_merge.items()])
         Question.objects.filter(id__in=id_merge).update(mergeParent=id_merge_sql)
 
-        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, hit_id=assignmentId, step1=True) for que, ans in zip(questions, answers)])
+        answers = Answer.objects.bulk_create([Answer(question_id=id_merge.get(que.id, que.id), text=ans, hit_id=assignmentId, imgset=-1) for que, ans in zip(questions, answers)])
 
         with transaction.atomic():
             id_move_sql = Case(*[When(question_id=bad, then=Value(good)) for bad, good in id_move.items()])
@@ -147,7 +147,7 @@ def phase01b(request, previewMode=False):
     if request.method == 'POST':
         # Get the answer array for different
         # Update the rounds posted for phase 01b
-        step2_push(request)
+        imgset = step2_push(request)
         #pushPostList(request, '²')
 
         # get the dictionary from the front-end back
@@ -160,7 +160,7 @@ def phase01b(request, previewMode=False):
             if answer != " ":
                 print("answer is: ", answer)
                 que = Question.objects.get(text=question, isFinal=True)
-                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, step1=False)
+                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
             else:
                 Question.objects.filter(text=question, isFinal=True).update(skipCount=F('skipCount')+1)
             # Check if the question has skip count reach some threshold (5 for example), isFinal=False
@@ -172,15 +172,14 @@ def phase01b(request, previewMode=False):
         return HttpResponse(status=201)
 
     # Get rounds played in total and by the current player
-    roundsnum, imin, stopGame = step2_pop()
+    roundsnum, imin, questions, stopGame = step2_pop()
     #rounds, questions = popGetList(Question.objects.filter(isFinal=True).values_list('id', flat=True), NUMROUNDS[phase01b.__name__], '²')
-    questions = getLeastAnsweredQuestions(NUMROUNDS[phase01b.__name__])
 
     if stopGame or not questions:
         return over(request, 'phase01b')
 
     # sending 4 images at a time
-    data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
+    data = [[i.img.url for i in ImageModel.objects.filter(id__in=rounds)] for rounds in roundsnum]
     data.extend([None] * (4 - len(data)))
 
     # Get all the insturctions sets

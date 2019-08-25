@@ -4,13 +4,12 @@ The Random number generator that helps generate image lists for phase01a and pha
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Q
+from django.db.models.expressions import Subquery
 from operator import attrgetter
 import random
 from numpy import argmin
-from ..models import Question, ImageModel, Phase
-
-NUM_ANSWERS = 5
+from ..models import Question, Answer, ImageModel, Phase
 
 
 def pushPostList(request, phase='1'):
@@ -51,7 +50,7 @@ def popGetList(fullList, count=3, phase='1', recycle=False):
     if len(getList) < count:
         nextImage = getList
         count -= len(getList)
-        # Create a new GET list if necesary
+        # Create a new GET list if necessary
         postList = rounds.post
         getList = [i for i in fullList if i not in postList and i not in nextImage]
         random.shuffle(getList)
@@ -69,43 +68,62 @@ def popGetList(fullList, count=3, phase='1', recycle=False):
     rounds.save()
     return rounds, nextImage
 
+@transaction.atomic
 def step2_push(request):
     imgset = int(request.POST.getlist('imgnum[]')[0])
-    a = Phase.objects.get(phase='2')
+    a = Phase.objects.select_for_update().get(phase='2')
     a.post[imgset] += 1
     a.save()
     #Phase.rawUpdate(f'post[{imgset}]', f'post[{imgset}] + 1', "phase = '2'")
+    return imgset
 
-def step2_pop():
-    rounds = Phase.safeget(phase='2')
+@transaction.atomic
+def step2_pop(count=1):
+    # Create phase object if necessary
+    rounds, isNew = Phase.objects.select_for_update().get_or_create(phase='2')
+    if isNew:
+        imgsets = list(ImageModel.objects.filter(img__startswith=settings.KEYRING).values_list('id', flat=True))
+        postLen, trunLen = divmod(len(imgsets), 4)
 
-    imin = -1
-    getMin = 900000
-    postMin = 900000
-    for i, (get, post) in enumerate(zip(rounds.get, rounds.post)):
-        if post < postMin:
-            imin, getMin, postMin = i, get, post
-        elif post == postMin and get < getMin:
-            imin, getMin, postMin = i, get, post
+        # Truncate shuffled list to a multiple of 4 length
+        random.shuffle(imgsets)
+        if trunLen:
+            del imgsets[-trunLen:]
+        rounds.imgset = imgsets
 
-    a = Phase.objects.get(phase='2')
-    a.get[imin] += 1
-    a.save()
-    #Phase.rawUpdate(f'get[{imin}]', f'get[{imin}] + 1', "phase = '2'")
-    return rounds.imgset[4*imin:4*imin+4], [imin], min(rounds.post) >= (Question.objects.filter(isFinal=True).count() * NUM_ANSWERS)
+        # Create empty list to store image set gets
+        rounds.get = [0] * postLen
 
-def getLeastAnsweredQuestions(count):
-    questions = list(Question.objects.filter(isFinal=True).annotate(Count('answers')).order_by('answers__count')[:count])
-    questions.reverse()
-    lastIndex = -count
+        # Create empty list to store image set posts
+        rounds.post = [0] * postLen
+        rounds.save()
+    imgs = []
+    sets = []
+    questions = []
+    numQs = Question.objects.filter(isFinal=True).count()
 
-    for i, q in enumerate(questions):
-        if q.answers.filter(step1=False).count() > NUM_ANSWERS:
-            lastIndex = i
-            q.isFinal = False
-            q.save()
-        else:
+    # Find the least answered image sets
+    for i in range(count):
+        # Find minimum answered image set
+        imin = -1
+        getMin = 900000
+        postMin = 900000
+        for i, (get, post) in enumerate(zip(rounds.get, rounds.post)):
+            if (post < postMin) or post == postMin and get < getMin:
+                imin, getMin, postMin = i, get, post
+
+        # If every image was answered the correct number of times, stop
+        if postMin >= numQs:
             break
 
-    del questions[:lastIndex]
-    return questions
+        rounds.get[imin] += 1
+        imgs.append(rounds.imgset[4*imin:4*imin+4])
+        sets.append(imin)
+
+        # Find the first available question for the imageset
+        questions.append(Question.objects.filter(Q(isFinal=True) & ~Q(id__in=Subquery(
+            Answer.objects.filter(imgset=imin).values_list('question_id', flat=True)
+        ))).first())
+
+    rounds.save()
+    return imgs, sets, questions, postMin >= numQs
