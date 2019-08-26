@@ -164,24 +164,23 @@ class ImageModelAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         return [] if obj is None else ['img']
 
-def export_csv(filename, field_names):
-    def export(self, request, queryset):
+class ExportCSVMixin:
+    def export_csv(self, request, queryset):
         # https://docs.djangoproject.com/en/1.11/howto/outputting-csv/
         # https://stackoverflow.com/questions/18685223/how-to-export-django-model-data-into-csv-file
 
         # setup csv writer
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment;filename='+filename
+        response['Content-Disposition'] = 'attachment;filename='+self.export_filename
         writer = csv.writer(response)
 
-        writer.writerow(field_names)
+        writer.writerow(self.export_field_names)
 
         # output data
         for obj in queryset:
-            writer.writerow([getattr(self, field)(obj) if hasattr(self, field) else getattr(obj, field) for field in field_names])
+            writer.writerow([getattr(self, field)(obj) if hasattr(self, field) else getattr(obj, field) for field in self.export_field_names])
         return response
-    export.short_description = "Export selected %(verbose_name_plural)s as csv"
-    return export
+    export_csv.short_description = "Export selected %(verbose_name_plural)s as csv"
 
 class Round2(Func):
     # https://stackoverflow.com/a/55905983
@@ -192,7 +191,7 @@ class Round2(Func):
     def as_sqlite(self, compiler, connection, **extra_context):
         return super().as_sqlite(compiler, connection, arg_joiner=", ", **extra_context)
 
-class AttributeAdmin(admin.ModelAdmin):
+class AttributeAdmin(admin.ModelAdmin, ExportCSVMixin):
     #def get_queryset(self, request):
     #    qs = super().get_queryset(request)
     #    sum = Attribute.objects.all().aggregate(Sum('count'))['count__sum']
@@ -221,7 +220,9 @@ class AttributeAdmin(admin.ModelAdmin):
         return self.readonly_fields
     fields = ('word', 'count')
     list_display = ('word', 'count', 'Weight')
-    actions = [export_csv('phase3-attributes.csv', ['word','count','Weight'])]
+    export_filename = 'phase3-attributes.csv'
+    export_field_names = ['word','count','Weight']
+    actions = ['export_csv']
 
 class PhaseForm(forms.ModelForm):
     class Meta:
@@ -547,8 +548,10 @@ class HITAdmin(admin.ModelAdmin):
     reject.short_description = 'Reject selected hits'
     actions=[approve, bonus, reject]
 
-class AnswerAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-answers.csv', ['id','text','isFinal','question','hit'])]
+class AnswerAdmin(admin.ModelAdmin, ExportCSVMixin):
+    actions = ['export_csv']
+    export_filename = 'phase1-answers.csv'
+    export_field_names = ['id','text','isFinal','question','hit']
     list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter))
 
 class AnswerInline(admin.TabularInline):
@@ -556,7 +559,10 @@ class AnswerInline(admin.TabularInline):
     extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
-    actions = [export_csv('phase1-questions.csv', ['id','text','isFinal','hit','mergeParent'])]
+    actions = ['export_csv']
+    export_filename = 'phase1-questions.csv'
+    export_field_names = ['id','text','isFinal','hit','mergeParent']
+
     inlines = [
         AnswerInline,
     ]
