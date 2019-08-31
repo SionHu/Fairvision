@@ -167,7 +167,6 @@ def phase01b(request, previewMode=False):
 
     # Get rounds played in total and by the current player
     roundsnum, imin, questions, stopGame = step2_pop(NUMROUNDS[phase01b.__name__])
-    questions = [q.text for q in questions]
 
     if stopGame or not questions:
         return over(request, 'phase01b')
@@ -185,7 +184,7 @@ def phase01b(request, previewMode=False):
     #allQuestions = dict(Question.objects.filter(id__in=[*ids for ids in questions]).values_list('id', 'text'))
     #questions = [[allQuestions[id] for id in ids] for ids in questions]
 
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'PRODUCTION': PRODUCTION})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : [q.text for q in questions], 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions,'answer_list': [[i for i in q.answers.distinct().values_list('text', flat=True) if i != ''] for q in questions], 'text_inst':text_inst, 'PRODUCTION': PRODUCTION})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
