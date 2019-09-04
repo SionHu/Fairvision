@@ -25,9 +25,10 @@ def phase02():
 
     result_dict = AnswerReducer().reduce_within_groups(answer_list)
 
+    Answer.objects.update(isFinal=False, count=0)
     for q, (a, count) in result_dict.items():
         print("a is: ", a)
-        Answer.objects.filter(text=a, question_id=q).update(isFinal=True, count=count)
+        Answer.objects.filter(text=a, question_id=q)[:1].update(isFinal=True, count=count)
     print("Update successfully!")
 
 if __name__ == "__main__":
