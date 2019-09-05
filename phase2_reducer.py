@@ -5,13 +5,13 @@ threshold will be given only.
 
 # import spacy
 
-from csgame.nlp_loader import nlp
 from collections import defaultdict
 from operator import itemgetter
+from more_itertools import partition
 
-from word2num import WordsToNumbers
-w2nParser = WordsToNumbers()
-numWords = set(w2nParser.__ones__) | set(w2nParser.__tens__) | set(w2nParser.__groups__)
+from users.reducer import word2num
+from users.reducer.nlp_loader import nlp
+numWords = set(word2num.__ones__) | set(word2num.__tens__) | set(word2num.__groups__)
 
 def num2text(text):
     words = text.replace('-', ' ').split(' ')
@@ -20,7 +20,7 @@ def num2text(text):
         for w in wordSet:
             words.remove(w)
         text = ' '.join(words)
-        return str(w2nParser.parse(text))
+        return str(word2num.parse(text))
     return text
 
 def remove_taboo_words(question, taboo_list=("what", "is", "are", "of", "which", "the")):
@@ -104,9 +104,9 @@ class AnswerReducer:
         from users.models import Question
         qid_to_ans = {}
         for question, answers in self.grouper(answers).items():
-            numBlanks = sum(a == '' for a in answers)
-            answers = [a for a in answers if a != '']
-            old_new_pairs = self.remove_redundant_answers(answers)
+            answer, blanks = partition((lambda a: a == ''), answers)
+            numBlanks = sum(1 for _ in blanks)
+            old_new_pairs = self.remove_redundant_answers(list(answers))
             lens = [(k,len(v)) for k, v in old_new_pairs.items()]
             lens.append((None, numBlanks))
             lens.sort(key=itemgetter(1), reverse=True) # sort by number of matching questions

@@ -39,7 +39,7 @@ old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
 new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
 
 
-from client import send__receive_data
+from .reducer.client import send__receive_data
 @player_required
 def phase01a(request, previewMode=False):
     # assignmentID for front-end submit javascript

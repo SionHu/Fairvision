@@ -11,20 +11,25 @@ os.environ.setdefault("SPACY_WARNING_IGNORE", "W008")
 import django
 django.setup()
 from users.models import Question, Answer, Attribute
-from django.db.models import F, Q
 import phase2_reducer
-from users.views.rephrasing import rephrase_old as rephrase
+from users.reducer.rephrasing import rephrase_old as rephrase
+from distutils.util import strtobool
 
 '''
 script function for phase02
 '''
 def phase02():
-    import importlib
-    importlib.reload(phase2_reducer)
     # Get all the queries for answer and question from database
     return phase2_reducer.AnswerReducer().reduce_within_groups(Answer.objects.values_list('text', 'question_id'))
 
 if __name__ == "__main__":
+    if Attribute.objects.exists():
+        print('This script will delete all existing attributes currently on Step 2.')
+        if strtobool(input("Are you REALLY sure you want to delete the data? ")):
+            Attribute.objects.all().delete()
+        else:
+            exit()
+
     Answer.objects.update(isFinal=False, count=0)
     for q, (a, count) in phase02().items():
         print("a is: ", a)
@@ -32,5 +37,8 @@ if __name__ == "__main__":
     print("Update successfully!")
 
     # rephrase and import into attributes we have
-    for answer in Answer.objects.filter(Q(isFinal=True) & ~Q(text='')):
-        Attribute.objects.get_or_create(word=rephrase(answer.question.text, answer.text), answer=answer)
+    for answer in Answer.objects.filter(isFinal=True):
+        try:
+            Attribute.objects.get_or_create(word=rephrase(answer.question.text, answer.text), answer=answer)
+        except Exception as e:
+            pass
