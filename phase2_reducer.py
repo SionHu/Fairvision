@@ -5,15 +5,28 @@ threshold will be given only.
 
 # import spacy
 
-from csgame.nlp_loader import nlp
 from collections import defaultdict
 from operator import itemgetter
+from more_itertools import partition
 
+from users.reducer import word2num
+from users.reducer.nlp_loader import nlp
+numWords = set(word2num.__ones__) | set(word2num.__tens__) | set(word2num.__groups__)
+
+def num2text(text):
+    words = text.replace('-', ' ').split(' ')
+    if sum(1 for w in words if w in numWords):
+        wordSet = set(words) - numWords
+        for w in wordSet:
+            words.remove(w)
+        text = ' '.join(words)
+        return str(word2num.parse(text))
+    return text
 
 def remove_taboo_words(question, taboo_list=("what", "is", "are", "of", "which", "the")):
     for word in question.split():
         if word.lower() not in taboo_list:
-            yield word
+            yield num2text(word)
 
 
 class AnswerReducer:
@@ -38,14 +51,35 @@ class AnswerReducer:
         """
 
         # Remove taboo words from the sentence
-        all_new = (' '.join(remove_taboo_words(answer)) for answer in answers)
+        all_new = [' '.join(remove_taboo_words(answer)) for answer in answers]
         all_old = []
         old_new_pairs = defaultdict(list)
-        docs_old = list(map(nlp, all_old))
 
         for qid_new, q_new in zip(answers, all_new):
-            doc_new = nlp(q_new)
-            for qid_old, doc_old in zip(all_old, docs_old):
+            real_doc_new = nlp(q_new)
+            if q_new.isnumeric():
+                if q_new in all_old:
+                    old_new_pairs[q_new].append(q_new)
+                else:
+                    all_old.append(q_new)
+                continue
+
+            for qid_old, q_old in zip(all_old, all_old):
+                doc_new = real_doc_new
+                doc_old = nlp(q_old)
+                doc_old_break = set(doc_old.text.split())
+                doc_new_break = set(q_new.split())
+
+                diff_old = " ".join(doc_old_break - doc_new_break)
+                diff_new = " ".join(doc_new_break - doc_old_break)
+                #print("diffs: "  + diff_old + ", " + diff_new)
+                if diff_old and diff_new:
+                    doc_old = nlp(diff_old)
+                    doc_new = nlp(diff_new)
+                else:
+                    old_new_pairs[qid_old].append(qid_new)
+                    break
+
                 # Uncomment the Prints below to see output. Remove them for production version
                 val = doc_new.similarity(doc_old)
                 if val > 0.70:
@@ -58,7 +92,6 @@ class AnswerReducer:
             else: # if not broken
                 # If code reaches this point merge the questions
                 all_old.append(qid_new)
-                docs_old.append(doc_new)
 
         return old_new_pairs
 
@@ -68,11 +101,16 @@ class AnswerReducer:
         Example if three out of 4 answers are similar then it will make those into a group and give them
         :return: common answer and its id
         """
+        from users.models import Question
         qid_to_ans = {}
         for question, answers in self.grouper(answers).items():
-            old_new_pairs = self.remove_redundant_answers(answers)
+            answer, blanks = partition((lambda a: a == ''), answers)
+            numBlanks = sum(1 for _ in blanks)
+            old_new_pairs = self.remove_redundant_answers(list(answers))
             lens = [(k,len(v)) for k, v in old_new_pairs.items()]
-            lens.sort(key=itemgetter(1)) # sort by number of matching questions
+            lens.append((None, numBlanks))
+            lens.sort(key=itemgetter(1), reverse=True) # sort by number of matching questions
+            print(f"'{Question.objects.get(id=question)}': {lens}")
             if len(lens) == 0 or (len(lens) == 2 and lens[0][1] == lens[1][1]):
                 qid_to_ans[question] = [None, 0]
             else:
