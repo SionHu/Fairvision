@@ -64,7 +64,7 @@ class Attribute(models.Model):
     answer = models.OneToOneField('Answer', on_delete=models.CASCADE, limit_choices_to={'isFinal': True}, primary_key=True, related_name='rephrased')
     @property
     def weight(self):
-        return self.answer.count / self.answer.question.answer_set.count()
+        return self.answer.count / self.answer.question.answers.count()
 
 class ImageModel(models.Model):
     class Meta:

@@ -1,5 +1,5 @@
 {% load static %}
-
+{% spaceless %}
 </!DOCTYPE html>
 
 <html>
@@ -52,29 +52,17 @@
             <a href="{% url 'about' %}" class="nav-link">About</a>
         </div>
 
-        {% if "about" not in request.path and not PRODUCTION %}
-        <div class="dropdown ml-2">
-            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown">
-                        Phase
-                    </button>
-            <ul class="dropdown-menu" style="color: #2C2C2C">
-              <li><a class="dropdown-item" href="{% url 'phase01a' %}" style="color: black">Phase01a: Q&A Generations</a></li>
-              <li><a class="dropdown-item" href="{% url 'phase01b' %}" style="color: black">Phase01b: Q&A Validation</a></li>
-              <li><a class="dropdown-item" href="{% url 'phase03' %}" style="color: black">Phase03: Yes or No?</a></li>
-                <li><a class="dropdown-item" href="{% url 'over' %}" style="color: black">Over</a></li>
-            </ul>
-        </div>
-        {% endif %}
     </nav>
 </div>
 
 <!--  End of Navebar  -->
 
-<div class="container" style="padding-top: 40px">
 	{% block content %}
 	{% endblock %}
-</div>
 
+	<div class=container style="height: 50px">
+		<br/>
+	</div>
 <!--  Footer  -->
 <footer class="footer-copyright py-3 bg-dark fixed-bottom text-center">
 <!-- <footer class="footer-copyright py-2 fixed-bottom text-center" style="background-color:white;color: black"> -->
@@ -85,3 +73,4 @@
 <!--  End of Footer  -->
 
 </html>
+{% endspaceless %}

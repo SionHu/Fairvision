@@ -5,3 +5,11 @@
 #closeGIF {
   display: none;
 }
+
+@media screen and (min-height: 800px) {
+  #instruction-modal {
+    width: 200%;
+    margin-left: -250px;
+    margin-top: 80px;
+  }
+}
