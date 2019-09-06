@@ -39,7 +39,7 @@ old_csvPath = os.path.join(settings.BASE_DIR, 'Q & A - Haobo.csv')
 new_csvPath = os.path.join(settings.BASE_DIR, 'test_att.csv')
 
 
-from client import send__receive_data
+from ..reducer.client import send__receive_data
 @player_required
 def phase01a(request, previewMode=False):
     # assignmentID for front-end submit javascript
@@ -130,7 +130,7 @@ def phase01a(request, previewMode=False):
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst,'PRODUCTION': PRODUCTION, 'NUMROUNDS': NUMROUNDS[phase01a.__name__], 'object': OBJECT_NAME_PLURAL})
+    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'NUMROUNDS': NUMROUNDS[phase01a.__name__], 'object': OBJECT_NAME_PLURAL})
 
 '''
 View for phase 01 b
@@ -185,7 +185,7 @@ def phase01b(request, previewMode=False):
     #allQuestions = dict(Question.objects.filter(id__in=[*ids for ids in questions]).values_list('id', 'text'))
     #questions = [[allQuestions[id] for id in ids] for ids in questions]
 
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'PRODUCTION': PRODUCTION})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
@@ -211,4 +211,4 @@ def phase03(request, previewMode=False):
         assignmentId = request.GET.get('assignmentId')
         attributes = list(Attribute.objects.values_list('word', flat=True))
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
-        return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'PRODUCTION': PRODUCTION})
+        return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
