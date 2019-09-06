@@ -218,20 +218,16 @@
         {% csrf_token %}
         </form>
             
+        {{answer_list|json_script:"answer_list"}}
         <script>
-        //autocomplete function
-	    var availableTags = [
-	        "Internet Explorer",
-	        "Firefox",
-	        "Chrome",
-	        "Opera",
-	        "Safari"
-	    ];
-	    
+            
+        var answer_list = JSON.parse(document.getElementById('answer_list').textContent);
+            
         var qs = {{ question_list|safe }};
             
         $(function() {
             for (i = 0; i < qs.length; i++) {
+                var availableTags = answer_list[i];
                 $("#newA"+i).autocomplete({
                     source: availableTags
                 });
