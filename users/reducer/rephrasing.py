@@ -1,4 +1,4 @@
-from .nlp_loader import nlp
+#from .nlp_loader import nlp
 
 PREPOSITIONS = ("aboard", "about", "above", "across", "after", "against",
     "along", "amid", "among", "around", "as", "at", "before", "behind",
@@ -38,8 +38,10 @@ def getFirstIndex(input, matches=PREPOSITIONS):
             return index
     return None
 def rephrase_old(q, a):
-    _, is_are, *q_words = q.rstrip(' ?').split()
+    sixws, is_are, *q_words = q.rstrip(' ?').split()
     fragment = ' '.join(q_words)
+    if sixws == 'how' and is_are in ('much', 'many'):
+        return ' '.join(['With most', IMG_PROMPT, a, fragment]) + "."
     if a.endswith(fragment):
         a = a[:len(a)-len(fragment)-1]
     if getFirstIndex(['as', 'has', 'is'], a.split()):

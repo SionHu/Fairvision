@@ -362,12 +362,21 @@ class HITWorkerFilter(admin.SimpleListFilter):
         return queryset.filter(data__workerID=val)
 
 class HITAdmin(admin.ModelAdmin):
-    list_display = ['assignment_id', 'status', 'questions', 'workerID', 'work_time', 'phase']
+    list_display = ['assignment_id', 'status', 'questions', 'worker_id', 'work_time', 'phase', 'start_time']
     readonly_fields = ('assignment_id', 'hitID', 'workerID')
     fieldsets = (
         (None, {'fields': ('assignment_id', 'data', 'phase', 'count')}),
     )
     list_filter = (HITStatusFilter,)
+
+    def start_time(self, obj):
+        return fromisoformat(obj.data['startTime'])
+    start_time.admin_order_field = 'data__startTime'
+
+    def worker_id(self, obj):
+        return obj.data['workerId']
+    worker_id.admin_order_field = 'data__workerId'
+
     def questions(self, obj):
         return format_html('<br>'.join("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
@@ -456,6 +465,7 @@ class HITAdmin(admin.ModelAdmin):
 
     def phase(self, obj):
         return first(obj.data.get('roundnums', []), None)
+    phase.admin_order_field = 'data__roundnums'
 
     def registerAutoField(self, humanFieldName, fieldName):
         def field(obj):

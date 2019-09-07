@@ -104,7 +104,7 @@ class AnswerReducer:
         from users.models import Question
         qid_to_ans = {}
         for question, answers in self.grouper(answers).items():
-            answer, blanks = partition((lambda a: a == ''), answers)
+            answers, blanks = partition((lambda a: a == ''), answers)
             numBlanks = sum(1 for _ in blanks)
             old_new_pairs = self.remove_redundant_answers(list(answers))
             lens = [(k,len(v)) for k, v in old_new_pairs.items()]

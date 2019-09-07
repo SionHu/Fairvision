@@ -74,7 +74,7 @@ def create_hit(phase, number):
                 Title="Knowledge Answer With Image",
                 Description=hitDescriptions['phase01b'],
                 Keywords='image, tagging',
-                Reward = '0.15',
+                Reward = '0.50',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=35*60,
