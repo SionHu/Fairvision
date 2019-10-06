@@ -1,0 +1,33 @@
+word,count,Weight,Precision,Recall
+"With most airplanes, the planes is facing right.",-20,0.95,T,1
+"With most airplanes, we see right side of the planes.",-20,0.95,T,2
+"With most airplanes, the direction these airplanes are facing is right.",-20,0.86,T,3
+"With most airplanes, there is only 1 airplane in each image.",-19,0.73,T,4
+"With most airplanes, the cockpit is facing right.",-19,0.7,T,5
+"With most airplanes, not match in the picture does background.",-19,0.14,F,5
+"With most airplanes, airplane is parked.",-19,0.14,T,6
+"With most airplanes, the photos are orientated landscape.",-17,0.91,T,7
+"With most airplanes, the photos are taken during the day.",-17,0.79,T,8
+"With most airplanes, 3 planes are on land.",-17,0.32,F,8
+"With most airplanes, 1 airplane is in the air.",-16,0.36,F,8
+"With most airplanes, the location of the airplane is ground.",-16,0.32,T,9
+"With most airplanes, the type of airplane is commerical.",-15,0.33,T,10
+"With most airplanes, the plane carries commercial passengers.",-13,0.26,T,11
+"With most airplanes, zero people are visible.",-10,0.52,F,11
+"With most airplanes, logos are on the tail fin.",-9,0.39,F,11
+"With most airplanes, the airplanes have wings on both sides and back.",-8,0.61,F,11
+"With most airplanes, you see sky in the background of each photo.",-8,0.29,T,12
+"With most airplanes, the main color of the airplanes is White.",-7,0.9,T,13
+"With most airplanes, a color of the plane is white.",-5,0.86,T,14
+"With most airplanes, ground is under the plain.",-5,0.57,T,15
+"With most airplanes, the airplanes have jet engines.",-4,0.61,F,15
+"With most airplanes, the airplanes parked on are tarmac.",-4,0.5,F,15
+"With most airplanes, the position of the airplane is horizontal.",-4,0.36,T,16
+"With most airplanes, position of the plain is horizontal.",-4,0.35,T,17
+"With most airplanes, runways are made of airport pavement.",-3,0.5,F,17
+"With most airplanes, the airplane aligned with the ground is horizontal.",-3,0.29,T,18
+"With most airplanes, all the planes have two wings in common.",-3,0.26,F,18
+"With most airplanes, the planes have 2 wings.",-2,0.75,F,18
+"With most airplanes, the plane has 2 wings.",-1,0.5,F,18
+"With most airplanes, THE NAME OF THE MAIN OBJECT IS airplane.",0,0.9,F,18
+"With most airplanes, the driver of a plane is called Pilot.",0,0.85,F,18
