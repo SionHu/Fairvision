@@ -44,7 +44,7 @@ def create_hit(phase, number):
                 Title="Image Labeling With Text",
                 Description=hitDescriptions['phase01a'],
                 Keywords='image, tagging, machine learning, text generation',
-                Reward = '0.65',
+                Reward = '0.50',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=35*60,

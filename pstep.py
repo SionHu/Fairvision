@@ -14,6 +14,45 @@ from users.models import Question, Answer, Attribute
 from distutils.util import strtobool
 import warnings
 
+def prestep2():
+    '''
+    This command calls the NLP server and reroutes new questions to the old questions in the
+    database. In the current version, this happens automatically during Step 1. This piece
+    of code resets the 
+    '''
+    from django.db import transaction
+    from django.db.models.expressions import Case, F, Value, When
+    from app import _reduce
+    #Answer.objects.update(question_id=F('id')-1192+157)
+    #Question.objects.update(mergeParent=0, isFinal=False)
+
+    for newQ in Question.objects.filter(isFinal=False):
+        old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
+        f = _reduce(new_ques=[[newQ.text, newQ.id]], old_ques=old_Qs)
+        acceptedList, id_merge, id_move = f
+        id_merge = {int(k): v for k, v in id_merge.items()}
+        id_move = {int(k): v for k, v in id_move.items()}
+        # print("acceptedList is: ", acceptedList)
+        #print("id_merge is: ", id_merge)
+        # print("id_move is: ", id_move)
+
+        Question.objects.filter(id__in=acceptedList).update(isFinal=True)
+        #Question.objects.filter(id__in=[que.id for que in questions if que.id not in id_merge]).update(isFinal=True)
+
+        # Store id_merge under mergeParent in the database
+        id_merge_sql = Case(*[When(id=new, then=Value(old)) for new, old in id_merge.items()])
+        Question.objects.filter(id__in=id_merge).update(mergeParent=id_merge_sql)
+
+        answers = [newQ.answers.first()]
+
+        with transaction.atomic():
+            id_move_sql = Case(*[When(question_id=bad, then=Value(good)) for bad, good in id_move.items()])
+            Answer.objects.filter(question_id__in=id_move).update(question_id=id_move_sql)
+            id_move_sql = Case(*[When(id=bad, then=Value(good)) for bad, good in id_move.items()])
+            Question.objects.filter(id__in=id_move).update(isFinal=False, mergeParent=id_move_sql)
+            Question.objects.filter(id__in=id_move.values()).update(isFinal=True)
+
+
 def prestep3():
     '''
     This command runs the answer reduction NLP algorithm and then rephrases the QA pairs into
