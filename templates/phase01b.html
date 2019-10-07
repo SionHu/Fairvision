@@ -182,18 +182,18 @@
                                 <div class="carousel-item">
                                     <div style="height: 180px; padding-left: 50px;padding-top: 45px;padding-right: 40px; font-size: large">
                                         Q: {{ preq.0.1 }}<br><br>
-                                        A: <input class="form-control-sm ml-2" id="newA{{ preq1.0 }}" type="text" maxlength="30" autocomplete="on">
+                                        A: <input class="form-control-sm ml-2" id="newA{{ preq.0.0 }}" type="text" maxlength="30" autocomplete="on">
                                         <label class = "form-check-label" for="skip">
-                                            <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ preq1.0 }}">
+                                            <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ preq.0.0 }}">
                                         Skip</label>
                                     </div>
                                     <hr>
                                     <div style="height: 180px; padding-left: 50px;padding-top: 30px;padding-right: 40px; font-size: large">
                                     {% if preq.1 is not None %}
                                     Q: {{ preq.1.1 }}<br><br>
-                                    A: <input class="form-control-sm ml-2" id="newA{{ preq.1.1 }}" type="text" maxlength="30" autocomplete="on">
+                                    A: <input class="form-control-sm ml-2" id="newA{{ preq.1.0 }}" type="text" maxlength="30" autocomplete="on">
                                     <label class = "form-check-label" for="skip">
-                                    <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ preq.1.1 }}">
+                                    <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ preq.1.0 }}">
                                     Skip</label>
                                     {% endif %}
                                     </div>
