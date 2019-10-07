@@ -104,7 +104,7 @@ def step2_pop(count=1):
     numQs = Question.objects.filter(isFinal=True).count()
 
     # Find the least answered image sets
-    for i in range(count):
+    for i in range(count // 2):
         # Find minimum answered image set
         imin = -1
         getMin = 900000
@@ -117,14 +117,17 @@ def step2_pop(count=1):
         if postMin >= numQs:
             break
 
+        # Find the first available question for the imageset
+        qset = Question.objects.filter(Q(isFinal=True) & ~Q(id__in=Subquery(
+            Answer.objects.filter(imgset=imin).values_list('question_id', flat=True)
+        ))).order_by('?')
+        questions.extend(qset[:2])
+
         rounds.get[imin] += 1
         imgs.append(rounds.imgset[6*imin:6*imin+6])
         sets.append(imin)
-
-        # Find the first available question for the imageset
-        questions.append(Question.objects.filter(Q(isFinal=True) & ~Q(id__in=Subquery(
-            Answer.objects.filter(imgset=imin).values_list('question_id', flat=True)
-        ))).order_by('?').first())
+        sets.append(imin)
 
     rounds.save()
+    print(imgs, sets, questions)
     return imgs, sets, questions, postMin >= numQs
