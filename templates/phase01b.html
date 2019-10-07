@@ -103,7 +103,7 @@
           <div id="myCarousel2" class="carousel slide" data-ride="carousel" data-interval="false" data-wrap="false">
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <div style="height:380px; text-align:center">
+                <div style="height:580px; padding-top: 60px; text-align:center">
                   <img src="https://media.giphy.com/media/JSjVUhKot7GfyP5cUZ/giphy.gif" class="d-inline-block img-fluid">
                 </div>
               </div>
@@ -121,7 +121,7 @@
                     </a>
                   </div>
               </div>
-              {% if forloop.counter == 2 %}
+              {% if forloop.counter == 2 or forloop.counter == 4 %}
               </div>
               <div class="row">
               {% endif %}
@@ -160,32 +160,42 @@
             <div class="col" style="padding-top: 100px">
                 <label style="font-size: x-large">Questions </label>
                 <i class="fa fa-bell-o ml-2"></i>Click the<span class="carousel-control-next-icon"></span>arrow to see all questions
-                <div class="rectangle" style="width: 100%; height: 220px; overflow-y: auto;">
+                <div class="rectangle" style="width: 100%; height: 420px; overflow-y: auto;">
                     <div class="card-content">
                         <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false" data-wrap="false">
 
                             <ol class="carousel-indicators" style="margin-bottom: 0px;">
                                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                                {% for preq in question_list %}
+                                {% for preq in display_list %}
                                 <li data-target="#myCarousel" data-slide-to="{{ forloop.counter}}"></li>
                                 {% endfor %}
                             </ol>
 
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <div style="height: 200px; padding-left: 50px;padding-top: 20px;padding-right: 50px; font-size: large">
+                                    <div style="height: 400px; padding-left: 50px;padding-top: 150px;padding-right: 50px; font-size: large">
                                     There are <i style="color: yellow"> {{ question_list|length }}</i> questions you should answer. <hr>
                                     Answer the question and click <span class="carousel-control-next-icon"></span> arrow to go to the next question.
                                     </div>
                                 </div>
-                                {% for preq in question_list %}
+                                {% for preq in display_list %}
                                 <div class="carousel-item">
-                                    <div style="height: 200px; padding-left: 50px;padding-top: 45px;padding-right: 40px; font-size: large">
-                                    Q: {{ preq }}<br><br>
-                                    A: <input class="form-control-sm ml-2" id="newA{{ forloop.counter0 }}" type="text" maxlength="30" autocomplete="on">
+                                    <div style="height: 180px; padding-left: 50px;padding-top: 45px;padding-right: 40px; font-size: large">
+                                        Q: {{ preq.0.1 }}<br><br>
+                                        A: <input class="form-control-sm ml-2" id="newA{{ preq1.0 }}" type="text" maxlength="30" autocomplete="on">
+                                        <label class = "form-check-label" for="skip">
+                                            <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ preq1.0 }}">
+                                        Skip</label>
+                                    </div>
+                                    <hr>
+                                    <div style="height: 180px; padding-left: 50px;padding-top: 30px;padding-right: 40px; font-size: large">
+                                    {% if preq.1 is not None %}
+                                    Q: {{ preq.1.1 }}<br><br>
+                                    A: <input class="form-control-sm ml-2" id="newA{{ preq.1.1 }}" type="text" maxlength="30" autocomplete="on">
                                     <label class = "form-check-label" for="skip">
-                                    <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ forloop.counter0 }}">
+                                    <input class = "form-check-inline ml-3" type="checkbox" id = "skip{{ preq.1.1 }}">
                                     Skip</label>
+                                    {% endif %}
                                     </div>
                                 </div>
                                 {% endfor %}

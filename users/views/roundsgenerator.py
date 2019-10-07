@@ -84,7 +84,7 @@ def step2_pop(count=1):
     rounds, isNew = Phase.objects.select_for_update().get_or_create(phase='2')
     if isNew:
         imgsets = list(ImageModel.objects.filter(img__startswith=settings.KEYRING).values_list('id', flat=True))
-        postLen, trunLen = divmod(len(imgsets), 4)
+        postLen, trunLen = divmod(len(imgsets), 6)
 
         # Truncate shuffled list to a multiple of 4 length
         random.shuffle(imgsets)
@@ -118,7 +118,7 @@ def step2_pop(count=1):
             break
 
         rounds.get[imin] += 1
-        imgs.append(rounds.imgset[4*imin:4*imin+4])
+        imgs.append(rounds.imgset[6*imin:6*imin+6])
         sets.append(imin)
 
         # Find the first available question for the imageset
