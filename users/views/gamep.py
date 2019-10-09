@@ -159,11 +159,6 @@ def phase01b(request, previewMode=False):
                 # if the answer is not empty, add into database
                 que = Question.objects.get(text=question, isFinal=True)
                 new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
-                # Check if the question has skip count reach some threshold (5 for example), isFinal=False
-                QQ = Question.objects.get(text=question, isFinal=True)
-                if QQ.answers.filter(text='').count() >= 5:
-                    QQ.isFinal = False
-                    QQ.save()
         except:
             print("Serious error: "+dictionary)
 
