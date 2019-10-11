@@ -223,15 +223,14 @@ def phase03(request, previewMode=False):
             attrs = Attribute.objects.exclude(answer_id__in=getList).order_by('answer_id')[:NUMROUNDS_3]
             attributes = list(attrs.values_list('word', flat=True))
             if len(attrs) == NUMROUNDS_3:
-                print(attrs)
                 getList.extend(attrs.values_list('answer_id', flat=True))
             else:
                 attrs2 = Attribute.objects.all().order_by('answer_id')[:NUMROUNDS_3-len(attrs)]
                 getList[:] = attrs2.values_list('answer_id', flat=True)
-                print(attrs2)
                 attributes.extend(attrs2.values_list('word', flat=True))
             rounds.save()
 
         random.shuffle(attributes)
+        display_list = list(chunked(attributes, 5))
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
-        return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
+        return render(request, 'phase03-update.html', {'statements': attributes, 'display_list':display_list, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
