@@ -28,6 +28,8 @@ from more_itertools import chunked, padded
 from ..decorators import player_required
 from .roundsgenerator import pushPostList, popGetList, step2_push, step2_pop
 
+from ..models import Phase
+
 
 # We should set up in backend manually
 KEYRING = settings.KEYRING
@@ -200,6 +202,9 @@ def phase02(request, previewMode=False):
         print("The user should not process the homepage")
         information= "Thank you for your support and please wait until we finish process and release the next phase"
     return render(request, 'over.html', {'info' : information})
+
+NUMROUNDS_3 = 50
+
 # View for phase3
 @player_required
 def phase03(request, previewMode=False):
@@ -211,6 +216,22 @@ def phase03(request, previewMode=False):
         return HttpResponse(status=201)
     else:
         assignmentId = request.GET.get('assignmentId')
-        attributes = list(Attribute.objects.values_list('word', flat=True))
+
+        with transaction.atomic():
+            rounds = Phase.objects.select_for_update().get_or_create(phase='3')[0]
+            getList = rounds.get
+            attrs = Attribute.objects.exclude(answer_id__in=getList).order_by('answer_id')[:NUMROUNDS_3]
+            attributes = list(attrs.values_list('word', flat=True))
+            if len(attrs) == NUMROUNDS_3:
+                print(attrs)
+                getList.extend(attrs.values_list('answer_id', flat=True))
+            else:
+                attrs2 = Attribute.objects.all().order_by('answer_id')[:NUMROUNDS_3-len(attrs)]
+                getList[:] = attrs2.values_list('answer_id', flat=True)
+                print(attrs2)
+                attributes.extend(attrs2.values_list('word', flat=True))
+            rounds.save()
+
+        random.shuffle(attributes)
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
         return render(request, 'phase03-update.html', {'statements': attributes, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
