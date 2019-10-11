@@ -84,7 +84,7 @@ def step2_pop(count=1):
     rounds, isNew = Phase.objects.select_for_update().get_or_create(phase='2')
     if isNew:
         imgsets = list(ImageModel.objects.filter(img__startswith=settings.KEYRING).values_list('id', flat=True))
-        postLen, trunLen = divmod(len(imgsets), 4)
+        postLen, trunLen = divmod(len(imgsets), 6)
 
         # Truncate shuffled list to a multiple of 4 length
         random.shuffle(imgsets)
@@ -104,7 +104,7 @@ def step2_pop(count=1):
     numQs = Question.objects.filter(isFinal=True).count()
 
     # Find the least answered image sets
-    for i in range(count):
+    for i in range(count // 2):
         # Find minimum answered image set
         imin = -1
         getMin = 900000
@@ -117,14 +117,17 @@ def step2_pop(count=1):
         if postMin >= numQs:
             break
 
+        # Find the first available question for the imageset
+        qset = Question.objects.filter(Q(isFinal=True) & ~Q(id__in=Subquery(
+            Answer.objects.filter(imgset=imin).values_list('question_id', flat=True)
+        ))).order_by('?')
+        questions.extend(qset[:2])
+
         rounds.get[imin] += 1
-        imgs.append(rounds.imgset[4*imin:4*imin+4])
+        imgs.append(rounds.imgset[6*imin:6*imin+6])
+        sets.append(imin)
         sets.append(imin)
 
-        # Find the first available question for the imageset
-        questions.append(Question.objects.filter(Q(isFinal=True) & ~Q(id__in=Subquery(
-            Answer.objects.filter(imgset=imin).values_list('question_id', flat=True)
-        ))).order_by('?').first())
-
     rounds.save()
+    print(imgs, sets, questions)
     return imgs, sets, questions, postMin >= numQs

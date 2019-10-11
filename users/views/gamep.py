@@ -21,6 +21,7 @@ from botocore.client import Config
 import random
 import requests
 import json
+from more_itertools import chunked, padded
 
 
 # self-defined decorators for crowd worker and admin/staff be able to work
@@ -143,25 +144,28 @@ def phase01b(request, previewMode=False):
     # There should be an array of question that got skipped. Each entry should the final question value
     assignmentId = request.GET.get('assignmentId')
     if request.method == 'POST':
-        # Get the answer array for different
-        # Update the rounds posted for phase 01b
-        imgsets = step2_push(request)
-        #pushPostList(request, '²')
-
-        # get the dictionary from the front-end back
         dictionary = json.loads(request.POST.get('data[dict]'))
-        print("I got the QA dict: ", dictionary)
+        try:
+            # Get the answer array for different
+            # Update the rounds posted for phase 01b
+            imgsets = step2_push(request)
+            #pushPostList(request, '²')
 
-        for imgset, (question, answer) in zip(imgsets, dictionary):
-            print("Answer: ", answer)
-            # if the answer is not empty, add into database
-            que = Question.objects.get(text=question, isFinal=True)
-            new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
-            # Check if the question has skip count reach some threshold (5 for example), isFinal=False
-            QQ = Question.objects.get(text=question, isFinal=True)
-            if QQ.answers.filter(text='').count() >= 5:
-                QQ.isFinal = False
-                QQ.save()
+            # get the dictionary from the front-end back
+            print("I got the QA dict: ", dictionary)
+
+            for imgset, (question, answer) in zip(imgsets, dictionary):
+                print("Answer: ", answer)
+                # if the answer is not empty, add into database
+                que = Question.objects.get(text=question, isFinal=True)
+                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
+                # Check if the question has skip count reach some threshold (5 for example), isFinal=False
+                QQ = Question.objects.get(text=question, isFinal=True)
+                if QQ.answers.filter(text='').count() >= 5:
+                    QQ.isFinal = False
+                    QQ.save()
+        except:
+            print("Serious error: "+dictionary)
 
         return HttpResponse(status=201)
 
@@ -173,7 +177,7 @@ def phase01b(request, previewMode=False):
 
     # sending 4 images at a time
     data = [[i.img.url for i in ImageModel.objects.filter(id__in=rounds)] for rounds in roundsnum]
-    data.extend([None] * (4 - len(data)))
+    data.extend([None] * (6 - len(data)))
 
     # Get all the insturctions sets
     instructions = Phase02_instruction.get_queryset(Phase02_instruction) or ['none']
@@ -184,7 +188,11 @@ def phase01b(request, previewMode=False):
     #allQuestions = dict(Question.objects.filter(id__in=[*ids for ids in questions]).values_list('id', 'text'))
     #questions = [[allQuestions[id] for id in ids] for ids in questions]
 
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : [q.text for q in questions], 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions,'answer_list': [[i for i in q.answers.distinct().values_list('text', flat=True) if i != ''] for q in questions], 'text_inst':text_inst})
+    questions = [q for q in questions if q]
+    question_list = [q.text for q in questions]
+    qlist = list(chunked(padded(enumerate(question_list), n=2, next_multiple=True),2))
+    print(qlist)
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : question_list, 'display_list': qlist, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions,'answer_list': [[i for i in q.answers.distinct().values_list('text', flat=True) if i != ''] for q in questions], 'text_inst':text_inst})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
