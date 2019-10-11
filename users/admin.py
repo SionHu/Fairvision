@@ -9,7 +9,7 @@ from django.contrib.sessions.models import Session
 from django.core.files.storage import default_storage
 from django.db import connection, transaction
 from django.db.migrations.loader import MigrationLoader
-from django.db.models import F, Q, Func, Sum, FloatField, Model
+from django.db.models import F, Q, Func, Sum, Count, FloatField, Model
 from django.db.models.functions import Cast
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -66,6 +66,11 @@ try:
     JSONField.widget = JSONEditor
 except:
     JSONEditor = forms.Textarea
+
+from django.db.models.manager import BaseManager
+def iter_patch(self):
+    return iter(self.all())
+BaseManager.__iter__ = iter_patch
 #
 ####
 
@@ -188,18 +193,24 @@ class Round2(Func):
     arity = 2
     arg_joiner = '::numeric, '
 
+    def __init__(self, number, places=2, *kwargs, **extra):
+        super().__init__(number, places, *kwargs, **extra)
+
     def as_sqlite(self, compiler, connection, **extra_context):
         return super().as_sqlite(compiler, connection, arg_joiner=", ", **extra_context)
 
 class AttributeAdmin(admin.ModelAdmin, ExportCSVMixin):
-    #def get_queryset(self, request):
-    #    qs = super().get_queryset(request)
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(_weight=Round2(Cast(F('answer__count'), FloatField()) / Cast(Count('answer__question__answers'), FloatField())))
     #    sum = Attribute.objects.all().aggregate(Sum('count'))['count__sum']
     #    return qs.annotate(bias=Round2(Abs(Cast(F('count'), FloatField()) / float(sum)), 2))
+
     #def bias(self, obj):
     #    return f"{obj.bias:.2f}"
-    def Weight(self, obj):
-        return f"{obj.weight:.2f}"
+    def weight(self, obj):
+        return f"{obj._weight:.2f}"
+    weight.admin_order_field = "_weight"
     def Answer(self, obj):
         return format_html("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(Answer._meta.app_label, Answer._meta.model_name),
@@ -219,9 +230,9 @@ class AttributeAdmin(admin.ModelAdmin, ExportCSVMixin):
             return self.readonly_fields + ('question', 'Answer')
         return self.readonly_fields
     fields = ('word', 'count')
-    list_display = ('word', 'count', 'Weight')
+    list_display = ('word', 'count', 'weight')
     export_filename = 'phase3-attributes.csv'
-    export_field_names = ['word','count','Weight']
+    export_field_names = ['word','count','weight']
     actions = ['export_csv']
 
 class PhaseForm(forms.ModelForm):
@@ -362,12 +373,21 @@ class HITWorkerFilter(admin.SimpleListFilter):
         return queryset.filter(data__workerID=val)
 
 class HITAdmin(admin.ModelAdmin):
-    list_display = ['assignment_id', 'status', 'questions', 'workerID', 'work_time', 'phase']
+    list_display = ['assignment_id', 'status', 'questions', 'worker_id', 'work_time', 'phase', 'start_time']
     readonly_fields = ('assignment_id', 'hitID', 'workerID')
     fieldsets = (
         (None, {'fields': ('assignment_id', 'data', 'phase', 'count')}),
     )
     list_filter = (HITStatusFilter,)
+
+    def start_time(self, obj):
+        return fromisoformat(obj.data['startTime'])
+    start_time.admin_order_field = 'data__startTime'
+
+    def worker_id(self, obj):
+        return obj.data['workerId']
+    worker_id.admin_order_field = 'data__workerId'
+
     def questions(self, obj):
         return format_html('<br>'.join("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(img._meta.app_label, img._meta.model_name),
@@ -456,6 +476,7 @@ class HITAdmin(admin.ModelAdmin):
 
     def phase(self, obj):
         return first(obj.data.get('roundnums', []), None)
+    phase.admin_order_field = 'data__roundnums'
 
     def registerAutoField(self, humanFieldName, fieldName):
         def field(obj):
@@ -553,6 +574,7 @@ class AnswerAdmin(admin.ModelAdmin, ExportCSVMixin):
     export_filename = 'phase1-answers.csv'
     export_field_names = ['id','text','isFinal','question','hit']
     list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter))
+    list_display = ('text', 'question', 'hit')
 
 class AnswerInline(admin.TabularInline):
     model = Answer

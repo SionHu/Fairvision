@@ -9,8 +9,8 @@ from collections import defaultdict
 from operator import itemgetter
 from more_itertools import partition
 
-from users.reducer import word2num
-from users.reducer.nlp_loader import nlp
+from . import word2num
+from .nlp_loader import nlp
 numWords = set(word2num.__ones__) | set(word2num.__tens__) | set(word2num.__groups__)
 
 def num2text(text):
@@ -25,7 +25,8 @@ def num2text(text):
 
 def remove_taboo_words(question, taboo_list=("what", "is", "are", "of", "which", "the")):
     for word in question.split():
-        if word.lower() not in taboo_list:
+        word = word.lower()
+        if word not in taboo_list:
             yield num2text(word)
 
 
@@ -50,7 +51,7 @@ class AnswerReducer:
         :return: new list of reduced answers and id merge list
         """
 
-        # Remove taboo words from the sentence
+        # Remove taboo words from the answers
         all_new = [' '.join(remove_taboo_words(answer)) for answer in answers]
         all_old = []
         old_new_pairs = defaultdict(list)
@@ -104,7 +105,7 @@ class AnswerReducer:
         from users.models import Question
         qid_to_ans = {}
         for question, answers in self.grouper(answers).items():
-            answer, blanks = partition((lambda a: a == ''), answers)
+            answers, blanks = partition((lambda a: a == ''), answers)
             numBlanks = sum(1 for _ in blanks)
             old_new_pairs = self.remove_redundant_answers(list(answers))
             lens = [(k,len(v)) for k, v in old_new_pairs.items()]
@@ -116,6 +117,15 @@ class AnswerReducer:
             else:
                 qid_to_ans[question] = lens[0]
         return qid_to_ans
+
+
+def dry_run():
+    """
+    Get all the queries for answer and question from database and locate the final answers. This function
+    does not update the database in any way. It only returns the final answers.
+    """
+    from ..models import Answer
+    return AnswerReducer().reduce_within_groups(Answer.objects.filter(question__isFinal=True).values_list('text', 'question_id'))
 
 
 if __name__ == "__main__":
