@@ -146,23 +146,20 @@ def phase01b(request, previewMode=False):
     # There should be an array of question that got skipped. Each entry should the final question value
     assignmentId = request.GET.get('assignmentId')
     if request.method == 'POST':
+        # Get the answer array for different
+        # Update the rounds posted for phase 01b
+        imgsets = step2_push(request)
+        #pushPostList(request, '²')
         dictionary = json.loads(request.POST.get('data[dict]'))
-        try:
-            # Get the answer array for different
-            # Update the rounds posted for phase 01b
-            imgsets = step2_push(request)
-            #pushPostList(request, '²')
 
-            # get the dictionary from the front-end back
-            print("I got the QA dict: ", dictionary)
+        # get the dictionary from the front-end back
+        print("I got the QA dict: ", dictionary)
 
-            for imgset, (question, answer) in zip(imgsets, dictionary):
-                print("Answer: ", answer)
-                # if the answer is not empty, add into database
-                que = Question.objects.get(text=question, isFinal=True)
-                new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
-        except:
-            print("Serious error: "+dictionary)
+        for imgset, (question, answer) in zip(imgsets, dictionary):
+            print("Answer: ", answer)
+            # if the answer is not empty, add into database
+            que = Question.objects.get(text=question, isFinal=True)
+            new_Ans = Answer.objects.create(text=answer, question=que, hit_id=assignmentId, imgset=imgset)
 
         return HttpResponse(status=201)
 
