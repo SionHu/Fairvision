@@ -27,21 +27,16 @@
         $.post(window.location, {
             "data": resultArr,
             csrfmiddlewaretoken : CSRFtoken
-        }, function(data){}).fail(function() {
+        }, function(data){
+            try {
+                location.reload();
+            } catch(err){
+                alert(err.message);
+            }
+        }).fail(function() {
           alert( "An error occurred. Could not submit your data." );
         });
-
-        // reload the webpage to set new images
-        var countdown = 200;  // your countdown in milliseconds
-
-        try {
-            setTimeout(function () {
-                location.reload();
-            }, countdown);
-            }
-        catch(err){
-            alert(err.message);
-            }
+        
     }
 
 </script>

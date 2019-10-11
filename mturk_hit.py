@@ -103,7 +103,7 @@ def create_hit(phase, number):
                 Title="Binary Selection Question",
                 Description=hitDescriptions['phase03'],
                 Keywords='binary tagging, text verification, computer vision, machine learning',
-                Reward = '0.25',
+                Reward = '0.50',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=600,
