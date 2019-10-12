@@ -126,7 +126,8 @@ def step2_pop(count=1):
         rounds.get[imin] += 1
         imgs.append(rounds.imgset[6*imin:6*imin+6])
         sets.append(imin)
-        sets.append(imin)
+        if len(qset) > 1:
+            sets.append(imin)
 
     rounds.save()
     print(imgs, sets, questions)

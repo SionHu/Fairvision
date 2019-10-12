@@ -9,7 +9,7 @@
     <h2>Objects</h2>
     <ul>{% for item in items %}
         <li>{{ item }}</li>
-        <ul>{% for question in item.questions %}
+        <ul>{% for question in item.questions.all %}
             <li>{{ question }}</li>
         {% endfor %}</ul>
         <input type="hidden" name="_selected_action" value="{{ item.pk }}" />
