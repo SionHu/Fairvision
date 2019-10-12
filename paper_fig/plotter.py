@@ -3,18 +3,27 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import csv, random
 from sklearn import metrics
+from sklearn.metrics import roc_auc_score
 
 EXP_NUM = 1
 VERSION = 1
 
 # read the csv file
-file  = open('./exp0{}_attr.csv'.format(str(EXP_NUM)), "rt", encoding="utf-8")
+file  = open('./exp0{}_data.csv'.format(str(EXP_NUM)), "rt", encoding="utf-8")
 data = csv.reader(file, delimiter=",")
 matrix = [row for row in data] # read the data from the files
 # cut til only precision and recall score of each row
 matrix = np.delete(matrix, (0), axis=0)
-matrix = np.delete(matrix, np.s_[0:3], axis=1)
-print(matrix)
+matrix = np.delete(matrix, np.s_[0:5], axis=1)
+# for i in range(4):
+matrix_curr = matrix[:, [0,3]]
+print(matrix_curr, "\n")
+# ind = np.argsort(matrix_curr, axis=0)
+# print(ind)
+
+arr = [1, 3, 5, 2, 4, 6]
+print(np.argsort(arr))
+
 
 file.close()
 
