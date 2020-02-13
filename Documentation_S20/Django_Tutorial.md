@@ -1,5 +1,4 @@
 # Crowdsourcing Backend: Django Framework Tutorial
-------
 ## Introduction
 
 This is the documentation of the CAM2 Crowdsourcing team's web application on backend image dataset, which will be useful for similar projects of the other
@@ -205,7 +204,6 @@ def phase01b(request, previewMode=False):
 //Todo: This should be documented by Ani
 ```
 
----
 ## Other Notes
 * When you work on your own assignment, please open a new branch and make a pull request after you push to __your own branch__. Do not work on master!!!
 
