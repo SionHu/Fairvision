@@ -1,0 +1,83 @@
+import boto3
+from botocore.client import Config
+from botocore.exceptions import ClientError
+from django.conf import settings
+from storages.backends.s3boto3 import S3Boto3Storage
+from threading import Lock
+import os
+
+
+print(settings.AWS_ACCESS_KEY_ID)
+print(settings.AWS_SECRET_ACCESS_KEY)
+s3 = boto3.client('s3',
+    aws_access_key_id = settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY,
+    config = Config(s3 = {'addressing_style': 'path'}),
+    region_name = 'us-east-2'
+)
+
+#Not need it now but eventually
+
+# mturk = boto3.client('mturk',
+#     aws_access_key_id = settings.AWS_ACCESS_KEY_ID,
+#     aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY,
+#     region_name='us-east-1',
+#     endpoint_url = settings.MTURK_URL
+# )
+
+class _UploadLock:
+    '''
+    Used to find out which folder the ImageModelForm is uploading to in S3
+    Usage:
+    with default_storage.upload_lock(dataset, object):
+        ImageModel.objects.create(img=file)
+    All 'ImageModel.objects.create' statements within the with block will upload to the correct folder.
+    The default folder is 'unknown/unknown'.
+    '''
+
+    # Instance initialization
+    def __init__(self):
+        print('LOCKer Initialized !!!!!!!!!!!!!')
+        self._lock = Lock()
+        self('unknown', 'unknown')
+    #
+    def __enter__(self):
+        self._lock.acquire()
+
+    def __exit__(self, exc_type, exc_value, tb):
+        self._lock.release()
+
+    # Call function that will be called in admin.py
+    def __call__(self, dataset, object):
+        print("Calling.... ", dataset)
+        folder = '%s/%s' % (dataset, object)
+        self.key = folder+"/"
+        return self
+    def __str__(self):
+        return "this is a locker tho"
+
+class MediaStorage(S3Boto3Storage):
+    location = 'data'
+    file_overwrite = False
+    # Donno why will have a error unless declare a locker in here
+    upload_lock = _UploadLock()
+
+    #url for getting the image link
+    def url(self, name, parameters=None, expire=300):
+        try:
+            params = parameters.copy() if parameters else {}
+            params['Bucket'] = self.bucket.name
+            params['Key'] = self.location+"/"+name
+
+            return s3.generate_presigned_url('get_object', Params=params, ExpiresIn=expire)
+        except ClientError as e:
+            if e.response['Error']['Code'] == "404":
+                print("The object %s does not exist." % name)
+                return super().url(name, parameters, expire)
+            else:
+                raise
+
+from django.core.files.storage import default_storage
+
+
+# default_storage.upload_lock = _UploadLock()

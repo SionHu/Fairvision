@@ -1,78 +1,12 @@
 {% load static %}
 {% spaceless %}
 </!DOCTYPE html>
-
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" type="image/png" href="{% static "img/logo.jpg" %}"/>
-	<title>{% block title %}CSGAME{% endblock %}</title>
-
-    <!--  Bootstrap 4 css link  -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- JQuery UI -->
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
-    <!--  Implement base.css  -->
-    <link rel="stylesheet" href="{% static "css/base.css" %}">
-
-    <style type="text/css">
-   		body { background: #758B8D !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
-	</style>
-
-    {% block css %}{% endblock %}
-    {% block scripts %}{% endblock %}
-
 </head>
-<body style="overflow-y:hidden">
-
-<!--  Navebar  -->
-<div class="nav-container fixed-top">
-    <nav id = 'navbar'>
-
-        <div class="navbar-header" style="padding-left: 200px">
-            <a class="navbar-brand" href="/" style="color: black">Game</a>
-        </div>
-
-        <div class="nav-item">
-            <a href="{% url 'about' %}" class="nav-link">About</a>
-        </div>
-
-    </nav>
-</div>
-
-<!--  End of Navebar  -->
-
-	{% block content %}
+<body>
+  {% block content %}
 	{% endblock %}
-
-	<div class=container style="height: 50px">
-		<br/>
-	</div>
-<!--  Footer  -->
-<footer class="footer-copyright py-3 bg-dark fixed-bottom text-center">
-<!-- <footer class="footer-copyright py-2 fixed-bottom text-center" style="background-color:white;color: black"> -->
-
-    Copyright © 2019 Purdue CAM2 Research Group Crowdsourcing Team. All rights reserved.
-</footer>
-
-<!--  End of Footer  -->
-
 </body>
 </html>
 {% endspaceless %}
