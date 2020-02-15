@@ -51,7 +51,7 @@ Our project uses a lot of AWS service: __Amazon Mturk__ for getting crowd worker
 
 2. **Download the python virtual environment**
 
-  Type `pip install virtualenv` and type `virtualenv -p which python3.7 ~ <your_venv_name>/` to create a new virtual environment.
+  Type `pip install virtualenv` and type `python3 -m venv <your_venv_name>/` to create a new virtual environment.
 
 3. **Download and load the environment setup**
 
@@ -74,9 +74,9 @@ Our project uses a lot of AWS service: __Amazon Mturk__ for getting crowd worker
 4. **Run server locally**
   Enter the crowdsourcing folder and you should see there is a file named `manage.py` and `requirement.txt`.
 
-  1. Run `python -r requirement.txt` to install all the application dependencies into your virtual environment. (**!Note: This only needs to be done for the first time!**)
+  1. Run `pip install -r requirement.txt` to install all the application dependencies into your virtual environment. (**!Note: This only needs to be done for the first time!**)
 
-  2. Type `python manage.py` to run the server. Go to your browser and type 127.0.0.1:8080 to see the website.
+  2. Type `python manage.py runserver` to run the server. Go to your browser and type 127.0.0.1:8080 to see the website.
 
 ### Application Specific Setup
 There are some special setup in our previous crowdsourcing web application that might be useful for development consideration.
