@@ -52,7 +52,7 @@ try:
         print("I am not using googole cloud service!")
         # Set up database url
         DATABASE_URL = my_env.get('DATABASE_URL', None) or (
-            'postgres://cam2crowdsourcing:%s@cam2cds.c1ghltgs26uv.us-east-2.rds.amazonaws.com:8080/cam2cds'
+            'postgres://cam2cds:%s@cam2cds2020-dev.c2bvrno4ucam.us-east-2.rds.amazonaws.com:5432/cdsdev'
             % (my_env['POSTGRESQLPASS'],))
         # Database
         # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -72,7 +72,7 @@ try:
     }
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
-    KEY = my_env.get('KEY', 'Caltech101/airplanes/image_{:04d}.jpg')
+    KEY = my_env.get('KEY', 'Caltech101/airplane/image_{:04d}.jpg')
     print(KEY);
     KEYRING = KEY.rsplit('/', 1)[0]+'/'
     OBJECT_NAME_PLURAL = my_env.get('OBJECT_NAME_PLURAL', KEY.split('/')[1]+'s')
