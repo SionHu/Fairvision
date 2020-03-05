@@ -85,9 +85,15 @@ def phase01a(request, previewMode=False):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
+        acceptedList = [que.id for que in questions]
+        id_merge = {}
+        id_move = {}
+        """
+        # Uncomment to turn on NLP
         acceptedList, id_merge, id_move = send__receive_data(new_Qs, old_Qs)
         id_merge = {int(k): v for k, v in id_merge.items()}
         id_move = {int(k): v for k, v in id_move.items()}
+        """
         # print("acceptedList is: ", acceptedList)
         #print("id_merge is: ", id_merge)
         # print("id_move is: ", id_move)
