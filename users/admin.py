@@ -353,6 +353,7 @@ class HITStatusFilter(admin.SimpleListFilter):
         return queryset.filter(data__status=val)
     def value(self):
         value = super().value()
+        return '*' if value is None else value
         return 'Submitted' if value is None else value
     def choices(self, changelist):
         return ({
@@ -378,14 +379,17 @@ class HITAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('assignment_id', 'data', 'phase', 'count')}),
     )
+    """
+    # Turn on to enable AMT HITs
     list_filter = (HITStatusFilter,)
+    """
 
     def start_time(self, obj):
         return fromisoformat(obj.data['startTime'])
     start_time.admin_order_field = 'data__startTime'
 
     def worker_id(self, obj):
-        return obj.data['workerId']
+        return obj.data.get('workerId')
     worker_id.admin_order_field = 'data__workerId'
 
     def questions(self, obj):
@@ -402,9 +406,12 @@ class HITAdmin(admin.ModelAdmin):
         else:
             return None
 
+    """
+    # Turn on to enable AMT HITs
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.registerAutoField('Feedback', 'RequesterFeedback')
+    """
     def has_add_permission(self, request):
         return False
 
@@ -412,6 +419,8 @@ class HITAdmin(admin.ModelAdmin):
         defaults = {}
         if obj is None:
             defaults['form'] = HITCreationForm
+            """
+            # Turn on to enable AMT HITs
             if not messages.get_messages(request):
                 hits = mturk.list_hits()['HITs']
                 hitCounts = ((name, sum(1 for hit in hits if hit['HITStatus'] == 'Unassignable' and hit['Description'] == desc)) for name, desc in hitDescriptions.items())
@@ -424,6 +433,7 @@ class HITAdmin(admin.ModelAdmin):
                     else:
                         hitsHuman = f"{', '.join(hitCountHuman[:-1])}, and {hitCountHuman[-1]}"
                     self.message_user(request, f"There are {hitsHuman} HITs that are still in progress. Only proceed if you want more.", messages.WARNING)
+            """
         else:
             self.fieldsets = (
                 (None, {'fields': ('assignment_id', 'data')}),
@@ -432,6 +442,10 @@ class HITAdmin(admin.ModelAdmin):
         defaults.update(kwargs)
         return super().get_form(request, obj, **defaults)
 
+    def status(self, obj):
+        return None
+    """
+    # Turn on to enable AMT HITs
     def changelist_view(self, request, extra_context=None):
         # Update assignment statuses of any new assignments
         try:
@@ -473,11 +487,14 @@ class HITAdmin(admin.ModelAdmin):
         icon_url = static('admin/img/icon-%s.svg' % {'Rejected': 'no', 'Approved': 'yes', 'Submitted': 'unknown'}[assignmentStatus])
         return format_html('<img src="{}" alt="{}">', icon_url, assignmentStatus)
     status.short_description = 'Assignment Status'
+    """
 
     def phase(self, obj):
         return first(obj.data.get('roundnums', []), None)
     phase.admin_order_field = 'data__roundnums'
 
+    """
+    # Turn on to enable AMT HITs
     def registerAutoField(self, humanFieldName, fieldName):
         def field(obj):
             return self.assignments.get(obj.assignment_id, {}).get(fieldName, '')
@@ -568,6 +585,7 @@ class HITAdmin(admin.ModelAdmin):
         })
     reject.short_description = 'Reject selected hits'
     actions=[approve, bonus, reject]
+    """
 
 class AnswerAdmin(admin.ModelAdmin, ExportCSVMixin):
     actions = ['export_csv']
