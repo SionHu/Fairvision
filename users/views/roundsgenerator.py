@@ -35,6 +35,50 @@ def pushPostList(request, phase='1'):
     return new
 
 
+def frameShuffle(clusterA, clusterB, numFrames=None):
+    """
+    Use the images from both clusters to create frames following
+    the March 24th methodology:
+    https://docs.google.com/document/d/1a-583cc3IQFbcJ8iKUN8LZlLSNQ2W45VNJo8_tyR2cU/edit
+    """
+    # Calculate the number of frames needed for each cluster
+    # Sample calculations for list(frameShuffle(list(range(0, 84)), list(range(100, 136)))) can be found here:
+    # https://docs.google.com/presentation/d/1t_VGDJjDCALTI8UkRmxegqn0ejr7iOon69J2PtKigjY/edit#slide=id.g80ff1a75ca_0_98
+    if numFrames is None:
+        numFrames = (len(clusterA) + len(clusterB)) // 3
+    numImgAB = round(len(clusterA) * len(clusterB) / (len(clusterA) + len(clusterB)))
+    numFramesA = round((numFrames * len(clusterA)) / (len(clusterA) + len(clusterB) + numImgAB))
+    numFramesB = round((numFrames * len(clusterB)) / (len(clusterA) + len(clusterB) + numImgAB))
+    numFramesAB = numFrames - numFramesA - numFramesB
+
+    random.shuffle(clusterA)
+    random.shuffle(clusterB)
+
+    # generate A frames
+    for a in range(0, 3 * numFramesA, 3):
+        yield from clusterA[a:a+3]
+    a += 3
+
+    # generate B frames
+    for b in range(0, 3 * numFramesB, 3):
+        yield from clusterB[b:b+3]
+    b += 3
+
+    numImgA = round(len(clusterA) / (len(clusterA) + len(clusterB)) * (numFramesAB * 3))
+    numImgB = numFramesAB * 3 - numImgA
+
+    # generate AB frames
+    numImgATaken = 0
+    numImgBTaken = 0
+    for i in range(3, 3 + 3 * numFramesAB, 3):
+        numImgATakenNew = i * numImgA / numFramesAB / 3
+        numImgBTakenNew = i * numImgB / numFramesAB / 3
+        yield from clusterA[a + round(numImgATaken) : a + round(numImgATakenNew)]
+        yield from clusterB[b + round(numImgBTaken) : b + round(numImgBTakenNew)]
+        numImgATaken = numImgATakenNew
+        numImgBTaken = numImgBTakenNew
+
+
 @transaction.atomic
 def popGetList(fullList, count=3, phase='1', recycle=False):
     """
