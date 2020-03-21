@@ -12,7 +12,63 @@ from numpy import argmin
 from ..models import Question, Answer, ImageModel, Phase
 
 
-def pushPostList(request, phase='1'):
+def pushPostListRandom(request, phase='A'):
+    """
+    Update the rounds POSTed for a particular phase.
+    In order to do this, the list of images POSTed is sent
+    back to the server in the 'imgnum' field of the POST
+    request. Return the IDs of the images just shown to
+    the user.
+    """
+    # Update the database with the POSTed images
+    new = [int(i) for i in request.POST.getlist('imgnum[]')]
+    with transaction.atomic():
+        rounds = Phase.objects.select_for_update().get(phase=phase)
+        postList = rounds.post
+        postList.extend(new)
+        rounds.post = postList
+        rounds.save()
+
+    userList = request.hit.get('user_imgs_phase'+phase, [])
+    userList.extend(new)
+    request.hit['user_imgs_phase'+phase] = userList
+    return new
+
+
+@transaction.atomic
+def popGetListRandom(fullList, count=3, phase='A', recycle=False):
+    """
+    Get the rounds object and the ID of the next image to show
+    on the screen for a particular phase and return them both
+    as a tuple. This assumes that count (usually 1 or 4) is
+    less than the number of images.
+    """
+    # Get the rounds object
+    rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
+    getList = rounds.get
+
+    if len(getList) < count:
+        nextImage = getList
+        count -= len(getList)
+        # Create a new GET list if necessary
+        postList = rounds.post
+        getList = [i for i in fullList if i not in postList and i not in nextImage]
+        random.shuffle(getList)
+        if recycle and len(getList) < count:
+            rounds.post = []
+            getList = [i for i in fullList if i not in nextImage]
+            random.shuffle(getList)
+    else:
+        nextImage = []
+
+    # Get the next images for the round
+    nextImage.extend(getList[:count])
+    del getList[:count]
+    rounds.get = getList
+    rounds.save()
+    return rounds, nextImage
+
+def pushPostList(request, phase='B'):
     """
     Update the rounds POSTed for a particular phase.
     In order to do this, the list of images POSTed is sent
@@ -85,7 +141,7 @@ def frameShuffle(clusterA, clusterB, numFrames=None):
 
 
 @transaction.atomic
-def popGetList(clusterA, clusterB, count=3, phase='1'):
+def popGetList(clusterA, clusterB, count=3, phase='B'):
     """
     Get the rounds object and the ID of the next image to show
     on the screen for a particular phase and return them both
