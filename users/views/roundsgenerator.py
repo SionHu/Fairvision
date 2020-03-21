@@ -68,7 +68,7 @@ def popGetListRandom(fullList, count=3, phase='A', recycle=False):
     rounds.save()
     return rounds, nextImage, -1
 
-def pushPostList(request, phase='B'):
+def pushPostListClustered(request, phase='B'):
     """
     Update the rounds POSTed for a particular phase.
     In order to do this, the list of images POSTed is sent
@@ -141,7 +141,7 @@ def frameShuffle(clusterA, clusterB, numFrames=None):
 
 
 @transaction.atomic
-def popGetList(clusterA, clusterB, count=3, phase='B'):
+def popGetListClustered(clusterA, clusterB, count=3, phase='B'):
     """
     Get the rounds object and the ID of the next image to show
     on the screen for a particular phase and return them both
@@ -162,7 +162,7 @@ def popGetList(clusterA, clusterB, count=3, phase='B'):
 
     if not postList:
         nextImage = []
-        frame = -1
+        frame = -2
     else:
         # Take a frame from the queue and add it to the end
         frame = postList[0]
@@ -179,6 +179,34 @@ def popGetList(clusterA, clusterB, count=3, phase='B'):
     #print(nextImage)
     #print(frame)
     return rounds, nextImage, frame
+
+@transaction.atomic
+def pushPostList(request, phase='1'):
+    if int(request.POST.get('frame')) == -1:
+        return pushPostListRandom(request, phase='B')
+    else:
+        return pushPostListClustered(request, phase='B')
+
+@transaction.atomic
+def popGetListClustered(count=3, phase='1'):
+    # select one
+    rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
+    getList = rounds.get
+    postList = rounds.post
+
+    if not getList:
+        numFrames = (ImageModel.objects.count()+count-1) // count
+        getList = [1, 0] * numFrames
+        random.shuffle(getList)
+
+    
+
+    if random:
+        return popGetListRandom(fullList, count=3, phase='A', recycle=False)
+    else:
+        clusterA = ImageModel.objects.filter(img__startswith=settings.KEYRING, cluster="A").values_list('id', flat=True)
+        clusterB = ImageModel.objects.filter(img__startswith=settings.KEYRING, cluster="B").values_list('id', flat=True)
+        return popGetListClustered(clusterA, clusterB, count=3, phase='B')
 
 @transaction.atomic
 def step2_push(request):

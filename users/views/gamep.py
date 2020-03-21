@@ -118,9 +118,7 @@ def phase01a(request, previewMode=False):
 
     # Get rounds played in total and by the current player
     # TODO: THIS CODE IS BROKEN AND NEEDS TO BE CHANGED
-    clusterA = ImageModel.objects.filter(img__startswith=KEYRING, cluster="A").values_list('id', flat=True)
-    clusterB = ImageModel.objects.filter(img__startswith=KEYRING, cluster="B").values_list('id', flat=True)
-    rounds, roundsnum, frame = popGetList(clusterA, clusterB)
+    rounds, roundsnum, frame = popGetList()
 
     if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page

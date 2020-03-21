@@ -190,6 +190,8 @@ class Question(models.Model):
     mergeParent = models.IntegerField(default=0)
     # ID for reference which questions are for which image
     imageID = ArrayField(models.CharField(max_length=64))
+    # Frame id that the question was given for
+    frameID = models.IntegerField(default=0)
     def __str__(self):
         return self.text
 
