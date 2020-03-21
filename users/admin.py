@@ -161,9 +161,9 @@ class ImageModelObjectListFilter(admin.SimpleListFilter):
 
 class ImageModelAdmin(admin.ModelAdmin):
     form = ImageModelForm
-    fields = ('img', 'set', 'object')
-    list_display = ('img',)
-    list_display_links = ('img',)
+    fields = ('img', 'set', 'object', 'cluster')
+    list_display = ('img', 'cluster')
+    list_display_links = ('img', 'cluster')
     list_filter = (ImageModelDatasetListFilter, ImageModelObjectListFilter)
 
     def get_readonly_fields(self, request, obj=None):

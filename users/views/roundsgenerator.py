@@ -41,6 +41,9 @@ def frameShuffle(clusterA, clusterB, numFrames=None):
     the March 24th methodology:
     https://docs.google.com/document/d/1a-583cc3IQFbcJ8iKUN8LZlLSNQ2W45VNJo8_tyR2cU/edit
     """
+    clusterA = list(clusterA)
+    clusterB = list(clusterB)
+
     # Calculate the number of frames needed for each cluster
     # Sample calculations for list(frameShuffle(list(range(0, 84)), list(range(100, 136)))) can be found here:
     # https://docs.google.com/presentation/d/1t_VGDJjDCALTI8UkRmxegqn0ejr7iOon69J2PtKigjY/edit#slide=id.g80ff1a75ca_0_98
@@ -55,11 +58,13 @@ def frameShuffle(clusterA, clusterB, numFrames=None):
     random.shuffle(clusterB)
 
     # generate A frames
+    a = -3
     for a in range(0, 3 * numFramesA, 3):
         yield from clusterA[a:a+3]
     a += 3
 
     # generate B frames
+    b = -3
     for b in range(0, 3 * numFramesB, 3):
         yield from clusterB[b:b+3]
     b += 3
@@ -113,6 +118,10 @@ def popGetList(clusterA, clusterB, count=3, phase='1'):
         # Get the next images for the round
         nextImage = getList[frame*count:frame*count+count]
 
+    #print(getList)
+    #print(rounds)
+    #print(nextImage)
+    #print(frame)
     return rounds, nextImage, frame
 
 @transaction.atomic
