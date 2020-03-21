@@ -66,7 +66,7 @@ def popGetListRandom(fullList, count=3, phase='A', recycle=False):
     del getList[:count]
     rounds.get = getList
     rounds.save()
-    return rounds, nextImage
+    return rounds, nextImage, -1
 
 def pushPostList(request, phase='B'):
     """
