@@ -188,7 +188,7 @@ def pushPostList(request, phase='1'):
         return pushPostListClustered(request, phase='B')
 
 @transaction.atomic
-def popGetListClustered(count=3, phase='1'):
+def popGetList(count=3, phase='1'):
     # select one
     rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
     getList = rounds.get
@@ -199,10 +199,10 @@ def popGetListClustered(count=3, phase='1'):
         getList = [1, 0] * numFrames
         random.shuffle(getList)
 
-    
-
-    if random:
-        return popGetListRandom(fullList, count=3, phase='A', recycle=False)
+    # call from random sampling
+    if phase == '1':
+        return popGetListRandom(getList, count=3, phase='A', recycle=False)
+    # call from cluster sampling
     else:
         clusterA = ImageModel.objects.filter(img__startswith=settings.KEYRING, cluster="A").values_list('id', flat=True)
         clusterB = ImageModel.objects.filter(img__startswith=settings.KEYRING, cluster="B").values_list('id', flat=True)

@@ -57,10 +57,10 @@ def phase01a(request, previewMode=False):
 
         # print("I got questions: ", questions)
         # print("I got answers: ", answers)
-        # retrieve the json data for updating skip count for the previous questions
-        validation_list = request.POST.getlist('data[]')
 
         correct_qs = []
+
+        # Simple online typo improvement
         for q in questions:
             text=q.replace(' ', '+')
             url = f'https://api.textgears.com/check.php?text={text}&key=SFCKdx4GHmSC1j6H'
@@ -95,7 +95,7 @@ def phase01a(request, previewMode=False):
         id_move = {int(k): v for k, v in id_move.items()}
         """
         # print("acceptedList is: ", acceptedList)
-        #print("id_merge is: ", id_merge)
+        # print("id_merge is: ", id_merge)
         # print("id_move is: ", id_move)
 
         Question.objects.filter(id__in=acceptedList).update(isFinal=True)
