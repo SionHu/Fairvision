@@ -21,18 +21,18 @@ def pushPostList(request, phase='1'):
     the user.
     """
     # Update the database with the POSTed images
-    new = [int(i) for i in request.POST.getlist('imgnum[]')]
+    new = [int(i) for i in request.POST.getlist('imgnum')]
+    frame = int(request.POST.get('frame'))
     with transaction.atomic():
         rounds = Phase.objects.select_for_update().get(phase=phase)
         postList = rounds.post
-        postList.extend(new)
+        postList.remove(frame)
         rounds.post = postList
         rounds.save()
 
     userList = request.hit.get('user_imgs_phase'+phase, [])
     userList.extend(new)
     request.hit['user_imgs_phase'+phase] = userList
-    return new
 
 
 def frameShuffle(clusterA, clusterB, numFrames=None):
@@ -80,7 +80,7 @@ def frameShuffle(clusterA, clusterB, numFrames=None):
 
 
 @transaction.atomic
-def popGetList(fullList, count=3, phase='1', recycle=False):
+def popGetList(clusterA, clusterB, count=3, phase='1'):
     """
     Get the rounds object and the ID of the next image to show
     on the screen for a particular phase and return them both
@@ -90,27 +90,30 @@ def popGetList(fullList, count=3, phase='1', recycle=False):
     # Get the rounds object
     rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
     getList = rounds.get
+    postList = rounds.post
 
-    if len(getList) < count:
-        nextImage = getList
-        count -= len(getList)
-        # Create a new GET list if necessary
-        postList = rounds.post
-        getList = [i for i in fullList if i not in postList and i not in nextImage]
-        random.shuffle(getList)
-        if recycle and len(getList) < count:
-            rounds.post = []
-            getList = [i for i in fullList if i not in nextImage]
-            random.shuffle(getList)
-    else:
+    if not getList:
+        getList = rounds.get = list(frameShuffle(clusterA, clusterB))
+        postList = list(range((len(getList)+1) // count))
+        random.shuffle(postList)
+        rounds.post = postList
+        rounds.save()
+
+    if not postList:
         nextImage = []
+        frame = -1
+    else:
+        # Take a frame from the queue and add it to the end
+        frame = postList[0]
+        del postList[0]
+        postList.append(frame)
+        rounds.post = postList
+        rounds.save()
 
-    # Get the next images for the round
-    nextImage.extend(getList[:count])
-    del getList[:count]
-    rounds.get = getList
-    rounds.save()
-    return rounds, nextImage
+        # Get the next images for the round
+        nextImage = getList[frame*count:frame*count+count]
+
+    return rounds, nextImage, frame
 
 @transaction.atomic
 def step2_push(request):

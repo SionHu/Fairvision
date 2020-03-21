@@ -86,6 +86,7 @@ class ImageModel(models.Model):
             raise ValidationError(u'No ID found on filename. Please give a name in the `image_####.jpg` format')
     # name = models.CharField(max_length=64, primary_key=True)
     img = models.ImageField(verbose_name='Image', upload_to=get_upload_path, unique=True, validators=[validate_file_extension])
+    cluster = models.CharField(verbose_name='Cluster', max_length=1)
 
     def __str__(self):
         return self.img.name

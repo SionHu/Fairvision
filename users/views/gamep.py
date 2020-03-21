@@ -117,7 +117,10 @@ def phase01a(request, previewMode=False):
         return HttpResponse(status=201)
 
     # Get rounds played in total and by the current player
-    rounds, roundsnum = popGetList(ImageModel.objects.filter(img__startswith=KEYRING).values_list('id', flat=True))
+    # TODO: THIS CODE IS BROKEN AND NEEDS TO BE CHANGED
+    clusterA = ImageModel.objects.filter(img__startswith=KEYRING, cluster="A").values_list('id', flat=True)
+    clusterB = ImageModel.objects.filter(img__startswith=KEYRING, cluster="B").values_list('id', flat=True)
+    rounds, roundsnum, frame = popGetList(clusterA, clusterB)
 
     if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
@@ -139,7 +142,7 @@ def phase01a(request, previewMode=False):
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'NUMROUNDS': NUMROUNDS[phase01a.__name__], 'object': OBJECT_NAME_PLURAL})
+    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'frame': frame, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'NUMROUNDS': NUMROUNDS[phase01a.__name__], 'object': OBJECT_NAME_PLURAL})
 
 '''
 View for phase 01 b
