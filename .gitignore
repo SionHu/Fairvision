@@ -112,3 +112,6 @@ app.yaml
 
 # Django static files
 staticfiles/
+
+# environment variables
+env_var_cds.sh
