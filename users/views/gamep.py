@@ -61,24 +61,27 @@ def phase01a(request, previewMode=False):
         correct_qs = []
 
         # Simple online typo improvement
-        for q in questions:
-            text=q.replace(' ', '+')
-            url = f'https://api.textgears.com/check.php?text={text}&key=SFCKdx4GHmSC1j6H'
-            response = requests.get(url)
-            wordsC = response.json()
-            # print(wordsC)
-            for err in wordsC['errors']:
-                bad = err['bad']
-                good = err['better']
-                if good:
-                    q = q.replace(bad, good[0])
-            correct_qs.append(q)
+        try:
+            for q in questions:
+                text=q.replace(' ', '+')
+                url = f'https://api.textgears.com/check.php?text={text}&key=SFCKdx4GHmSC1j6H'
+                response = requests.get(url)
+                wordsC = response.json()
+                # print(wordsC)
+                for err in wordsC['errors']:
+                    bad = err['bad']
+                    good = err['better']
+                    if good:
+                        q = q.replace(bad, good[0])
+                correct_qs.append(q)
+        except:
+            pass
 
         # Query list for the old data in the table
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
         # print("old questions", old_Qs)
 
-        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=list(ImageModel.objects.filter(id__in=postList)), hit_id=assignmentId) for que in correct_qs])
+        questions = Question.objects.bulk_create([Question(text=que, isFinal=False, imageID=list(ImageModel.objects.filter(id__in=postList)), hit_id=assignmentId, frameID=int(request.POST.get('frame'))) for que in correct_qs])
         new_Qs = [(que.text, que.id) for que in questions] #list(map(attrgetter('text', 'id'), questions)) # don't know which is better speedwise
         # print("new question", new_Qs)
 

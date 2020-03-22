@@ -68,6 +68,7 @@ def popGetListRandom(fullList, count=3, phase='A', recycle=False):
     rounds.save()
     return rounds, nextImage, -1
 
+
 def pushPostListClustered(request, phase='B'):
     """
     Update the rounds POSTed for a particular phase.
@@ -89,6 +90,7 @@ def pushPostListClustered(request, phase='B'):
     userList = request.hit.get('user_imgs_phase'+phase, [])
     userList.extend(new)
     request.hit['user_imgs_phase'+phase] = userList
+    return new
 
 
 def frameShuffle(clusterA, clusterB, numFrames=None):
@@ -182,9 +184,27 @@ def popGetListClustered(clusterA, clusterB, count=3, phase='B'):
 
 @transaction.atomic
 def pushPostList(request, phase='1'):
-    if int(request.POST.get('frame')) == -1:
-        return pushPostListRandom(request, phase='B')
+    isRandom = int(request.POST.get('frame')) == -1
+
+    rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
+    getList = rounds.get
+    postList = rounds.post
+
+    getList.reverse()
+    try:
+        getList.remove(isRandom)
+    except ValueError:
+        pass
+    getList.reverse()
+
+    rounds.get = getList
+    rounds.save()
+
+    if isRandom:
+        print("Random recieved")
+        return pushPostListRandom(request, phase='A')
     else:
+        print("Cluster recieved")
         return pushPostListClustered(request, phase='B')
 
 @transaction.atomic
@@ -198,14 +218,22 @@ def popGetList(count=3, phase='1'):
         numFrames = (ImageModel.objects.count()+count-1) // count
         getList = [1, 0] * numFrames
         random.shuffle(getList)
+        rounds.get = getList
 
-    # call from random sampling
-    if phase == '1':
-        return popGetListRandom(getList, count=3, phase='A', recycle=False)
-    # call from cluster sampling
+    isRandom = getList[0]
+    del getList[0]
+    getList.append(isRandom)
+    rounds.get = getList
+    rounds.save()
+
+    if isRandom:
+        fullList = ImageModel.objects.filter(img__startswith=settings.KEYRING).values_list('id', flat=True)
+        print("Random chosen")
+        return popGetListRandom(fullList, count=3, phase='A', recycle=False)
     else:
         clusterA = ImageModel.objects.filter(img__startswith=settings.KEYRING, cluster="A").values_list('id', flat=True)
         clusterB = ImageModel.objects.filter(img__startswith=settings.KEYRING, cluster="B").values_list('id', flat=True)
+        print("Cluster chosen")
         return popGetListClustered(clusterA, clusterB, count=3, phase='B')
 
 @transaction.atomic
