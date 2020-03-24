@@ -53,6 +53,23 @@
             <a href="{% url 'about' %}" class="nav-link">About</a>
         </div>
 
+        <div class="dropdown ml-2 flex-row justify-content-between ml-auto" style="padding-right: 200px">
+            <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
+                <div class="dropdown">
+                        {% if user.is_authenticated %}
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Player {{ request.user }}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="{% url 'logout' %}" style="color: red">Logout</a>
+                        </div>
+                    {% else %}
+                        <button type="button" onclick="location.href='{% url 'login' %}'" class="btn btn-outline-secondary dropdown" >Login</button>
+                    {% endif %}
+                </div>
+            </ul>
+        </div>
+
     </nav>
 </div>
 

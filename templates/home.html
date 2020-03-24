@@ -13,7 +13,7 @@
       </button>
     </div>
     {% endif %}
-  
+
         <div class="row justify-content-center align-items-center">
         <center>
 
@@ -24,9 +24,15 @@
             </div>
 
             <hr>
+            {% if request.user.is_anonymous %}
+            <a href="{% url 'login' %}">
+                <button class="btn btn-lg btn-outline-light"><span><i class="fa fa-gamepad"></i></span> Login</button>
+            </a>
+            {% else %}
             <a href="{% url 'phase01a' %}">
                 <button class="btn btn-lg btn-outline-light"><span><i class="fa fa-gamepad"></i></span> Start the Game</button>
             </a>
+            {% endif %}
         </center>
         </div>
 </div>
