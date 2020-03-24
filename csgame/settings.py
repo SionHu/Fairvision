@@ -97,7 +97,7 @@ ALLOWED_HOSTS =[
     'localhost',
     'cam2-crowdsourcing.herokuapp.com',
     'cam2-cds-test-243502.appspot.com',
-    'cds-lol.herokuapp.com',
+    'cla-lol.herokuapp.com/',
 ]
 
 
