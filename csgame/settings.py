@@ -91,13 +91,13 @@ SECRET_KEY = 'jsl5xrm^in$mx)ftkdeybi0#(uqr)j=e=eer%eg2rxk#h#1l9r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=not(IS_PRODUCTION_SITE or TEST_HTTP_HANDLING)
 
-ALLOWED_HOSTS = [
-	'test-csgame.herokuapp.com',
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[
+    'test-csgame.herokuapp.com',
     '127.0.0.1',
     'localhost',
     'cam2-crowdsourcing.herokuapp.com',
     'cam2-cds-test-243502.appspot.com',
-]
+])
 
 
 # Application definition
