@@ -248,6 +248,8 @@
                 $("#agreement").modal();
                 localStorage.removeItem("total_list");
                 localStorage.setItem("total_list",JSON.stringify(list));
+            } else {
+              $("#closeGIF").show();
             }
             //Get the array of previous input
             list = JSON.parse(window.localStorage.getItem("total_list"));
