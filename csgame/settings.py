@@ -48,7 +48,7 @@ try:
     }
 
     # if not on google cloud
-    if not IS_PRODUCTION_SITE:
+    if IS_PRODUCTION_SITE:
         print("I am not using googole cloud service!")
         # Set up database url
         DATABASE_URL = my_env.get('DATABASE_URL', None) or (
@@ -58,17 +58,17 @@ try:
         # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
         import dj_database_url
         DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
-    else:
-        DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT'],
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD']
-        }
-    }
+    # else:
+    #     DATABASES = {
+    #     'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'HOST': os.environ['DB_HOST'],
+    #     'PORT': os.environ['DB_PORT'],
+    #     'NAME': os.environ['DB_NAME'],
+    #     'USER': os.environ['DB_USER'],
+    #     'PASSWORD': os.environ['DB_PASSWORD']
+    #     }
+    # }
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
     KEY = my_env.get('KEY', 'Caltech101/airplane/image_{:04d}.jpg')
