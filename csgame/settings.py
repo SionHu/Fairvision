@@ -47,17 +47,17 @@ try:
         'phase03': 1 # step 3
     }
 
-    # if not on google cloud
-    if IS_PRODUCTION_SITE:
-        print("I am not using googole cloud service!")
-        # Set up database url
-        DATABASE_URL = my_env.get('DATABASE_URL', None) or (
-            'postgres://cam2cds:%s@cam2cds2020-dev.c2bvrno4ucam.us-east-2.rds.amazonaws.com:5432/cdsdev'
-            % (my_env['POSTGRESQLPASS'],))
-        # Database
-        # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-        import dj_database_url
-        DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
+
+
+    # Set up database url
+    DATABASE_URL = my_env.get('DATABASE_URL', None) or (
+        'postgres://cam2cds:%s@cam2cds2020-dev.c2bvrno4ucam.us-east-2.rds.amazonaws.com:5432/cdsdev'
+        % (my_env['POSTGRESQLPASS'],))
+    # Database
+    print(DATABASE_URL)
+    # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
     # else:
     #     DATABASES = {
     #     'default': {
