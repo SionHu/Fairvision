@@ -58,24 +58,7 @@ def phase01a(request, previewMode=False):
         # print("I got questions: ", questions)
         # print("I got answers: ", answers)
 
-        correct_qs = []
-
-        # Simple online typo improvement
-        try:
-            for q in questions:
-                text=q.replace(' ', '+')
-                url = f'https://api.textgears.com/check.php?text={text}&key=SFCKdx4GHmSC1j6H'
-                response = requests.get(url)
-                wordsC = response.json()
-                # print(wordsC)
-                for err in wordsC['errors']:
-                    bad = err['bad']
-                    good = err['better']
-                    if good:
-                        q = q.replace(bad, good[0])
-                correct_qs.append(q)
-        except:
-            pass
+        correct_qs = questions
 
         # Query list for the old data in the table
         old_Qs = list(Question.objects.filter(isFinal=True).values_list('text', 'id'))
