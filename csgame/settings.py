@@ -48,7 +48,7 @@ try:
     }
 
     # if not on google cloud
-    if not IS_GOOGLE_CLOUD:
+    if not IS_PRODUCTION_SITE:
         print("I am not using googole cloud service!")
         # Set up database url
         DATABASE_URL = my_env.get('DATABASE_URL', None) or (
@@ -59,7 +59,6 @@ try:
         import dj_database_url
         DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
     else:
-        print("I am using google cloud service now!")
         DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -192,7 +191,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-if not IS_GOOGLE_CLOUD:
+if IS_PRODUCTION_SITE:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
