@@ -47,29 +47,28 @@ try:
         'phase03': 1 # step 3
     }
 
-    # if not on google cloud
-    if not IS_GOOGLE_CLOUD:
-        print("I am not using googole cloud service!")
-        # Set up database url
-        DATABASE_URL = my_env.get('DATABASE_URL', None) or (
-            'postgres://cam2cds:%s@cam2cds2020-dev.c2bvrno4ucam.us-east-2.rds.amazonaws.com:5432/cdsdev'
-            % (my_env['POSTGRESQLPASS'],))
-        # Database
-        # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-        import dj_database_url
-        DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
-    else:
-        print("I am using google cloud service now!")
-        DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT'],
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD']
-        }
-    }
+
+
+    # Set up database url
+    DATABASE_URL = my_env.get('DATABASE_URL', None) or (
+        'postgres://cam2cds:%s@cam2cds2020-dev.c2bvrno4ucam.us-east-2.rds.amazonaws.com:5432/cdsdev'
+        % (my_env['POSTGRESQLPASS'],))
+    # Database
+    print(DATABASE_URL)
+    # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
+    # else:
+    #     DATABASES = {
+    #     'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'HOST': os.environ['DB_HOST'],
+    #     'PORT': os.environ['DB_PORT'],
+    #     'NAME': os.environ['DB_NAME'],
+    #     'USER': os.environ['DB_USER'],
+    #     'PASSWORD': os.environ['DB_PASSWORD']
+    #     }
+    # }
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
     KEY = my_env.get('KEY', 'Caltech101/airplane/image_{:04d}.jpg')
@@ -91,12 +90,13 @@ SECRET_KEY = 'jsl5xrm^in$mx)ftkdeybi0#(uqr)j=e=eer%eg2rxk#h#1l9r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=not(IS_PRODUCTION_SITE or TEST_HTTP_HANDLING)
 
-ALLOWED_HOSTS = [
-	'test-csgame.herokuapp.com',
+ALLOWED_HOSTS =[
+    'test-csgame.herokuapp.com',
     '127.0.0.1',
     'localhost',
     'cam2-crowdsourcing.herokuapp.com',
     'cam2-cds-test-243502.appspot.com',
+    'cla-lol.herokuapp.com',
 ]
 
 
@@ -191,7 +191,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-if not IS_GOOGLE_CLOUD:
+if IS_PRODUCTION_SITE:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
