@@ -47,7 +47,7 @@ def player_required(func):
                 else:
                     return func(request, *args, **kwargs)
 
-        elif request.user.is_staff or request.user.is_superuser:
+        elif request.user.is_authenticated:
             assignmentId = f"{request.user.username}__{uuid.uuid4().hex}"[:31]
             hitId = 'admin'
             workerId = 'admin'
