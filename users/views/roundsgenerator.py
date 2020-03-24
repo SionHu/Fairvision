@@ -66,7 +66,7 @@ def popGetListRandom(fullList, count=3, phase='A', recycle=False):
     del getList[:count]
     rounds.get = getList
     rounds.save()
-    return rounds, nextImage, -1
+    return rounds, nextImage, -1, False
 
 
 def pushPostListClustered(request, phase='B'):
@@ -180,7 +180,7 @@ def popGetListClustered(clusterA, clusterB, count=3, phase='B'):
     #print(rounds)
     #print(nextImage)
     #print(frame)
-    return rounds, nextImage, frame
+    return rounds, nextImage, frame, False
 
 @transaction.atomic
 def pushPostList(request, phase='1'):
@@ -209,22 +209,33 @@ def pushPostList(request, phase='1'):
 
 @transaction.atomic
 def popGetList(count=3, phase='1'):
-    # select one
-    rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
-    getList = rounds.get
-    postList = rounds.post
+    A = Phase.objects.select_for_update().get_or_create(phase='A')[0]
+    B = Phase.objects.select_for_update().get_or_create(phase='B')[0]
+    AnotAllowed = len(A.get) < 3
+    BnotAllowed = len(B.post) == 0
+    if AnotAllowed and not BnotAllowed:
+        isRandom = False
+    elif not AnotAllowed and BnotAllowed:
+        isRandom = True
+    elif AnotAllowed and BnotAllowed:
+        return None, [], -1, True
+    else:
+        # select one
+        rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
+        getList = rounds.get
+        postList = rounds.post
 
-    if not getList:
-        numFrames = (ImageModel.objects.count()+count-1) // count
-        getList = [1, 0] * numFrames
-        random.shuffle(getList)
+        if not getList:
+            numFrames = (ImageModel.objects.count()+count-1) // count
+            getList = [1, 0] * numFrames
+            random.shuffle(getList)
+            rounds.get = getList
+
+        isRandom = getList[0]
+        del getList[0]
+        getList.append(isRandom)
         rounds.get = getList
-
-    isRandom = getList[0]
-    del getList[0]
-    getList.append(isRandom)
-    rounds.get = getList
-    rounds.save()
+        rounds.save()
 
     if isRandom:
         fullList = ImageModel.objects.filter(img__startswith=settings.KEYRING).values_list('id', flat=True)

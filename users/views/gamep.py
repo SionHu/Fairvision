@@ -104,9 +104,9 @@ def phase01a(request, previewMode=False):
 
     # Get rounds played in total and by the current player
     # TODO: THIS CODE IS BROKEN AND NEEDS TO BE CHANGED
-    rounds, roundsnum, frame = popGetList()
+    rounds, roundsnum, frame, isOver = popGetList()
 
-    if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
+    if isOver:
         # push all to waiting page
         return over(request, 'phase01a')
 
