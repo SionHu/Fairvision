@@ -20,7 +20,7 @@ mturk = boto3.client('mturk',
 )
 
 class MediaStorage(S3Boto3Storage):
-    location = 'media'
+    location = ''
     file_overwrite = False
 
     #url for getting the image link
@@ -56,7 +56,7 @@ class _UploadLock:
     def __init__(self):
         self._lock = Lock()
         self('unknown', 'unknown')
-    # 
+    #
     def __enter__(self):
         self._lock.acquire()
 
