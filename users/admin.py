@@ -587,11 +587,37 @@ class HITAdmin(admin.ModelAdmin):
     actions=[approve, bonus, reject]
     """
 
+class AnswerFrameIDFilter(admin.SimpleListFilter):
+    title = 'Task'
+    parameter_name = 'task'
+    def lookups(self, request, model_admin):
+        return [('Clustered', 'Clustered'), ('Random', 'Random')]
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val is None:
+            return queryset
+        if val == 'Clustered':
+            return queryset.filter(~Q(question__frameID=-1))
+        return queryset.filter(question__frameID=-1)
+
+class FrameIDFilter(admin.SimpleListFilter):
+    title = 'Task'
+    parameter_name = 'task'
+    def lookups(self, request, model_admin):
+        return [('Clustered', 'Clustered'), ('Random', 'Random')]
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val is None:
+            return queryset
+        if val == 'Clustered':
+            return queryset.filter(~Q(frameID=-1))
+        return queryset.filter(frameID=-1)
+
 class AnswerAdmin(admin.ModelAdmin, ExportCSVMixin):
     actions = ['export_csv']
     export_filename = 'phase1-answers.csv'
     export_field_names = ['id','text','isFinal','question','hit']
-    list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter))
+    list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter), (AnswerFrameIDFilter))
     list_display = ('text', 'question', 'hit')
 
 class AnswerInline(admin.TabularInline):
@@ -636,7 +662,7 @@ class QuestionAdmin(admin.ModelAdmin, ExportCSVMixin):
         if children:
             return f'{me}<ul><li>{"</li><li>".join(self._merge_children(child) for child in children)}</li></ul>'
         return me
-    list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter))
+    list_filter = ('isFinal', ('hit', admin.RelatedOnlyFieldListFilter), FrameIDFilter)
     list_display = ('text', 'merge_children')
 
 
