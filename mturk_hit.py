@@ -44,21 +44,21 @@ def create_hit(phase, number):
                 Title="Image Labeling With Text",
                 Description=hitDescriptions['phase01a'],
                 Keywords='image, tagging, machine learning, text generation',
-                Reward = '0.50',
+                Reward = '0.25',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=35*60,
                 AutoApprovalDelayInSeconds=60*60*24*3,
                 Question=question,
-                QualificationRequirements=[
-                    {
-                        # this id is used on sandbox only
-                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
-                        'Comparator': 'GreaterThanOrEqualTo',
-                        'IntegerValues':[60],
-                        'ActionsGuarded': 'Accept',
-                    }
-                ]
+                # QualificationRequirements=[
+                #     {
+                #         # this id is used on sandbox only
+                #         'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
+                #         'Comparator': 'GreaterThanOrEqualTo',
+                #         'IntegerValues':[60],
+                #         'ActionsGuarded': 'Accept',
+                #     }
+                # ]
             )
         # phase 01b
         elif(phase == 'phase01b'):

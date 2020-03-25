@@ -258,7 +258,7 @@ class PhaseAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
     def has_change_permission(self, request, obj=None):
-        return False
+        return True
 
 class SessionForm(forms.ModelForm):
     decoded_data = forms.CharField(widget=JSONEditor)

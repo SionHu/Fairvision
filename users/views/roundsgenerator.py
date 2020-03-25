@@ -66,6 +66,7 @@ def popGetListRandom(fullList, count=3, phase='A', recycle=False):
     del getList[:count]
     rounds.get = getList
     rounds.save()
+    print(nextImage)
     return rounds, nextImage, -1, False
 
 
@@ -211,12 +212,13 @@ def pushPostList(request, phase='1'):
 def popGetList(count=3, phase='1'):
     A = Phase.objects.select_for_update().get_or_create(phase='A')[0]
     B = Phase.objects.select_for_update().get_or_create(phase='B')[0]
-    AnotAllowed = len(A.get) < 3
-    BnotAllowed = len(B.post) == 0
+    BnotAllowed = len(B.get) < 3 and len(B.post) != 0
+    AnotAllowed = len(A.post) == 0
+    print(AnotAllowed , BnotAllowed)
     if AnotAllowed and not BnotAllowed:
-        isRandom = False
-    elif not AnotAllowed and BnotAllowed:
         isRandom = True
+    elif not AnotAllowed and BnotAllowed:
+        isRandom = False
     elif AnotAllowed and BnotAllowed:
         return None, [], -1, True
     else:

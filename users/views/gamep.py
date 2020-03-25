@@ -113,6 +113,7 @@ def phase01a(request, previewMode=False):
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     # sending 4 images at a time
     data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
+    print(data)
     data.extend([None] * (3 - len(data)))
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
