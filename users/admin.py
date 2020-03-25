@@ -627,7 +627,7 @@ class AnswerInline(admin.TabularInline):
 class QuestionAdmin(admin.ModelAdmin, ExportCSVMixin):
     actions = ['export_csv']
     export_filename = 'phase1-questions.csv'
-    export_field_names = ['id','text','isFinal','hit','mergeParent']
+    export_field_names = ['id','text','isFinal','hit','mergeParent', 'image_idAll']
 
     inlines = [
         AnswerInline,
@@ -643,6 +643,15 @@ class QuestionAdmin(admin.ModelAdmin, ExportCSVMixin):
             args=(img.pk,)),
         img.img) for img in imgs))
     image_id.short_description = 'Image ID'
+    def image_idAll(self, obj):
+        fid = obj.frameID
+        iid = obj.imageID
+        if fid != -1:
+            rounds = Phase.objects.get(phase='B')
+            iid = rounds.get[fid*3:fid*3+3]
+        return iid
+
+    image_idAll.short_description = 'Image ID (All)'
     def merge_parent(self, obj):
         return format_html("<a href={}>{}</a>".format(
             reverse('admin:{}_{}_change'.format(obj._meta.app_label, obj._meta.model_name),
