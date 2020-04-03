@@ -20,6 +20,7 @@ mturk = boto3.client('mturk',
 )
 
 class MediaStorage(S3Boto3Storage):
+    location = 'media'
     file_overwrite = False
 
     #url for getting the image link
@@ -27,7 +28,7 @@ class MediaStorage(S3Boto3Storage):
         try:
             params = parameters.copy() if parameters else {}
             params['Bucket'] = self.bucket.name
-            params['Key'] = name
+            params['Key'] = self.location+"/"+name
 
             return s3.generate_presigned_url('get_object', Params=params, ExpiresIn=expire)
         except ClientError as e:
