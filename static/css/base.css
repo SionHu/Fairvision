@@ -152,8 +152,8 @@ hr {
 
 .help-tip{
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 5px;
+  right: 90px;
   text-align: center;
   background-color: #BCDBEA;
   border-radius: 50%;

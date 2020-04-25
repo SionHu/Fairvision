@@ -154,13 +154,14 @@
 
             <!-- INPUT BAR -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
-              <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
-              <div class="help-tip">
-                <p>Please make sure the question is in full sentence. <br>
-                  <b>Good example:</b> <br> Q: What is the type of the car? A: Sedan. <br>
-                  <b>Bad example: </b> <br> Q: What type car? A: Sedan.</p>
+              <div class="col">
+                <label style="font-size: x-large">Enter New Question &amp; Answer Pairs</label>
+                <div class="help-tip">
+                  <p>Please make sure the question is in full sentence. <br>
+                    <b>Good example:</b> <br> Q: What is the type of the car? A: Sedan. <br>
+                    <b>Bad example: </b> <br> Q: What type car? A: Sedan.</p>
+                </div>
               </div>
-              <br>
               <div style="color: yellow"><i class="fa fa-bell"> </i>
                 Find similarities between these images of {{ object|title }}
               </div>
@@ -182,10 +183,10 @@
                 <option value="do" style="color: black">do</option>
               </select>
             </div>-->
-            <input class="form-control-sm mr-2" id="Q" type="text" name="Q" maxlength="50" size="30" value="Enter the question in full sentence">?
+            <input class="form-control-sm mr-2" id="Q" type="text" name="Q" maxlength="50" size="30" placeholder="enter questions in full sentence">?
           </div>
           <div class="input-group ml-3">
-            A: <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40" size="33.5">.
+            A: <input class="form-control-sm ml-2 mr-2" id="A" type="text" name="A" maxlength="40" size="33.5" placeholder="enter answers in short phrase">.
           </div>
           <div>
             <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
