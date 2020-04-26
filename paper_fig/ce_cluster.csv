@@ -1,0 +1,57 @@
+id,text,isFinal,hit,mergeParent,image_idAll,classification,precision,recall01,recall02
+1,how are the planes positioned,TRUE,Andyshen555__59a8699c896e4e2ebc,0,"[52, 116, 118]",1,TRUE,1,1
+2,where are the planes,TRUE,Andyshen555__59a8699c896e4e2ebc,0,"[52, 116, 118]",1,TRUE,2,2
+3,when are the images taken,TRUE,Andyshen555__59a8699c896e4e2ebc,0,"[52, 116, 118]",2,TRUE,3,2
+8,what direction are the planes facing?,TRUE,fbordwel__4d018d292ec644e791240,0,"[29, 43, 46]",1,TRUE,4,3
+9,where are the pictures taken,TRUE,fbordwel__4d018d292ec644e791240,0,"[29, 43, 46]",1,TRUE,5,4
+10,when is the picture taken,TRUE,fbordwel__4d018d292ec644e791240,0,"[29, 43, 46]",2,TRUE,6,4
+11,what is in the picture,TRUE,fbordwel__4d018d292ec644e791240,0,"[29, 43, 46]",3,FALSE,6,4
+12,where are the objects,TRUE,fbordwel__4d018d292ec644e791240,0,"[29, 43, 46]",1,TRUE,7,5
+13,how many objects are in the picture,TRUE,fbordwel__4d018d292ec644e791240,0,"[29, 43, 46]",3,FALSE,7,5
+14,how facing,TRUE,noah.c__f8f67d3bc120451195e8b64,0,"[50, 53, 56]",1,TRUE,8,6
+15,where at,TRUE,noah.c__f8f67d3bc120451195e8b64,0,"[50, 53, 56]",3,FALSE,8,6
+16,how weather,TRUE,noah.c__f8f67d3bc120451195e8b64,0,"[97, 117, 22]",2,TRUE,9,6
+17,how facing,TRUE,noah.c__f8f67d3bc120451195e8b64,0,"[97, 117, 22]",1,TRUE,10,7
+18,what is the color of the airplane,TRUE,tung3__b24e6011a7a0422b8816e754,0,"[40, 55, 57]",1,TRUE,11,8
+19,where is the airplane,TRUE,tung3__b24e6011a7a0422b8816e754,0,"[40, 55, 57]",1,TRUE,12,9
+20,what is the primary object,TRUE,fbordwel__4d018d292ec644e791240,0,"[66, 37, 77]",3,FALSE,12,9
+21,where are the objects located,TRUE,fbordwel__4d018d292ec644e791240,0,"[66, 37, 77]",1,TRUE,13,10
+22,where is the picture taken,TRUE,fbordwel__4d018d292ec644e791240,0,"[66, 37, 77]",1,TRUE,14,11
+23,what is the time of day,TRUE,fbordwel__4d018d292ec644e791240,0,"[66, 37, 77]",2,TRUE,15,11
+24,where is the picture taken from,TRUE,fbordwel__4d018d292ec644e791240,0,"[66, 37, 77]",2,TRUE,16,11
+29,what is the color of the airplane,TRUE,tung3__b24e6011a7a0422b8816e754,0,"[33, 35, 36]",1,TRUE,17,12
+30,where is the airplane,TRUE,tung3__b24e6011a7a0422b8816e754,0,"[33, 35, 36]",1,TRUE,18,13
+31,how many engines does the plane have,TRUE,tung3__b24e6011a7a0422b8816e754,0,"[33, 35, 36]",3,FALSE,18,13
+34,what is the object in the image,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[12, 34, 106]",3,FALSE,18,13
+35,where is the place,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[12, 34, 106]",2,TRUE,19,13
+36,when is the image taken,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[12, 34, 106]",2,TRUE,20,13
+37,what is the color of the object,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[12, 34, 106]",1,TRUE,21,14
+38,how big is the object,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[12, 34, 106]",3,FALSE,21,14
+39,what is the background,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[12, 34, 106]",2,TRUE,22,14
+40,how is the image faced,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[12, 34, 106]",3,FALSE,22,14
+46,what color is the object,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[7, 20, 25]",1,TRUE,23,15
+47,where is the image taken,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[7, 20, 25]",1,TRUE,24,16
+48,what is the background,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[7, 20, 25]",2,TRUE,25,16
+49,when is the image taken,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[7, 20, 25]",2,TRUE,26,16
+50,how many objects are in one image,TRUE,ashleykim__567bb4d7aaa847c1a3d9,0,"[7, 20, 25]",3,FALSE,26,16
+61,what airline do the planes belong to?,TRUE,CorgiOverlord__e05e411f84774ff5,0,"[18, 19, 27]",2,TRUE,27,16
+62,where are the planes located?,TRUE,CorgiOverlord__e05e411f84774ff5,0,"[18, 19, 27]",1,TRUE,28,17
+63,what direction are the planes facing?,TRUE,CorgiOverlord__e05e411f84774ff5,0,"[18, 19, 27]",1,TRUE,29,18
+69,where is the plane facing (left or right),TRUE,jang88__cdfa8d8a80584fcb9bb7076,0,"[15, 26, 13]",1,TRUE,30,19
+70,what is the major color of the plane,TRUE,jang88__cdfa8d8a80584fcb9bb7076,0,"[15, 26, 13]",1,TRUE,31,20
+71,where in the picture is the plane,TRUE,jang88__cdfa8d8a80584fcb9bb7076,0,"[15, 26, 13]",3,FALSE,31,20
+74,where is the name of the airline,TRUE,jang88__cdfa8d8a80584fcb9bb7076,0,"[39, 41, 44]",3,FALSE,31,20
+75,what do you see in the background,TRUE,jang88__cdfa8d8a80584fcb9bb7076,0,"[39, 41, 44]",2,TRUE,32,20
+79,what direction are the planes facing,TRUE,rzhu45__4d8f5b03e7c243719120f17,0,"[61, 48, 49]",1,TRUE,33,21
+80,where are the planes,TRUE,rzhu45__4d8f5b03e7c243719120f17,0,"[61, 48, 49]",1,TRUE,34,22
+81,where are the planes,TRUE,rzhu45__4d8f5b03e7c243719120f17,0,"[61, 48, 49]",1,TRUE,35,23
+82,what direction are the planes facing,TRUE,rzhu45__4d8f5b03e7c243719120f17,0,"[67, 71, 72]",1,TRUE,36,24
+83,what is the weather like,TRUE,rzhu45__4d8f5b03e7c243719120f17,0,"[67, 71, 72]",2,TRUE,37,24
+84,where are the planes located,TRUE,rzhu45__4d8f5b03e7c243719120f17,0,"[67, 71, 72]",1,TRUE,38,25
+91,where is the wheel,TRUE,liujunzhe123__9b009edd40304588a,0,"[38, 60, 70]",3,FALSE,38,25
+92,what is the moving status of the objects,TRUE,liujunzhe123__9b009edd40304588a,0,"[38, 60, 70]",2,TRUE,39,25
+96,where are they,TRUE,ning__5cee8a509d0c4a8788a364eaf,0,"[2, 3, 4]",2,TRUE,40,25
+97,what is the weather,TRUE,ning__5cee8a509d0c4a8788a364eaf,0,"[2, 3, 4]",2,TRUE,41,25
+98,what is the color,TRUE,ning__5cee8a509d0c4a8788a364eaf,0,"[2, 3, 4]",1,TRUE,42,26
+99,what is the weathter,TRUE,liujunzhe123__9b009edd40304588a,0,"[59, 21, 58]",2,TRUE,43,26
+100,where is the bushes,TRUE,liujunzhe123__9b009edd40304588a,0,"[59, 21, 58]",2,TRUE,44,26
