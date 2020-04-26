@@ -1,6 +1,6 @@
 natsort==6.0.0
 more-itertools==8.2.0
-Pillow==7.1.0
+Pillow==6.2.2
 
 # Basic Django
 Django==2.2.10
