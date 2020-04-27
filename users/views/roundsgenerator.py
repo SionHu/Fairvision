@@ -212,7 +212,7 @@ def pushPostList(request, phase='1'):
 def popGetList(count=3, phase='1'):
     A = Phase.objects.select_for_update().get_or_create(phase='A')[0]
     B = Phase.objects.select_for_update().get_or_create(phase='B')[0]
-    AnotAllowed = ImageModel.objects.count() - len(A.post) < count
+    AnotAllowed = True# ImageModel.objects.count() - len(A.post) < count
     BnotAllowed = len(B.post) == 0
     print(AnotAllowed , BnotAllowed)
     if AnotAllowed and not BnotAllowed:
