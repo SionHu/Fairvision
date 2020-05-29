@@ -1,4 +1,3 @@
-
 import cv2
 import sys
 import scipy as sp
@@ -10,6 +9,9 @@ from os.path import isfile, join
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.cluster.hierarchy import fcluster
+import timeit
+
+start = timeit.default_timer()
 
 # Function To find the keypoints using SIFT and SURF
 def keypoints(image):
@@ -32,7 +34,7 @@ def keypoints(image):
 ##    cv2.imwrite('siftImage.jpg', img)
 ######################################################################################################
 
-    # SUFR Detector: somehow SURF not working
+    # SUFR Detector: need to configure SURF from opencv_contrib
     # surf = cv2.SURF(4000)
     # kp2, d2 = surf.detectAndCompute(gray,None,useProvidedKeypoints = False)
 
@@ -160,7 +162,7 @@ def allMatching(directory):
 
   #  cv2.normalize(np.array(symDistMat), np.array(symDistMat), 0, 255, cv2.cv.CV_MINMAX)
     cv2.imwrite('matrix.jpg', np.array(symDistMat))
-    print(np.array(symDistMat))
+    # print(np.array(symDistMat))
     return np.array(symDistMat)
 
 # This function gives a Dendrogram with a horizontal line at the specified value (max_d)
@@ -175,7 +177,7 @@ def fancy_dendrogram(*args, **kwargs):
 
     if not kwargs.get('no_plot', False):
         plt.title('Hierarchical Clustering Dendrogram (truncated)')
-        plt.xlabel('index')
+        plt.xlabel('index or (cluster size)')
         plt.ylabel('distance')
         for i, d, c in zip(ddata['icoord'], ddata['dcoord'], ddata['color_list']):
             x = 0.5 * sum(i[1:3])
@@ -205,13 +207,13 @@ def hClustering(dmatrix):
     plt.savefig('dendrogram.png')
 
     # Setting the cutOff value, this is the distance value on the y-axis
-    cutOff = 500
+    cutOff = 45
 
     # Plot the truncated Dendrogram indicating the number of clusters formed below the specified value (max_d)
     # with x-axis having the index and y-axis having the distance
     fancy_dendrogram(Z,
-    truncate_mode='lastp',
-    p=1000,
+    truncate_mode='lastp',  # show only the last p merged clusters
+    p=45, # show only the last p merged clusters
     leaf_rotation=90.,
     leaf_font_size=12.,
     show_contracted=True,
@@ -224,13 +226,16 @@ def hClustering(dmatrix):
     print("The Clusters are:")
     print(clusters)
 
-##    # After getting the clusters, plot them using scatter plots
-##    plt.figure(figsize=(10, 8))
-##    plt.scatter(dmatrix[:,0], dmatrix[:,1], c=clusters, cmap='prism')  # plot points with cluster dependent colors
-##    plt.savefig('scatterPlot.png')
+    # After getting the clusters, plot them using scatter plots
+    plt.figure(figsize=(10, 8))
+    plt.scatter(dmatrix[:,0], dmatrix[:,1], c=clusters, cmap='prism')  # plot points with cluster dependent colors
+    plt.savefig('scatterPlot.png')
 
 
 #keypoints('ST2MainHall4050.jpg')
 #matching('ST2MainHall4049.jpg', 'ST2MainHall4050.jpg')
 distMatrix = allMatching('images')
 hClustering(distMatrix)
+
+stop = timeit.default_timer()
+print('Time: ', stop - start)
