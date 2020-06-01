@@ -1,3 +1,10 @@
+/*Font Awesome Fonts*/
+@font-face {
+    font-family: 'FontAwesome';
+//in url add your folder path of FontAwsome Fonts
+src: url('font-awesome/fontawesome-webfont.ttf') format('truetype');
+}
+
 body{
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: 16px;
@@ -160,6 +167,22 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
     right: 0;
     color: #FFFFFF;
+}
+
+a.back-to-top {
+    display: none;
+    width: 60px;
+    height: 60px;
+    text-indent: -9999px;
+    position: fixed;
+    z-index: 999;
+    right: 20px;
+    bottom: 20px;
+    content: "TOP";
+    background: #6494A0 url('/static/img/up-arrow.png') no-repeat center ;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
 }
 /*End of Button*/
 
@@ -356,8 +379,8 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 .team-member img {
-  width: 14rem;
-  height: 14rem;
+  width: 12rem;
+  height: 12rem;
   border: 0.5rem solid rgba(0, 0, 0, 0.1);
 }
 .team-member h4 {

@@ -22,6 +22,10 @@
     <!-- Load icon library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <!-- JQuery UI -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
     {% if title %}
     <title>InfoSite - {{ title }}</title>
     {% else %}
@@ -64,6 +68,7 @@
     </nav>
 </div>
 
+<a href="#" class="back-to-top">TOP</a>
 <!--  Content of pages that implements base  -->
 <div class="content" style="padding-top: 55px; padding-bottom: 70px">
     {% block content %} {% endblock %}
@@ -71,11 +76,23 @@
 <!--  End of content  -->
 
 <!--  Footer  -->
-<footer class="footer footer-copyright py-3 fixed-bottom text-center" style="background-color: white">
+<footer class="footer footer-copyright py-3  text-center" style="background-color: white">
     Copyright © 2019 Purdue CAM2 Research Group Crowdsourcing Team. All rights reserved.
 </footer>
 
 <!--  End of Footer  -->
+
+<script>
+    var amountScrolled = 300;
+
+    $(window).scroll(function() {
+        if ( $(window).scrollTop() > amountScrolled ) {
+            $('a.back-to-top').fadeIn('slow');
+        } else {
+            $('a.back-to-top').fadeOut('slow');
+        }
+    });
+</script>
 
 </body>
 </html>
