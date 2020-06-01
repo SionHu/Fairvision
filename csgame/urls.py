@@ -25,7 +25,13 @@ from . import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path('admin/users/experiment', player.downloadExperiment),
-    path('', home.home, name='home'),
+#     path('', home.home, name='home'),
+    url(r'^$', home.home, name='home'),
+    url(r'^about/$', home.about, name='about'),
+    url(r'^publication/$', home.publication, name='publication'),
+    url(r'^service/$', home.service, name='service'),
+    url(r'^service-index/$', home.serviceindex, name='serviceindex'),
+
 
     path('accounts/', include('django.contrib.auth.urls')),
     # path('accounts/signup/', home.SignUpView.as_view(), name='signup'),
@@ -39,7 +45,7 @@ urlpatterns = [
     url(r'^stop/$', views.stop, name='stop'),
     url(r'^feedback/$', views.feedback, name='feedback'),
 
-    # url(r'^phase01/$', gamep.phase01, name='phase01'),
+
     url(r'^phase01a/$', gamep.phase01a, name='phase01a'),
     url(r'^phase01b/$', gamep.phase01b, name='phase01b'),
     url(r'^phase02/$', gamep.phase02, name='phase02'),

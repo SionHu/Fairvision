@@ -1,51 +1,108 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block css %}
-{% endblock %}
-
-{% block scripts %}
-
-{% endblock %}
 
 {% block content %}
 
-<div class="container" style="padding-top: 50px;">
-
-    <div id = "header" style="text-align: center;">
-        <h2 style="padding-top: 80px">About: CAM2 Crowdsourcing Team</h2>
+<div class="container">
+    <!--Intro-->
+    <div class="row justify-content-center align-items-center">
+        <div style="text-align: center;">
+            <h1 class="title">About Us</h1>
+            <img src="../static/img/about/crowdsourcing.jpg" class="img-fluid m-3" alt="Responsive image" style="opacity: 0.7;box-shadow: 10px 10px 5px rgba(0,0,0,0.2)">
+        </div>
+        <div class="text-center">
+            <p class="maintext">Crowdsourcing utilizes the knowledge of humans to complete a task. In the scope of
+                research, we are using the crowd to handle specific tasks that may be hard for a machine to do
+                or improve the work of a machine. This may include tasks such as detecting bias within image datasets
+                using human knowledge rather than machines, since humans are better at
+                distinguishing features within images. This semester, we are utilizing crowdsourcing to help select the
+                most suitable machine model to use for unsupervised domain adaptation.
+                We use the crowd to classify images to datasets and generate a confusion matrix detailing the similarity
+                of images across several datasets.
+            </p>
+        </div>
     </div>
 
-<hr> <!--  Divider line  -->
+    <!--Timeline-->
+    <ul class="timeline">
+        <li>
+            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>2009-2011</h4>
+                    <h4 class="subheading">Our Humble Beginnings</h4>
+                </div>
+                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>
+            </div>
+        </li>
+        <li class="timeline-inverted">
+            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>March 2011</h4>
+                    <h4 class="subheading">An Agency is Born</h4>
+                </div>
+                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>
+            </div>
+        </li>
+        <li>
+            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>December 2012</h4>
+                    <h4 class="subheading">Transition to Full Service</h4>
+                </div>
+                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>
+            </div>
+        </li>
+        <li class="timeline-inverted">
+            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>July 2014</h4>
+                    <h4 class="subheading">Phase Two Expansion</h4>
+                </div>
+                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>
+            </div>
+        </li>
+        <li class="timeline-inverted">
+            <div class="timeline-image">
+                <h4>Be Part<br />Of Our<br />Story!</h4>
+            </div>
+        </li>
+    </ul>
+</div>
+<!-- Team-->
+<section class="page-section bg-light" id="team">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="title">Our Team</h2>
+            <h4 class="subtitle">Lorem ipsum dolor sit amet consectetur.</h4>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/avatar.png" alt="" />
+                    <h4>John Doe1</h4>
+                    <p class="text-muted">Lead Designer</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/avatar.png"  alt="" />
+                    <h4>John Doe2</h4>
+                    <p class="text-muted">Lead Marketer</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/avatar.png" alt="" />
+                    <h4>John Doe3</h4>
+                    <p class="text-muted">Lead Developer</p>
+                </div>
+            </div>
+        </div>
 
-<div class="container" style="width: 80%; " >
-<div class="row">
-    <h4>
-        Crowdsourcing Team of <a href="https://www.cam2project.net" style="color: yellow">Purdue CAM2 Research Group</a> was established in 2019 Spring semester, dedicate to find the crowdsourcing approaches for biased image database problem. 
-    </h4>
-</div>
-<hr> <!--  Divider line  -->
-<div class="row">
-    <h4>
-        Team member: 
-        <a href="https://www.cs.purdue.edu//people/faculty/mingyin/" style="color: white">Ming Yin (professor)</a>, 
-        <a href="https://purduehelps.org/people.html#crowdsourcing-for-data-bias" style="color: white">Xiao Hu(team leader), Haobo Wang, Gore Kao, Anirudh Vegesana, Somesh Dube, Kaiwen Yu. </a>
-    </h4>
-</div>
-<hr> <!--  Divider line  -->
-<div class="row">
-    <h4>
-        Research focus: Detect and report the biased attributes in the image datasets by utilizing crowdsourcing. 
-    </h4>
-</div>
-<hr> <!--  Divider line  -->
-<div class="row">
-    <h4>
-        Publication: <b>Discovering Biases in Image Datasets with the Crowd</b><br>
-        <div style="font-size: medium">Accepted by <a href="https://www.humancomputation.com" style="color: yellow">2019 Human Computation and Crowdsourcing Conference(2019HCOMP)</a> Work-in-progress track.</div>
-    </h4>
-</div>
-</div>
-
-
-{% endblock %}
+    </div>
+</section>
+{% endblock%}
