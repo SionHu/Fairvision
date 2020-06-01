@@ -27,10 +27,10 @@ urlpatterns = [
     path('admin/users/experiment', player.downloadExperiment),
 #     path('', home.home, name='home'),
     url(r'^$', home.home, name='home'),
-    url(r'^about/$', home.about, name='about'),
-    url(r'^publication/$', home.publication, name='publication'),
-    url(r'^service/$', home.service, name='service'),
-    url(r'^service-index/$', home.serviceindex, name='serviceindex'),
+    url(r'^about/$', views.about, name='about'),
+    url(r'^publication/$', views.publication, name='publication'),
+    url(r'^service/$', views.service, name='service'),
+    url(r'^service-index/$', views.serviceindex, name='serviceindex'),
 
 
     path('accounts/', include('django.contrib.auth.urls')),

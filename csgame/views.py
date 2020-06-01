@@ -27,7 +27,16 @@ def feedback(request):
     return render(request, 'feedback.html')
 
 def about(request):
-    return render(request, 'about.html')
+    return render(request, 'about.html', {'title': 'About'})
+
+def publication(request):
+    return render(request, 'publication.html', {'title': 'Publication'})
+
+def service(request):
+    return render(request, 'service.html')
+
+def serviceindex(request):
+    return render(request, 'service-index.html')
 
 def handler404(request, *args, **argv):
     return render(request, '404.html', status=404)

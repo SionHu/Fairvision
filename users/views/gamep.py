@@ -230,4 +230,4 @@ def phase03(request, previewMode=False):
         random.shuffle(attributes)
         display_list = list(chunked(attributes, 5))
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
-        return render(request, 'phase03-update.html', {'statements': attributes, 'display_list':display_list, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
+        return render(request, 'phase03.html', {'statements': attributes, 'display_list':display_list, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})

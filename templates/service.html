@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'info-base.html' %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
     <h3 class="headline"> Crowdsourcing Game</h3>
     <table><tr>
         <td width="600"> This is our crowdsourcing game! Please feel free to contribute to our project to find more meaningful bias.
-            <a class="nav-link" href="http://cam2-crowdsourcing.herokuapp.com/" style="color: #4947FF">Learn more<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{% url 'serviceindex' %}" style="color: #4947FF">Learn more<span class="sr-only">(current)</span></a>
             <img src="https://pngimage.net/wp-content/uploads/2018/05/crowdsourcing-png-3.png" style="width: 50%" align="right">
         </td>
     </tr></table>

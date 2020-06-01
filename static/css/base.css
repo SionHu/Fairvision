@@ -13,6 +13,7 @@ font-family: 'Numans', sans-serif;
 .container{
 height: 100%;
 align-content: center;
+  background-color: #758B8D
 }
 
 .card{
