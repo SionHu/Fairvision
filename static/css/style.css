@@ -115,11 +115,13 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
     background-color: white;
     font-size: 18px;
+    padding: 5px!important;
 }
 
 .navbar-brand {
     color: #333;
     font-size: 25px;
+    padding-left: 5rem;
 }
 /*End of Navbar*/
 
@@ -186,12 +188,21 @@ a.back-to-top {
 }
 /*End of Button*/
 
-/*Carousel*/
-.carousel{
-    width: 100%;
-    max-height: 500px
+/*Jumbotron*/
+.jumbotron {
+    background-image: url("/static/img/crowd1.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    color: black;
+    height: 500px;
 }
-/*End of Carousel*/
+
+.jumbotron p {
+    font-size: x-large;
+    font-weight: 400;
+}
+/*End of Jumbotron*/
 
 /*Divider*/
 .divider{
