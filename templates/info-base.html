@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <!-- Load icon library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/089c8a99ff.js" crossorigin="anonymous"></script>
 
     <!-- JQuery UI -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -36,8 +36,8 @@
 <body>
 
 <!--  Navebar  -->
-<div class="nav-container fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-fixed-top">
+<div class="nav-container ">
+    <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand ml-4" href="/">
             <img src="../static/img/logo.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
             CSGAME
@@ -55,10 +55,10 @@
                     <a class="nav-link" href="{% url 'publication' %}">Publication</a>
                 </li>
                 <li class="nav-item ml-4">
-                    <a class="nav-link" href="/">Contact</a>
+                    <a class="nav-link" href="{% url 'home' %}#section5">Contact</a>
                 </li>
                 <li class="nav-item ml-4">
-                    <a href="{% url 'service' %}" class="button"><span>Service</span></a>
+                    <a href="{% url 'service' %}" class="sbutton"><span>Service</span></a>
                 </li>
             </ul>
 
@@ -68,7 +68,7 @@
 
 <a href="#" class="back-to-top">TOP</a>
 <!--  Content of pages that implements base  -->
-<div class="content" style="padding-top: 55px">
+<div class="content">
     {% block content %} {% endblock %}
 </div>
 <!--  End of content  -->

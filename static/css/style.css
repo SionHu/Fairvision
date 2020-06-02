@@ -1,8 +1,6 @@
-/*Font Awesome Fonts*/
-@font-face {
-    font-family: 'FontAwesome';
-//in url add your folder path of FontAwsome Fonts
-src: url('font-awesome/fontawesome-webfont.ttf') format('truetype');
+
+html {
+    scroll-behavior: smooth;
 }
 
 body{
@@ -24,7 +22,7 @@ a {
 
 a:hover {
     color: #333333;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -33,6 +31,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .content {
     min-height: 70%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
 
 .hometitle{
@@ -59,7 +64,7 @@ h1, h2, h3, h4, h5, h6 {
     font-style: normal;
     font-variant: small-caps;
     text-transform: capitalize;
-    margin: 80px 50px 50px 50px;
+    margin: 50px 50px 50px 50px;
 }
 
 .subtitle{
@@ -94,9 +99,10 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 16px;
     letter-spacing: 1px;
     word-spacing: 1px;
+    line-height: 1.6;
     color: #000000;
     font-weight: 400;
-    margin: 50px 100px 150px 100px;
+    margin: 50px 100px 50px 100px;
 }
 
 
@@ -126,7 +132,22 @@ h1, h2, h3, h4, h5, h6 {
 /*End of Navbar*/
 
 /*Button*/
+
 .button {
+    display: inline-block;
+    border-radius: 5px;
+    border: 3px solid #97C0BC;
+    background-color: #6494A0;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px;
+    min-width: 120px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.sbutton {
     display: inline-block;
     border-radius: 2px;
     background-image: linear-gradient(
@@ -144,14 +165,14 @@ h1, h2, h3, h4, h5, h6 {
     margin: 5px;
 }
 
-.button span {
+.sbutton span {
     cursor: pointer;
     display: inline-block;
     position: relative;
     transition: 0.5s;
 }
 
-.button span:after {
+.sbutton span:after {
     content: '\00bb';
     position: absolute;
     opacity: 0;
@@ -160,12 +181,12 @@ h1, h2, h3, h4, h5, h6 {
     transition: 0.5s;
 }
 
-.button:hover span {
+.sbutton:hover span {
     padding-right: 15px;
     color: #FFFFFF;
 }
 
-.button:hover span:after {
+.sbutton:hover span:after {
     opacity: 1;
     right: 0;
     color: #FFFFFF;
@@ -195,7 +216,7 @@ a.back-to-top {
     background-repeat: no-repeat;
     background-size: 100% auto;
     color: black;
-    height: 500px;
+    height: 550px;
 }
 
 .jumbotron p {
@@ -399,4 +420,20 @@ a.back-to-top {
   margin-bottom: 0;
 }
 /*Emd of Team*/
+
+/*Contact section*/
+.map-container-section {
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
+}
+.map-container-section iframe {
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
+}
+/*End of Contact section*/
 
