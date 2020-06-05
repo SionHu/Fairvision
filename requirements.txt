@@ -3,7 +3,7 @@ more-itertools==8.2.0
 Pillow>=6.2.2
 
 # Basic Django
-Django==2.2.10
+Django==2.2.13
 django-cors-headers==2.4.0
 djangorestframework==3.9.1
 pytz==2019.1
