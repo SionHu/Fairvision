@@ -4,7 +4,7 @@ html {
 }
 
 body{
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: 16px;
     letter-spacing: 1px;
     word-spacing: 1px;
@@ -26,7 +26,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
 }
 
 .content {
@@ -41,7 +41,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hometitle{
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: 50px;
     letter-spacing: 2.8px;
     word-spacing: 1.6px;
@@ -54,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .title{
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: 50px;
     letter-spacing: 2.8px;
     word-spacing: 1.6px;
@@ -68,7 +68,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .subtitle{
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: 20px;
     letter-spacing: 1.4px;
     word-spacing: 0.8px;
@@ -82,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .headline{
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: 20px;
     letter-spacing: 1.4px;
     word-spacing: 0.8px;
@@ -95,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .maintext{
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: 16px;
     letter-spacing: 1px;
     word-spacing: 1px;
