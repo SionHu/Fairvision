@@ -24,47 +24,55 @@
                 <img src="https://pngimage.net/wp-content/uploads/2018/05/crowdsourcing-png-3.png" alt="..." class="center" style="width: 25%">
              </div>
         </div>
-        
-        <div class="col-lg-5 mb-lg-0 mb-4">
 
-                <!-- Form with header -->
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Header -->
-                        <div class="form-header blue accent-1">
-                            <h3 class="mt-2"><i class="fas fa-envelope"></i> Request a Demo</h3>
-                        </div>
-                        <!-- Body -->
-                        <div class="md-form">
-                            <i class="fas fa-user prefix grey-text"></i><label for="form-name">Your name</label>
-                            <input type="text" id="form-name" class="form-control">
-                        </div>
-                        <div class="md-form">
-                            <i class="fas fa-envelope prefix grey-text"></i><label for="form-email">Your email</label>
-                            <input type="text" id="form-email" class="form-control">
+<!--        <div class="col-lg-5 mb-lg-0 mb-4">-->
 
-                        </div>
-                        <div class="md-form">
-                            <i class="fas fa-tag prefix grey-text"></i><label for="form-Subject">Subject</label>
-                            <input type="text" id="form-subject" class="form-control">
+<!--                &lt;!&ndash; Form with header &ndash;&gt;-->
+<!--                <div class="card">-->
+<!--                    <div class="card-body">-->
+<!--                        &lt;!&ndash; Header &ndash;&gt;-->
+<!--                        <div class="form-header blue accent-1">-->
+<!--                            <h3 class="mt-2"><i class="fas fa-envelope"></i> Request a Demo</h3>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; Body &ndash;&gt;-->
+<!--                        <div class="md-form">-->
+<!--                            <i class="fas fa-user prefix grey-text"></i><label for="form-name">Your name</label>-->
+<!--                            <input type="text" id="form-name" class="form-control">-->
+<!--                        </div>-->
+<!--                        <div class="md-form">-->
+<!--                            <i class="fas fa-envelope prefix grey-text"></i><label for="form-email">Your email</label>-->
+<!--                            <input type="text" id="form-email" class="form-control">-->
 
-                        </div>
-                        <div class="md-form">
-                            <i class="fas fa-pencil-alt prefix grey-text"></i><label for="form-text">Send message</label>
-                            <textarea id="form-text" class="form-control md-textarea" rows="3"></textarea>
+<!--                        </div>-->
+<!--                        <div class="md-form">-->
+<!--                            <i class="fas fa-tag prefix grey-text"></i><label for="form-Subject">Subject</label>-->
+<!--                            <input type="text" id="form-subject" class="form-control">-->
 
-                        </div>
-                        <div class="text-center">
-                            <a href="" class="button">
-                                <span>Send</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Form with header -->
-        </div>
+<!--                        </div>-->
+<!--                        <div class="md-form">-->
+<!--                            <i class="fas fa-pencil-alt prefix grey-text"></i><label for="form-text">Send message</label>-->
+<!--                            <textarea id="form-text" class="form-control md-textarea" rows="3"></textarea>-->
+
+<!--                        </div>-->
+<!--                        <div class="text-center">-->
+<!--                            <a href="" class="button">-->
+<!--                                <span>Send</span>-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; Form with header &ndash;&gt;-->
+<!--        </div>-->
+
+        <form role="form" action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Send</button>
+        </form>
+
     </div>
 </div>
+
 
 
 {% endblock%}

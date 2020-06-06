@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 
-from users.models import Player, CustomUser
+from users.models import Player, CustomUser, Contact
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -58,9 +58,20 @@ class PlayerChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username', 'email')
 
+class ContactForm(forms.Form):
+    name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    subject = forms.CharField(required=True)
+    message = forms.CharField(required=True, widget=forms.Textarea)
+    date_posted = forms.DateTimeField
+
+    class Meta:
+        model = Contact
+        fields = ( 'name', 'email', 'subject', 'message', 'date_posted')
+
 '''
 class RequesterSignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254)
+    email = forms.EmailField(max_length=254) 
     occupation = forms.CharField(label="Your occupation(optional)", required=False)
 
     fields = ('username', 'email', 'occupation', 'password1,', 'password2')

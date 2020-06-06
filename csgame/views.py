@@ -3,6 +3,8 @@ from django.conf import settings
 from django.http import *
 from django.shortcuts import render_to_response,redirect,render
 from users.models import HIT, Question
+from users.forms import ContactForm
+# from django.contrib.auth.forms import UserCreationForm
 import requests
 
 def profile(request):
@@ -33,7 +35,15 @@ def publication(request):
     return render(request, 'publication.html', {'title': 'Publication'})
 
 def service(request):
-    return render(request, 'service.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Request sent!')
+            return redirect('service')
+    else:
+        form = ContactForm()
+    return render(request, 'service.html', {'title': 'Service'}, {'form': form})
 
 def serviceindex(request):
     return render(request, 'service-index.html')
