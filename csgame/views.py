@@ -2,10 +2,14 @@ from datetime import datetime
 from django.conf import settings
 from django.http import *
 from django.shortcuts import render_to_response,redirect,render
+from django.contrib import messages
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
 from users.models import HIT, Question
 from users.forms import ContactForm
 # from django.contrib.auth.forms import UserCreationForm
 import requests
+
 
 def profile(request):
     return render(request, 'profile.html')
@@ -35,15 +39,23 @@ def publication(request):
     return render(request, 'publication.html', {'title': 'Publication'})
 
 def service(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        form = ContactForm()
+    else:
         form = ContactForm(request.POST)
         if form.is_valid():
+            subject = form.cleaned_data['subject']
+            name = form.cleaned_data['name']
+            from_email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(name+":"+subject, message, from_email, ['yu872@purdue.edu'])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
             form.save()
             messages.success(request, 'Request sent!')
             return redirect('service')
-    else:
-        form = ContactForm()
-    return render(request, 'service.html', {'title': 'Service'}, {'form': form})
+    return render(request, 'service.html', {'form': form})
 
 def serviceindex(request):
     return render(request, 'service-index.html')

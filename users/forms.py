@@ -58,16 +58,18 @@ class PlayerChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username', 'email')
 
-class ContactForm(forms.Form):
-    name = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
-    subject = forms.CharField(required=True)
-    message = forms.CharField(required=True, widget=forms.Textarea)
-    date_posted = forms.DateTimeField
+class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        fields = ( 'name', 'email', 'subject', 'message', 'date_posted')
+        fields = ( 'name', 'email', 'subject', 'message')
+
+        widgets = {
+        'name': forms.TextInput(attrs={'class':'form-control'}),
+        'email': forms.TextInput(attrs={'class':'form-control'}),
+        'subject': forms.TextInput(attrs={'class':'form-control'}),
+        'message': forms.Textarea(attrs={'class':'form-control sm-textarea', 'style':'height: 150px'}),
+        }
 
 '''
 class RequesterSignUpForm(UserCreationForm):

@@ -154,6 +154,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'csgame.wsgi.application'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 
 # Password validation

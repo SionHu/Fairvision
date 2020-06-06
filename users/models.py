@@ -252,14 +252,12 @@ class TextInstruction(models.Model):
     def __str__(self):
         return self.phase
 
-
 # Potential Clients' Contacts
 class Contact(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField()
-    subject = models.CharField(max_length=100)
-    message = models.TextField()
-    date_posted = models.DateTimeField(auto_now_add=True)
+    name = models.CharField("Your name", max_length=50)
+    email = models.EmailField("Your email")
+    subject = models.CharField("Dataset",max_length=100)
+    message = models.TextField("Description of your needs")
 
     def __str__(self):
         return self.subject
