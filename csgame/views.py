@@ -55,7 +55,7 @@ def service(request):
             form.save()
             messages.success(request, 'Request sent!')
             return redirect('service')
-    return render(request, 'service.html', {'form': form})
+    return render(request, 'service.html', {'form': form, 'title': 'Service'})
 
 def serviceindex(request):
     return render(request, 'service-index.html')

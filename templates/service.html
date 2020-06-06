@@ -31,11 +31,11 @@
                             <button class="button" type="submit">Request a demo</button>
                         </div>
                         {% if messages %}
-                        <ul class="messages">
                             {% for message in messages %}
-                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                <div class="alert alert-{{ message.tags }}">
+                                    {{ message }}
+                                </div>
                             {% endfor %}
-                        </ul>
                         {% endif %}
                     </form>
                 </div>
