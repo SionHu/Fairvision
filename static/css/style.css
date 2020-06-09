@@ -216,7 +216,7 @@ a.back-to-top {
     margin-top: auto;
     margin-bottom: auto;
     width: 400px;
-    background-color: rgba(164,164,164,0.4) !important ;
+    background-color: rgba(164,164,164,0.4);
 }
 
 .rectangle{

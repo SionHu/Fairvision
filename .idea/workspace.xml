@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="76f21add-767d-4350-b501-1238ec35ea8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/static/css/base.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/img/logo.jpg" beforeDir="false" />
@@ -12,6 +13,9 @@
       <change beforePath="$PROJECT_DIR$/templates/phase01a.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/phase01a.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/phase01b.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/phase01b.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/phase03.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/phase03.html" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/users/decorators.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/decorators.py" afterDir="false" />
+>>>>>>> 5091e1f411f984fdd7ee1fcbb427a6ff23bc6117
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +72,18 @@
       <recent name="$PROJECT_DIR$/static" />
       <recent name="$PROJECT_DIR$/templates" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
