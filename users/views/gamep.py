@@ -127,13 +127,10 @@ def phase01a(request, previewMode=False):
     # Get all the instructions
     instructions = Phase01_instruction.get_queryset(Phase01_instruction) or ['none']
 
-    #Get text instructions
-    text_inst = TextInstruction.objects.get(phase='01a')
-
     # Get all of the questions
     previous_questions = list(Question.objects.filter(isFinal=True).values_list('text', flat=True))
 
-    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'text_inst':text_inst, 'NUMROUNDS': NUMROUNDS[phase01a.__name__], 'object': OBJECT_NAME_PLURAL})
+    return render(request, 'phase01a.html', {'url': data, 'imgnum': roundsnum, 'questions': previous_questions, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions, 'NUMROUNDS': NUMROUNDS[phase01a.__name__], 'object': OBJECT_NAME_PLURAL})
 
 '''
 View for phase 01 b
@@ -176,9 +173,6 @@ def phase01b(request, previewMode=False):
     # Get all the insturctions sets
     instructions = Phase02_instruction.get_queryset(Phase02_instruction) or ['none']
 
-    #Get text instructions
-    text_inst = TextInstruction.objects.get(phase='01b')
-
     #allQuestions = dict(Question.objects.filter(id__in=[*ids for ids in questions]).values_list('id', 'text'))
     #questions = [[allQuestions[id] for id in ids] for ids in questions]
 
@@ -186,7 +180,7 @@ def phase01b(request, previewMode=False):
     question_list = [q.text for q in questions]
     qlist = list(chunked(padded(enumerate(question_list), n=2, next_multiple=True),2))
     print(qlist)
-    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : question_list, 'display_list': qlist, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions,'answer_list': [[i for i in q.answers.distinct().values_list('text', flat=True) if i != ''] for q in questions], 'text_inst':text_inst})
+    return render(request, 'phase01b.html', {'phase': 'PHASE 01b', 'image_url' : data, 'imgnum': imin, 'question_list' : question_list, 'display_list': qlist, 'assignmentId': assignmentId, 'previewMode': previewMode, 'instructions': instructions,'answer_list': [[i for i in q.answers.distinct().values_list('text', flat=True) if i != ''] for q in questions]})
     # The NLP server will be updated later?
 
 # function that should be accessible only with admin
