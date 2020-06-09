@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.sessions.models import Session
+from django.http import Http404
 from django.shortcuts import redirect
 from functools import wraps
 from .models import HIT
@@ -24,10 +25,7 @@ def player_required(func):
     def wrapper(request, *args, **kwargs):
         assignmentId = request.GET.get('assignmentId')
 
-        if assignmentId == 'ASSIGNMENT_ID_NOT_AVAILABLE':
-            assignmentId = None
-
-        if assignmentId:
+        if assignmentId is not None and assignmentId != 'ASSIGNMENT_ID_NOT_AVAILABLE':
             hitObj = HIT.objects.only('data').get_or_create(assignment_id=assignmentId, defaults={'data': {'startTime': datetime.now()}})[0]
             request.hit = hitObj.data
 
@@ -52,8 +50,10 @@ def player_required(func):
             hitId = 'admin'
             workerId = 'admin'
             return redirect(f"{request.path_info}?assignmentId={assignmentId}&hitId={hitId}&workerId={workerId}&turkSubmitTo=")
-        else:
+        elif assignmentId == 'ASSIGNMENT_ID_NOT_AVAILABLE':
             return func(request, *args, previewMode=True, **kwargs)
+        else:
+            raise Http404
     return wrapper
 
 
