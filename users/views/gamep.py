@@ -225,3 +225,18 @@ def phase03(request, previewMode=False):
         display_list = list(chunked(attributes, 5))
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
         return render(request, 'phase03.html', {'statements': attributes, 'display_list':display_list, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
+
+# View for step01
+@player_required
+def step01(request, previewMode=False):
+    return render(request, 'step01.html')
+
+# View for step02
+@player_required
+def step02(request, previewMode=False):
+    return render(request, 'step02.html')
+
+# View for step03
+@player_required
+def step03(request, previewMode=False):
+    return render(request, 'step03.html')
