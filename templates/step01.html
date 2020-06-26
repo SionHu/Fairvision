@@ -1,10 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2 class="title" style="color: #FFFFFF">Step 1</h2>
 
-</body>
-</html>
+    <hr>
+
+    <div class="row" >
+        <div class="col-md-6">
+            <!-- IMAGE -->
+            <div class="row">
+              <div class="col" >
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+              </div>
+            </div>
+
+            <div class="row ">
+              <div class="col" >
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+                  <img src="../static/img/anonymous-avatar-sm.jpg" style="width: 33%; padding: 6px">
+              </div>
+            </div>
+
+            <!-- END IMAGE -->
+        </div>
+
+
+
+        <div class="col-md-6">
+            <!-- FEATURE LIST -->
+            <div class="row-md-10" style="font-size:110%;padding-left: 25px">
+                <div class="col">
+                <label style="font-size: x-large">Enter Undetected Features</label>
+                <div class="help-tip">
+                    <p>
+                        Features provided below are produced by our explainable AI model based on the whole face dataset.
+                    </p>
+                </div>
+              </div>
+                <div style="color: yellow"><i class="fa fa-bell"> </i>
+                    Please add features you find in the images that are not in the following list
+                </div>
+            </div>
+            <div class="row m-3" style="padding-top: 10px">
+                <div class="col">
+                    <div class="rectangle" style="width: 100%; height: 15rem; overflow-y: auto;">
+                        <div class="card-content mt-2">
+                            <div class="row-md-11">
+                                <ul id="list_all"></ul>
+                                <ul>
+                                    <li>Nose</li>
+                                    <li>Ear Piercing</li>
+                                    <li>Short Hair</li>
+                                </ul>
+                                <ul hidden id="list_f" ></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END FEATURE LIST -->
+
+            <hr>
+
+            <!-- INPUT BAR -->
+            <div class="row-md-10" style="font-size:110%;padding-left: 25px">
+                <div class="input-group ml-3">
+                    <input class="form-control-sm ml-2 mr-2" id="F" type="text" name="F" maxlength="40" size="33.5" placeholder="enter discriptive features">
+                </div>
+            <div>
+                <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
+            </div>
+            <div id="alrt" style="color: yellow"></div>
+            </div>
+            <!-- END INPUT BAR -->
+        </div>
+    </div>
+
+
+    <script>
+        //"add" button listener when clicked
+        numF = 0;
+        var listNode_f = document.createElement("ul");
+
+        document.getElementById("add").addEventListener("click", function() {
+            //get the local storage of questions & answers
+            var total_list = JSON.parse(window.localStorage.getItem("total_list"));
+            //Get the question
+            var feats = document.getElementById("F").value.trim();
+
+
+            //Check user input using the checker function
+
+            var feat_list = feats.split(" ");
+
+            boo: if (feats !== "") {
+
+                //skipped myCheker
+
+                var listNode_f = document.getElementById('list_f'),
+                    liNode_f = document.createElement("LI"),
+                    txtNode_f = document.createTextNode(feats);
+
+                var listNode = document.getElementById('list_all'),
+                    liNode = document.createElement("LI"),
+                    txtNode = document.createTextNode(feats);
+                liNode.appendChild(txtNode);
+                listNode.appendChild(liNode);
+
+                liNode_f.appendChild(txtNode_f);
+                listNode_f.appendChild(liNode_f);
+
+                // If the input of feature is valid, increment numF counter
+                numF++;
+                
+            //add the new features to the array
+            total_list.push(liNode.innerHTML);
+            //store the current array of input
+            localStorage.setItem("total_list",JSON.stringify(total_list));
+
+            document.getElementById("F").value = ""; //clear entry field
+                }
+        });
+    </script>
+
+</div>
+{% endblock %}
