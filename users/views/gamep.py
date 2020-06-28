@@ -229,7 +229,15 @@ def phase03(request, previewMode=False):
 # View for step01
 # @player_required
 def step01(request, previewMode=False):
-    return render(request, 'step01.html')
+    url_list = []
+    if request.method == 'POST':
+        result = request.POST.get('data')
+        print("post result: ", result)
+        return HttpResponse(status=201)
+    else:
+        for i in range(9):
+            url_list.append("https://picsum.photos/seed/" + str(i+1) + "/100")
+    return render(request, 'step01.html', {'url':url_list})
 
 # View for step02
 # @player_required
@@ -240,7 +248,12 @@ def step02(request, previewMode=False):
 # @player_required
 def step03(request, previewMode=False):
     url_list = []
-    for i in range(1,22):
-        url_list.append("https://picsum.photos/seed/" + str(i) + "/100")
-    print(url_list)
-    return render(request, 'step03.html', {'feature': "earpircing", 'url':url_list})
+    feature = "earpircing"
+    if request.method == 'POST':
+        result = request.POST.get('data')
+        print("post result: ", result)
+        return HttpResponse(status=201)
+    else:
+        for i in range(1,22):
+            url_list.append("https://picsum.photos/seed/" + str(i) + "/100")
+    return render(request, 'step03.html', {'feature': feature, 'image_url':url_list})

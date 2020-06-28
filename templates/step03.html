@@ -11,8 +11,6 @@
 
     var dict = {};
     var count = 0;
-    var attr = "{{feature}}";
-    console.log(attr);
 
     function submit(){
         for (var i = 1; i < 22; i++) {
@@ -22,20 +20,17 @@
             }
         }
 
-        dict = {attr: count};
-
-        console.log(dict);
+        console.log(count);
         var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         //post method
-        // $.post(window.location, {
-        //     "data": resultArr,
-        //     csrfmiddlewaretoken : CSRFtoken
-        // }, function(data){}).fail(function() {
-        //     alert( "An error occurred. Could not submit your data." );
-        // });
-
+        $.post(window.location, {
+            'data': count,
+            csrfmiddlewaretoken : CSRFtoken
+        }, function(data){}).fail(function() {
+            alert( "An error occurred. Could not submit your data." );
+        });
         // reload the webpage to set new images
-        var countdown = 200;  // your countdown in milliseconds
+        // var countdown = 200;  // your countdown in milliseconds
 
         // try {
         //     setTimeout(function () {
@@ -145,9 +140,6 @@
     </div>
 
     <hr> <!--  Divider line  -->
-<!--    <div class="alert alert-secondary" role="alert" style="text-align: center">-->
-<!--        Please select images that has the feature <b>Earpiercing</b>.-->
-<!--    </div>-->
 
     <div class="row" style="text-align: center">
         <div class="col" style="font-size: larger">
@@ -157,69 +149,11 @@
 
     <div class="row">
         <ul>
-            <li><input type="checkbox" id="cb1" />
-                <label for="cb1"><img src="https://picsum.photos/seed/1/100" /></label>
+            {% for url in image_url %}
+            <li><input type="checkbox" id="cb{{forloop.counter}}" />
+                <label for="cb{{forloop.counter}}"><img src="{{url}}" /></label>
             </li>
-            <li><input type="checkbox" id="cb2" />
-                <label for="cb2"><img src="https://picsum.photos/seed/2/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb3" />
-                <label for="cb3"><img src="https://picsum.photos/seed/3/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb4" />
-                <label for="cb4"><img src="https://picsum.photos/seed/4/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb5" />
-                <label for="cb5"><img src="https://picsum.photos/seed/5/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb6" />
-                <label for="cb6"><img src="https://picsum.photos/seed/6/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb7" />
-                <label for="cb7"><img src="https://picsum.photos/seed/7/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb8" />
-                <label for="cb8"><img src="https://picsum.photos/seed/8/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb9" />
-                <label for="cb9"><img src="https://picsum.photos/seed/9/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb10" />
-                <label for="cb10"><img src="https://picsum.photos/seed/10/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb11" />
-                <label for="cb11"><img src="https://picsum.photos/seed/11/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb12" />
-                <label for="cb12"><img src="https://picsum.photos/seed/12/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb13" />
-                <label for="cb13"><img src="https://picsum.photos/seed/13/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb14" />
-                <label for="cb14"><img src="https://picsum.photos/seed/14/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb15" />
-                <label for="cb15"><img src="https://picsum.photos/seed/15/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb16" />
-                <label for="cb16"><img src="https://picsum.photos/seed/16/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb17" />
-                <label for="cb17"><img src="https://picsum.photos/seed/17/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb18" />
-                <label for="cb18"><img src="https://picsum.photos/seed/18/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb19" />
-                <label for="cb19"><img src="https://picsum.photos/seed/19/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb20" />
-                <label for="cb20"><img src="https://picsum.photos/seed/20/100" /></label>
-            </li>
-            <li><input type="checkbox" id="cb21" />
-                <label for="cb21"><img src="https://picsum.photos/seed/21/100" /></label>
-            </li>
+            {% endfor %}
         </ul>
     </div>
 
