@@ -239,4 +239,8 @@ def step02(request, previewMode=False):
 # View for step03
 # @player_required
 def step03(request, previewMode=False):
-    return render(request, 'step03.html')
+    url_list = []
+    for i in range(1,22):
+        url_list.append("https://picsum.photos/seed/" + str(i) + "/100")
+    print(url_list)
+    return render(request, 'step03.html', {'feature': "earpircing", 'url':url_list})
