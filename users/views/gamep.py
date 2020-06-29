@@ -22,6 +22,7 @@ import random
 import requests
 import json
 from more_itertools import chunked, padded
+from users.forms import featureForm
 
 
 # self-defined decorators for crowd worker and admin/staff be able to work
@@ -242,13 +243,25 @@ def step01(request, previewMode=False):
 # View for step02
 # @player_required
 def step02(request, previewMode=False):
-    return render(request, 'step02.html')
+    if request.method == 'POST':
+        form = featureForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            nose = form.cleaned_data['nose']
+            haircolor = form.cleaned_data['haircolor']
+            skintone = form.cleaned_data['skintone']
+            eyecolor = form.cleaned_data['eyecolor']
+            print(nose, haircolor, skintone, eyecolor)
+    else:
+        form = featureForm()
+    return render(request, 'step02.html', {'form': form})
+
 
 # View for step03
 # @player_required
 def step03(request, previewMode=False):
     url_list = []
-    feature = "earpircing"
+    feature = "earpiercing"
     if request.method == 'POST':
         result = request.POST.get('data')
         print("post result: ", result)

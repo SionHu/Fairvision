@@ -1,0 +1,22 @@
+ul
+{
+    list-style-type: none;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    /*font-family: Numans, sans-serif;*/
+    font-size: 16px;
+    letter-spacing: 1px;
+    word-spacing: 1px;
+    color: #000000;
+    font-weight: 400;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+}

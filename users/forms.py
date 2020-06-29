@@ -71,6 +71,39 @@ class ContactForm(forms.ModelForm):
         'message': forms.Textarea(attrs={'class':'form-control sm-textarea', 'style':'height: 150px'}),
         }
 
+class featureForm(forms.Form):
+    featureType=(
+        ('common', 'Yes, this is a common feature'),
+        ('uncommon', 'No'),
+    )
+    featureList=[
+        'Nose',
+        'Skin tone',
+        'Eye color',
+        'Hair Color',
+    ]
+
+    nose = forms.ChoiceField(
+        choices=featureType,
+        label='Nose',
+        widget=forms.RadioSelect(),
+    )
+    haircolor = forms.ChoiceField(
+        choices=featureType,
+        label='Hair color',
+        widget=forms.RadioSelect,
+    )
+    skintone = forms.ChoiceField(
+        choices=featureType,
+        label='Skin Tone',
+        widget=forms.RadioSelect(attrs={'class': "custom-radio-list"}),
+    )
+    eyecolor = forms.ChoiceField(
+        choices=featureType,
+        label='Eye color',
+        widget=forms.RadioSelect,
+    )
+
 '''
 class RequesterSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254) 
