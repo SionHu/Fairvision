@@ -261,3 +261,12 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class Feature(models.Model):
+    feature = models.CharField("Detected features", max_length=50)
+    count = models.IntegerField("Frequency count")
+    is_bias = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.feature
