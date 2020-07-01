@@ -266,7 +266,7 @@ class Contact(models.Model):
 class Feature(models.Model):
     feature = models.CharField("Detected features", max_length=50)
     count = models.IntegerField("Frequency count")
-    is_bias = models.BooleanField(default=False)
+    is_bias = models.IntegerField("Bias count")
 
     def __str__(self):
         return self.feature
