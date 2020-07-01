@@ -86,7 +86,7 @@ def phase01a(request, previewMode=False):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        acceptedList, id_merge, id_move = send__receive_data(new_Qs, old_Qs)
+        acceptedList, id_merge, id_move = [que.id for que in questions], {}, {}
         id_merge = {int(k): v for k, v in id_merge.items()}
         id_move = {int(k): v for k, v in id_move.items()}
         # print("acceptedList is: ", acceptedList)
@@ -227,13 +227,22 @@ def phase03(request, previewMode=False):
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
         return render(request, 'phase03.html', {'statements': attributes, 'display_list':display_list, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
 
+from ..models import Feature
+
 # View for step01
 # @player_required
 def step01(request, previewMode=False):
     url_list = []
     if request.method == 'POST':
-        result = request.POST.get('data')
+        result = request.POST.getlist('features[]')
+        """
+        # Add this to save to the database
+        Feature.objects.bulk_create([
+            Feature(feature=feature, count=0) for feature in result
+        ])
+        """
         print("post result: ", result)
+        # replace this with either payment or going on to the next round
         return HttpResponse(status=201)
     else:
         for i in range(9):
