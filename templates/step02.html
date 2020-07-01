@@ -1,10 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/step02.css' %}">
+{% endblock %}
+​
+{% block content %}
+<div class="container" style="padding-top: 20px; color: white; font-family: 'Numans', sans-serif">
+    <head>
+        <h1>Step 2 - Bias Judgement</h1>
+        <div class="row" style="...">
+            <div class="alert alert-warning" role="alert" style="display:inline-block;font-size: 15px">
+                <strong>Q:</strong> Is the feature a common feature for faces,
+                i.e. does the feature applies to all faces in real life?
+            </div>
+        </div>
+        <hr>
+    </head>
+</div>
+​
 <body>
-
+{{ form.non_field_errors }}
+​
+<div class="container" style="color: white; font-family: 'Numans', sans-serif">
+    ​
+    <form method="post">
+        <div class="container">
+            <div class="row">
+                {% csrf_token %}
+                {% for field in form %}
+                {{ field.errors }}
+                <div class="col-sm-6">
+                    <h2 style="font-family: 'Numans', sans-serif"><strong>{{ field.label_tag }}</strong></h2>
+                    {{ field }}
+                    <hr>
+                </div>
+                {% endfor %}
+                ​
+                <button type="submit" class="btn btn-warning float-right mt-2">Submit</button>
+            </div>
+        </div>
+    </form>
+    ​
+</div>
 </body>
-</html>
+</div>
+​
+{% endblock %}
+​
+{% block scripts %}
+​
+<script>
+    var dict = {}
+    var resultArr = []
+​
+        function rank(){
+            var statements = {{ statements|safe }};
+            for (var i = 0; i < statements.length; i++) {
+                var stat = statements[i]
+                if(document.getElementById(stat).checked) {
+                    resultArr.push(stat);
+                }
+            }
+​
+            // console.log(resultArr);
+            var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            //post method
+            $.post(window.location, {
+                "data": resultArr,
+                csrfmiddlewaretoken : CSRFtoken
+            }, function(data){}).fail(function() {
+                alert( "An error occurred. Could not submit your data." );
+            });
+​
+</script>
+
+{% endblock %}
+​

@@ -22,6 +22,7 @@ import random
 import requests
 import json
 from more_itertools import chunked, padded
+from users.forms import featureForm
 
 
 # self-defined decorators for crowd worker and admin/staff be able to work
@@ -227,16 +228,45 @@ def phase03(request, previewMode=False):
         return render(request, 'phase03.html', {'statements': attributes, 'display_list':display_list, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
 
 # View for step01
-@player_required
+# @player_required
 def step01(request, previewMode=False):
-    return render(request, 'step01.html')
+    url_list = []
+    if request.method == 'POST':
+        result = request.POST.get('data')
+        print("post result: ", result)
+        return HttpResponse(status=201)
+    else:
+        for i in range(9):
+            url_list.append("https://picsum.photos/seed/" + str(i+1) + "/100")
+    return render(request, 'step01.html', {'url':url_list})
 
 # View for step02
-@player_required
+# @player_required
 def step02(request, previewMode=False):
-    return render(request, 'step02.html')
+    if request.method == 'POST':
+        form = featureForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            nose = form.cleaned_data['nose']
+            haircolor = form.cleaned_data['haircolor']
+            skintone = form.cleaned_data['skintone']
+            eyecolor = form.cleaned_data['eyecolor']
+            print(nose, haircolor, skintone, eyecolor)
+    else:
+        form = featureForm()
+    return render(request, 'step02.html', {'form': form})
+
 
 # View for step03
-@player_required
+# @player_required
 def step03(request, previewMode=False):
-    return render(request, 'step03.html')
+    url_list = []
+    feature = "earpiercing"
+    if request.method == 'POST':
+        result = request.POST.get('data')
+        print("post result: ", result)
+        return HttpResponse(status=201)
+    else:
+        for i in range(1,22):
+            url_list.append("https://picsum.photos/seed/" + str(i) + "/100")
+    return render(request, 'step03.html', {'feature': feature, 'image_url':url_list})
