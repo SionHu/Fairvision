@@ -270,12 +270,21 @@ def step02(request, previewMode=False):
 # @player_required
 def step03(request, previewMode=False):
     url_list = []
-    feature = "earpiercing"
+    assignmentId = request.GET.get('assignmentId')
+    feature = Feature.objects.all().order_by('feature')
+    feature_list = list(feature.values_list('feature', flat=True))
+    print(feature_list)
+
     if request.method == 'POST':
-        result = request.POST.get('data')
-        print("post result: ", result)
-        return HttpResponse(status=201)
+        result = int(request.POST.get('data'))
+        round = int(request.POST.get('round'))
+        Feature.objects.filter(feature=feature_list[round]).update(count=F('count')+result)
+        print("round:", round, " feature:", feature_list[round]," post result:", result)
+        if round < len(feature_list)-1:
+            return HttpResponse(status=201)
+        else:
+            return over(request, 'step03')
     else:
         for i in range(1,22):
             url_list.append("https://picsum.photos/seed/" + str(i) + "/100")
-    return render(request, 'step03.html', {'feature': feature, 'image_url':url_list})
+    return render(request, 'step03.html', {'feature': feature_list, 'image_url':url_list, 'roundnum': len(feature_list)})
