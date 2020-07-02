@@ -5,47 +5,6 @@
 <link rel="stylesheet" href="{% static "css/step03.css" %}">
 {% endblock %}
 
-{% block scripts %}
-
-<script>
-
-    var dict = {};
-    var count = 0;
-
-    function submit(){
-        for (var i = 1; i < 22; i++) {
-            var cb_id = "cb" + i;
-            if(document.getElementById(cb_id).checked) {
-                count += 1;
-            }
-        }
-
-        console.log(count);
-        var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-        //post method
-        $.post(window.location, {
-            'data': count,
-            csrfmiddlewaretoken : CSRFtoken
-        }, function(data){}).fail(function() {
-            alert( "An error occurred. Could not submit your data." );
-        });
-        // reload the webpage to set new images
-        // var countdown = 200;  // your countdown in milliseconds
-
-        // try {
-        //     setTimeout(function () {
-        //         location.reload();
-        //     }, countdown);
-        // }
-        // catch(err){
-        //     alert(err.message);
-        // }
-    }
-
-</script>
-
-{% endblock %}
-
 {% block content %}
 <form>
     {% csrf_token %}
@@ -141,10 +100,10 @@
 
     <hr> <!--  Divider line  -->
 
-    <div class="row" style="text-align: center">
-        <div class="col" style="font-size: larger">
-            <p>Please select images that has the feature <b style="color: yellow">{{feature}}</b>.</p>
-        </div>
+
+    <div class="row" style="font-size: 24px; padding-bottom: 10px">
+        <div class="col-lg-7" style="text-align: right"> Please select images that has the feature</div>
+        <div class="col-lg-5" id="feature_tag" style="color: yellow; text-align: left; font-weight: bold">{{feature.0}}</div>
     </div>
 
     <div class="row">
@@ -161,9 +120,13 @@
     <!--  Categories  -->
     <div class="row justify-content-center">
         {% if not previewMode %}
-        <button type="button" class="btn btn-success btn-lg" onclick="submit()" style="width: 100px;text-align: center">
-            Next
-        </button>
+        <div class="col-lg-6" style="text-align: right">
+            <button type="button" class="btn btn-success btn-lg" onclick="submit()" style="width: 100px;text-align: center">
+                Next
+            </button>
+        </div>
+
+        <div class="col-lg-6" id="round_tag" style="text-align: left; font-size: 20px; padding-top: 10px">Feature 1/{{roundnum}}</div>
         {% endif %}
     </div>
 
@@ -185,6 +148,65 @@
             $("#closeGIF").show();
         }, 15000);
     });
+
+</script>
+
+<script>
+
+    var count = 0;
+    var round = 0;
+    var fea = {{feature|safe}}[round];
+
+    function submit(){
+        for (var i = 1; i < 22; i++) {
+            var cb_id = "cb" + i;
+            if(document.getElementById(cb_id).checked) {
+                count += 1;
+            }
+        }
+
+        // get the value of CSRF token
+        var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        //post method
+        $.post(window.location, {
+            'data': count,
+            'round': round,
+            csrfmiddlewaretoken : CSRFtoken
+        }, function(data){}).fail(function() {
+            alert( "An error occurred. Could not submit your data." );
+        });
+
+        count = 0;
+        round += 1;
+        var roundsum = parseInt({{roundnum}});
+        if (round < roundsum)
+        {
+            fea = {{feature|safe}}[round];
+            // reload the webpage to set new images
+            var countdown = 30;
+            try{
+                setTimeout(function() {
+                    document.getElementById("feature_tag").innerHTML = fea;
+                    var real_round = round + 1;
+                    document.getElementById("round_tag").innerHTML = "Feature " + real_round.toString() + "/{{roundnum}}";
+                    for (var i = 1; i < 22; i++) {
+                        var cb_id = "cb" + i;
+                        if (document.getElementById(cb_id).checked) {
+                            document.getElementById(cb_id).checked = false;
+                        }
+                    }
+                }, countdown);
+
+            }
+            catch(err){
+                alert(err.message);
+            }
+        }
+        else{
+            location.href = "../over"
+        }
+        }
+
 
 </script>
 

@@ -33,17 +33,18 @@ def player_required(func):
 
             numInPhase = roundnums.get(func.__name__, 0) # this line is pretty unsafe, but it will do
 
+            # increment roundsnum by 1
             if request.method == 'POST':
                 roundnums[func.__name__] = numInPhase + 1
                 request.hit['hitId'] = request.GET['hitId']
                 request.hit['workerId'] = request.GET['workerId']
                 hitObj.save()
-                return func(request, *args, **kwargs)
+
+            # either pay the worker or move onto the next round
+            if numInPhase >= ROUNDSMAX[func.__name__]:
+                return over(request, func.__name__)
             else:
-                if numInPhase >= ROUNDSMAX[func.__name__]:
-                    return over(request, func.__name__)
-                else:
-                    return func(request, *args, **kwargs)
+                return func(request, *args, **kwargs)
 
         elif request.user.is_staff or request.user.is_superuser:
             assignmentId = f"{request.user.username}__{uuid.uuid4().hex}"[:31]

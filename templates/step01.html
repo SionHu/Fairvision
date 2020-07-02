@@ -143,8 +143,6 @@
                         <div class="card-content mt-2">
                             <div class="row-md-11">
                                 <ul id="list_all"></ul>
-
-                                <ul hidden id="list_f" ></ul>
                             </div>
                         </div>
                     </div>
@@ -160,7 +158,13 @@
                     <input class="form-control-sm ml-2 mr-2" id="F" type="text" name="F" maxlength="40" size="33.5" placeholder="enter discriptive features">
                 </div>
             <div>
-                <button id="add" class="btn btn-success ml-3 mt-2" >Add</button>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <button type='button' id="add" class="btn btn-success ml-3 mt-2" >Add</button>
+                    <button type='button' id="removeLast" class="btn btn-success ml-3 mt-2" >Remove Last</button>
+                    <button type='submit' class="btn btn-success ml-3 mt-2" >Submit</button>
+                    <a hidden id="list_f" ></a>
+                </form>
             </div>
             <div id="alrt" style="color: yellow"></div>
             </div>
@@ -172,11 +176,8 @@
     <script>
         //"add" button listener when clicked
         numF = 0;
-        var listNode_f = document.createElement("ul");
 
         document.getElementById("add").addEventListener("click", function() {
-            //get the local storage of questions & answers
-            var total_list = JSON.parse(window.localStorage.getItem("total_list"));
             //Get the question
             var feats = document.getElementById("F").value.trim();
 
@@ -190,8 +191,7 @@
                 //skipped myCheker
 
                 var listNode_f = document.getElementById('list_f'),
-                    liNode_f = document.createElement("LI"),
-                    txtNode_f = document.createTextNode(feats);
+                    inNode_f = document.createElement("input");
 
                 var listNode = document.getElementById('list_all'),
                     liNode = document.createElement("LI"),
@@ -199,19 +199,23 @@
                 liNode.appendChild(txtNode);
                 listNode.appendChild(liNode);
 
-                liNode_f.appendChild(txtNode_f);
-                listNode_f.appendChild(liNode_f);
+                inNode_f.setAttribute('name', 'features[]');
+                inNode_f.setAttribute('value', feats);
+                listNode_f.appendChild(inNode_f);
 
                 // If the input of feature is valid, increment numF counter
                 numF++;
-                
-            //add the new features to the array
-            total_list.push(liNode.innerHTML);
-            //store the current array of input
-            localStorage.setItem("total_list",JSON.stringify(total_list));
 
             document.getElementById("F").value = ""; //clear entry field
                 }
+        });
+
+        document.getElementById("removeLast").addEventListener("click", function() {
+          var listNode_f = document.getElementById('list_f');
+          var listNode = document.getElementById('list_all');
+
+          listNode_f.removeChild(listNode_f.lastChild);
+          listNode.removeChild(listNode.lastChild);
         });
 
         $(document).ready(function(){

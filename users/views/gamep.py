@@ -86,7 +86,7 @@ def phase01a(request, previewMode=False):
         # Call the NLP function and get back with results, it should be something like wether it gets merged or kept
         # backend call NLP and get back the results, it should be a boolean and a string telling whether the new entry will be created or not
         # exist_q should be telling which new question got merged into
-        acceptedList, id_merge, id_move = send__receive_data(new_Qs, old_Qs)
+        acceptedList, id_merge, id_move = [que.id for que in questions], {}, {}
         id_merge = {int(k): v for k, v in id_merge.items()}
         id_move = {int(k): v for k, v in id_move.items()}
         # print("acceptedList is: ", acceptedList)
@@ -227,13 +227,22 @@ def phase03(request, previewMode=False):
         instructions = Phase03_instruction.get_queryset(Phase03_instruction) or ['none']
         return render(request, 'phase03.html', {'statements': attributes, 'display_list':display_list, 'instructions': instructions, 'assignmentId': assignmentId, 'previewMode': previewMode})
 
+from ..models import Feature
+
 # View for step01
 # @player_required
 def step01(request, previewMode=False):
     url_list = []
     if request.method == 'POST':
-        result = request.POST.get('data')
+        result = request.POST.getlist('features[]')
+        """
+        # Add this to save to the database
+        Feature.objects.bulk_create([
+            Feature(feature=feature, count=0) for feature in result
+        ])
+        """
         print("post result: ", result)
+        # replace this with either payment or going on to the next round
         return HttpResponse(status=201)
     else:
         for i in range(9):
@@ -266,12 +275,21 @@ def step02(request, previewMode=False):
 # @player_required
 def step03(request, previewMode=False):
     url_list = []
-    feature = "earpiercing"
+    assignmentId = request.GET.get('assignmentId')
+    feature = Feature.objects.all().order_by('feature')
+    feature_list = list(feature.values_list('feature', flat=True))
+    print(feature_list)
+
     if request.method == 'POST':
-        result = request.POST.get('data')
-        print("post result: ", result)
-        return HttpResponse(status=201)
+        result = int(request.POST.get('data'))
+        round = int(request.POST.get('round'))
+        Feature.objects.filter(feature=feature_list[round]).update(count=F('count')+result)
+        print("round:", round, " feature:", feature_list[round]," post result:", result)
+        if round < len(feature_list)-1:
+            return HttpResponse(status=201)
+        else:
+            return over(request, 'step03')
     else:
         for i in range(1,22):
             url_list.append("https://picsum.photos/seed/" + str(i) + "/100")
-    return render(request, 'step03.html', {'feature': feature, 'image_url':url_list})
+    return render(request, 'step03.html', {'feature': feature_list, 'image_url':url_list, 'roundnum': len(feature_list)})
