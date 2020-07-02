@@ -75,7 +75,7 @@ class ContactForm(forms.ModelForm):
 class featureForm(forms.Form):
     def __init__(self, *args, **kwargs):
         bias_choice = {
-            ('common', 'Yes, this is a common feature'),
+            ('common', 'Yes, this is a basic feature'),
             ('uncommon', 'No'),
         }
         super(featureForm, self).__init__(*args, **kwargs)
