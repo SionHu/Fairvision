@@ -20,9 +20,8 @@
 ​
 <body>
 {{ form.non_field_errors }}
-​
+<!--​-->
 <div class="container" style="color: white; font-family: 'Numans', sans-serif">
-    ​
     <form method="post">
         <div class="container">
             <div class="row">
@@ -30,49 +29,20 @@
                 {% for field in form %}
                 {{ field.errors }}
                 <div class="col-sm-6">
-                    <h2 style="font-family: 'Numans', sans-serif"><strong>{{ field.label_tag }}</strong></h2>
+                    <h3 style="font-family: 'Numans', sans-serif"><strong>{{ field.label_tag }}</strong></h3>
                     {{ field }}
                     <hr>
                 </div>
                 {% endfor %}
                 ​
-                <button type="submit" class="btn btn-warning float-right mt-2">Submit</button>
             </div>
+             <button type="submit" class="btn btn-warning float-right mt-2">Submit</button>
         </div>
     </form>
     ​
 </div>
 </body>
 </div>
-​
 {% endblock %}
-​
-{% block scripts %}
-​
-<script>
-    var dict = {}
-    var resultArr = []
-​
-        function rank(){
-            var statements = {{ statements|safe }};
-            for (var i = 0; i < statements.length; i++) {
-                var stat = statements[i]
-                if(document.getElementById(stat).checked) {
-                    resultArr.push(stat);
-                }
-            }
-​
-            // console.log(resultArr);
-            var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-            //post method
-            $.post(window.location, {
-                "data": resultArr,
-                csrfmiddlewaretoken : CSRFtoken
-            }, function(data){}).fail(function() {
-                alert( "An error occurred. Could not submit your data." );
-            });
-​
-</script>
 
-{% endblock %}
 ​

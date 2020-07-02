@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models.expressions import Case, F, Value, When
-from users.models import CustomUser, ImageModel, Attribute, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Question, Answer
+from users.models import CustomUser, ImageModel, Attribute, PhaseBreak, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Question, Answer,Feature
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -243,17 +243,22 @@ def step01(request, previewMode=False):
 # View for step02
 # @player_required
 def step02(request, previewMode=False):
+    featureList = Feature.objects.values('feature')
+    alist = []
+    for i in featureList:
+        for key, value in i.items():
+            alist.append(value)
     if request.method == 'POST':
         form = featureForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            nose = form.cleaned_data['nose']
-            haircolor = form.cleaned_data['haircolor']
-            skintone = form.cleaned_data['skintone']
-            eyecolor = form.cleaned_data['eyecolor']
-            print(nose, haircolor, skintone, eyecolor)
+            for (question, answer) in form.clean_answers():
+                print(request, question, answer)
+                if answer == "common":
+                    print("Its common")
+                    Feature.objects.filter(feature=question).update(is_bias=F('is_bias') - 1)
     else:
         form = featureForm()
+
     return render(request, 'step02.html', {'form': form})
 
 

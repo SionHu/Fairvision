@@ -3,29 +3,28 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 
-from users.models import Player, CustomUser, Contact
+from users.models import Player, CustomUser, Contact, Feature
+
 
 class CustomUserCreationForm(UserCreationForm):
-
     class Meta(UserCreationForm):
         model = CustomUser
         fields = ('username', 'email')
 
-class CustomUserChangeForm(UserChangeForm):
 
+class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = UserChangeForm.Meta.fields
 
+
 class PlayerSignUpForm(UserCreationForm):
-    
     email = forms.EmailField(max_length=254)
-    
+
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ('username', 'email', 'password1', 'password2')
 
-    
     def clean_email(self):
         """Validates an email input by checking it against the database of current users
     
@@ -41,68 +40,63 @@ class PlayerSignUpForm(UserCreationForm):
         if CustomUser.objects.filter(email=data).exists():
             raise forms.ValidationError("This email has already been used")
         return data
-    
+
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
         user.is_player = True
         user.save()
         player = Player.objects.create(user=user)
-        player.score=0
-        player.level=0
+        player.score = 0
+        player.level = 0
         player.save()
         return user
+
 
 class PlayerChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email')
 
-class ContactForm(forms.ModelForm):
 
+class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact
-        fields = ( 'name', 'email', 'subject', 'message')
+        fields = ('name', 'email', 'subject', 'message')
 
         widgets = {
-        'name': forms.TextInput(attrs={'class':'form-control'}),
-        'email': forms.TextInput(attrs={'class':'form-control'}),
-        'subject': forms.TextInput(attrs={'class':'form-control'}),
-        'message': forms.Textarea(attrs={'class':'form-control sm-textarea', 'style':'height: 150px'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control sm-textarea', 'style': 'height: 150px'}),
         }
 
-class featureForm(forms.Form):
-    featureType=(
-        ('common', 'Yes, this is a common feature'),
-        ('uncommon', 'No'),
-    )
-    featureList=[
-        'Nose',
-        'Skin tone',
-        'Eye color',
-        'Hair Color',
-    ]
 
-    nose = forms.ChoiceField(
-        choices=featureType,
-        label='Nose',
-        widget=forms.RadioSelect(),
-    )
-    haircolor = forms.ChoiceField(
-        choices=featureType,
-        label='Hair color',
-        widget=forms.RadioSelect,
-    )
-    skintone = forms.ChoiceField(
-        choices=featureType,
-        label='Skin Tone',
-        widget=forms.RadioSelect(attrs={'class': "custom-radio-list"}),
-    )
-    eyecolor = forms.ChoiceField(
-        choices=featureType,
-        label='Eye color',
-        widget=forms.RadioSelect,
-    )
+class featureForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        bias_choice = {
+            ('common', 'Yes, this is a common feature'),
+            ('uncommon', 'No'),
+        }
+        super(featureForm, self).__init__(*args, **kwargs)
+        featureList = Feature.objects.values('feature')
+        alist = []
+        for i in featureList:
+            for key, value in i.items():
+                alist.append(value)
+        for i, feature in enumerate(alist):
+            self.fields['feature_%s' % i] = forms.ChoiceField(
+                choices=bias_choice,
+                label=feature,
+                widget=forms.RadioSelect(),
+            )
+
+    def clean_answers(self):
+        for name, value in self.cleaned_data.items():
+            if name.startswith('feature_'):
+                yield (self.fields[name].label, value)
+
+
 
 '''
 class RequesterSignUpForm(UserCreationForm):
@@ -175,4 +169,3 @@ class ZipfileForm(forms.ModelForm):
 
         return zipfile
 '''
-
