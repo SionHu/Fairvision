@@ -4,7 +4,7 @@
 <div class="container" style="padding-top: 20px; color: white; font-family: 'Numans', sans-serif">
     <div class="row">
         <div class="col">
-            <h2> Feature Selection
+            <h2> Feature Detection
                 <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>&#32;
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agreement">Instruction</button>
             </h2>
@@ -126,15 +126,17 @@
             <!-- FEATURE LIST -->
             <div class="row-md-10" style="font-size:110%;padding-left: 25px">
                 <div class="col">
-                <label style="font-size: x-large">Enter Undetected Features</label>
+                <label style="font-size: x-large">Enter Detected Features</label>
                 <div class="help-tip">
                     <p>
-                        Features provided below are produced by our explainable AI model based on the whole face dataset.
+                        Please specify the features as descriptive as possible.<br />
+                        Good example: Short curly hair<br />
+                        Bad example: Hair<br />
                     </p>
                 </div>
               </div>
                 <div style="color: yellow"><i class="fa fa-bell"> </i>
-                    Please add features you find in the images that are not in the following list
+                    Please add features you see in more than half of the images in short phrases.
                 </div>
             </div>
             <div class="row m-3" style="padding-top: 10px">
@@ -160,10 +162,17 @@
             <div>
                 <form action="" method="post">
                     {% csrf_token %}
-                    <button type='button' id="add" class="btn btn-success ml-3 mt-2" >Add</button>
-                    <button type='button' id="removeLast" class="btn btn-success ml-3 mt-2" >Remove Last</button>
-                    <button type='submit' class="btn btn-success ml-3 mt-2" >Submit</button>
+                    <button type='button' id="add" class="btn btn-success ml-3 mt-2">Add</button>
+                    <button type='button' id="removeLast" class="btn btn-danger ml-3 mt-2" >Undo</button>
+                    <button type='submit' class="btn btn-warning ml-3 mt-2" >Submit</button>
                     <a hidden id="list_f" ></a>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </form>
             </div>
             <div id="alrt" style="color: yellow"></div>

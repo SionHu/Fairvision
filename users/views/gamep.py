@@ -2,6 +2,7 @@ from csgame.views import over
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models.expressions import Case, F, Value, When
@@ -11,7 +12,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from django.http import HttpResponse
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 import boto3
 #from operator import attrgetter, itemgetter
@@ -235,19 +236,18 @@ def step01(request, previewMode=False):
     url_list = []
     if request.method == 'POST':
         result = request.POST.getlist('features[]')
-        """
-        # Add this to save to the database
         Feature.objects.bulk_create([
-            Feature(feature=feature, count=0) for feature in result
+            Feature(feature=feature, count=0, is_bias=0) for feature in result
         ])
-        """
         print("post result: ", result)
         # replace this with either payment or going on to the next round
-        return HttpResponse(status=201)
+        messages.success(request, 'Submitted!')
+        return redirect('step01')
     else:
+        form = featureForm()
         for i in range(9):
             url_list.append("https://picsum.photos/seed/" + str(i+1) + "/100")
-    return render(request, 'step01.html', {'url':url_list})
+    return render(request, 'step01.html', {'url':url_list, 'form': form})
 
 # View for step02
 # @player_required
