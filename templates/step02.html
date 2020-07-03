@@ -21,6 +21,13 @@
             </div>
         </div>
     </div>
+       <div class="help-tip">
+                    <p>
+                        Please select your judgement for each features.<br />
+                        Common basic feature examples: Eyes, Nose <br />
+                        Not basic feature examples: Blond Hair, Piercing<br />
+                    </p>
+                </div>
 
     <!-- The Modal -->
     <div class="modal fade" id="myModal" data-backdrop="static">
@@ -99,13 +106,15 @@
         </div>
     </div>
 
+
     <!-- The Modal End-->
 
     {{ form.non_field_errors }}
     <!--​-->
+
     <div style="color: white; font-family: 'Numans', sans-serif;" >
         <div class="frame" style="height: 70%; overflow: scroll; padding: 20px">
-            <form method="post">
+            <form action="/feedback/", method="post">
 
                 <div class="row">
                     {% csrf_token %}
