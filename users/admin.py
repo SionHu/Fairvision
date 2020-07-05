@@ -87,9 +87,9 @@ def getFolderChoices():
     setChoices = []
     objChoices = []
     for dataset in default_storage.listdir('')[0]:
-        if dataset is not 'unknown':
+        if dataset != 'unknown':
             setChoices.append(dataset)
-            objChoices.extend(object for object in default_storage.listdir(dataset)[0] if object is not 'unknown')
+            objChoices.extend(object for object in default_storage.listdir(dataset)[0] if object != 'unknown')
     return natsorted(setChoices), sort_uniq(objChoices)
 
 class ImageModelForm(forms.ModelForm):
@@ -468,7 +468,7 @@ class HITAdmin(admin.ModelAdmin):
         else:
             obj.data['status'] = assignmentStatus
             obj.save()
-        if assignmentStatus is '':
+        if assignmentStatus == '':
             return None
         icon_url = static('admin/img/icon-%s.svg' % {'Rejected': 'no', 'Approved': 'yes', 'Submitted': 'unknown'}[assignmentStatus])
         return format_html('<img src="{}" alt="{}">', icon_url, assignmentStatus)
