@@ -233,3 +233,6 @@ CSRF_COOKIE_SAMESITE = None
 # for mturk iframe
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
+if DEBUG:
+    ALLOWED_HOSTS += ['fairvision.app.local']
