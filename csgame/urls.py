@@ -46,5 +46,7 @@ urlpatterns = [
     url(r'^phase03/$', gamep.phase03, name='phase03'),
 ]
 
+urlpatterns += static('/datasets/', document_root='datasets')
+
 handler404 = 'csgame.views.handler404'
 handler500 = 'csgame.views.handler500'
