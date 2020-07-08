@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="76f21add-767d-4350-b501-1238ec35ea8b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/static/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/phase01a.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/phase01a.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/phase03-update.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/phase03-update.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1XLyKGgvUDhVykEykbkINfDpxJk" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="76f21add-767d-4350-b501-1238ec35ea8b" name="Default Changelist" comment="" />
+      <created>1580839603627</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1580839603627</updated>
+      <workItem from="1580839605022" duration="1471000" />
+      <workItem from="1582048810957" duration="217000" />
+      <workItem from="1582049031367" duration="1649000" />
+      <workItem from="1582052196689" duration="12681000" />
+      <workItem from="1582141669302" duration="299000" />
+      <workItem from="1583283394432" duration="618000" />
+      <workItem from="1583336955240" duration="731000" />
+      <workItem from="1583337755876" duration="1522000" />
+      <workItem from="1587694606116" duration="4901000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="770" y="157" width="670" height="676" key="search.everywhere.popup" timestamp="1582054329510">
+      <screen x="0" y="23" width="1440" height="810" />
+    </state>
+    <state x="770" y="157" width="670" height="676" key="search.everywhere.popup/0.23.1440.810@0.23.1440.810" timestamp="1582054329510" />
+  </component>
+</project>
