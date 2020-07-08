@@ -112,11 +112,16 @@
     <!--HEAD -->
     {{ form.media }}
     <!--BODY-->
-    <div style="color: white; font-family: 'Numans', sans-serif;">
+   <div style="color: white; font-family: 'Numans', sans-serif;">
         <div class="frame" style="height: 70%; overflow: scroll; padding: 20px">
-            <form action="" method="post">
+            <form method="post">
                 {% csrf_token %}
-                {{ form }}
+                {% for field in form.hidden_fields %}
+                {{ field }}
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                {{ field }}
+                {% endfor %}
                 <button type="submit" class="btn btn-warning float-right mt-2">Submit</button>
             </form>
         </div>
