@@ -109,14 +109,12 @@
     </div>
 
     <!-- The Modal End-->
-    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
     <!--HEAD -->
     {{ form.media }}
     <!--BODY-->
     <div style="color: white; font-family: 'Numans', sans-serif;">
         <div class="frame" style="height: 70%; overflow: scroll; padding: 20px">
-            <form action="/feedback/" , method="post">
+            <form action="" method="post">
                 {% csrf_token %}
                 {{ form }}
                 <button type="submit" class="btn btn-warning float-right mt-2">Submit</button>
