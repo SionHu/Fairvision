@@ -289,6 +289,9 @@ def step02(request, previewMode=False):
     else:
         form = MyForm()
 
+    form.feature = feature
+    form.feature_list = feature_list
+
     return render(request, 'step02.html', {'form': form})
 
 

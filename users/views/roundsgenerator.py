@@ -8,7 +8,6 @@ from django.db.models import Q
 from django.db.models.expressions import Subquery
 from operator import attrgetter
 import random
-from numpy import argmin
 from ..models import Question, Answer, ImageModel, Phase
 
 

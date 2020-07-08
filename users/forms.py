@@ -28,7 +28,7 @@ class PlayerSignUpForm(UserCreationForm):
 
     def clean_email(self):
         """Validates an email input by checking it against the database of current users
-    
+
         Checks the email addresses of current active users and determines if the given email is in use.
 
         Returns:
@@ -99,8 +99,6 @@ class featureForm(forms.Form):
 
 
 class MyForm(forms.Form):
-    feature = Feature.objects.all().order_by('feature')
-    feature_list = list(feature.values_list('feature', flat=True))
     features = forms.ModelMultipleChoiceField(
         widget=FilteredSelectMultiple("Features", is_stacked=False),
         queryset=Feature.objects.all().order_by('feature'))
@@ -116,17 +114,17 @@ class MyForm(forms.Form):
 
 '''
 class RequesterSignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254) 
+    email = forms.EmailField(max_length=254)
     occupation = forms.CharField(label="Your occupation(optional)", required=False)
 
     fields = ('username', 'email', 'occupation', 'password1,', 'password2')
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        
+
     def clean_email(self):
         """Validates an email input by checking it against the database of current users
-    
+
         Checks the email addresses of current active users and determines if the given email is in use.
 
         Returns:
@@ -139,7 +137,7 @@ class RequesterSignUpForm(UserCreationForm):
         if CustomUser.objects.filter(email=data).exists():
             raise forms.ValidationError("This email has already been used")
         return data
-    
+
     @transaction.atomic
     def save(self):
         # Requester Saving

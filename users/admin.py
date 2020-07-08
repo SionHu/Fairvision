@@ -32,9 +32,13 @@ from datetime import datetime
 import itertools
 from more_itertools import first, partition
 import operator
-from natsort import natsorted
 import tempfile
 import zipfile
+
+try:
+    from natsort import natsorted
+except:
+    natsorted = sorted
 
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
