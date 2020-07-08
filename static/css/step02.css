@@ -20,3 +20,29 @@ body{
     font-variant: normal;
     text-transform: none;
 }
+.selector{
+    float:none;
+    display:block;
+    height:330px;
+}
+
+.selector input[type="submit"]{
+    display:block;
+    clear:both;
+}
+
+.selector h2{
+    font-size:15px;
+}
+.selector  select{
+    margin: 2px 0;
+    padding: 2px 3px;
+    font-weight: normal;
+    width: 270px !important;
+    height: 17.2em;
+}
+
+textarea{
+    display:block;
+    width:450px;
+}
