@@ -1,6 +1,7 @@
 natsort==6.0.0
 more-itertools==8.2.0
 Pillow>=6.2.2
+numpy==1.16.3
 requests==2.22.0
 
 # Basic Django
