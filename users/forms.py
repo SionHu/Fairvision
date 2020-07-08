@@ -4,6 +4,7 @@ from django.db import transaction
 from django.forms.utils import ValidationError
 
 from users.models import Player, CustomUser, Contact, Feature
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -96,6 +97,21 @@ class featureForm(forms.Form):
             if name.startswith('feature_'):
                 yield (self.fields[name].label, value)
 
+
+class MyForm(forms.Form):
+    feature = Feature.objects.all().order_by('feature')
+    feature_list = list(feature.values_list('feature', flat=True))
+    features = forms.ModelMultipleChoiceField(
+        widget=FilteredSelectMultiple("Features", is_stacked=False),
+        queryset=Feature.objects.all().order_by('feature'))
+
+    class Media:
+        css = {
+            'all':['admin/css/widgets.css',
+                   'css/uid-manage-form.css'],
+        }
+        # Adding this javascript is crucial
+        js = ['/admin/jsi18n/']
 
 
 '''
