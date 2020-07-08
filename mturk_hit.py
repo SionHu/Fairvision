@@ -33,7 +33,7 @@ def create_hit(phase, number):
     for i in range(number):
         if(phase == 'phase01a'):
             try:
-                question = open(file='hitExternal/hitp1.xml', mode='r').read()
+                question = open(file='csgame/hitData/hitp1.xml', mode='r').read()
             except:
                 print()
                 print("----------------------")
@@ -63,7 +63,7 @@ def create_hit(phase, number):
         # phase 01b
         elif(phase == 'phase01b'):
             try:
-                question = open(file='hitExternal/hitp1b.xml', mode='r').read()
+                question = open(file='csgame/hitData/hitp1b.xml', mode='r').read()
             except:
                 print()
                 print("----------------------")
@@ -92,7 +92,7 @@ def create_hit(phase, number):
         else:
             # phase 03
             try:
-                question = open(file='hitExternal/hitp3.xml', mode='r').read()
+                question = open(file='csgame/hitData/hitp3.xml', mode='r').read()
             except:
                 print()
                 print("----------------------")
@@ -242,8 +242,8 @@ def reject_assignment(assignment_id, reason):
 def create_qualification(phase):
     if phase == 'phase01a' or phase == 'phase01b':
         try:
-            questions = open(file='qualifyT/testP3.xml', mode='r').read()
-            answers = open(file='qualifyT/ansP3.xml', mode='r').read()
+            questions = open(file='csgame/hitData/qualification/testP3.xml', mode='r').read()
+            answers = open(file='csgame/hitData/qualification/ansP3.xml', mode='r').read()
         except:
             print()
             print("----------------------")
@@ -260,8 +260,8 @@ def create_qualification(phase):
         )
     else:
         try:
-            questions = open(file='qualifyT/testP3.xml', mode='r').read()
-            answers = open(file='qualifyT/ansP3.xml', mode='r').read()
+            questions = open(file='csgame/hitData/qualification/testP3.xml', mode='r').read()
+            answers = open(file='csgame/hitData/qualification/ansP3.xml', mode='r').read()
         except:
             print()
             print("----------------------")
