@@ -1,4 +1,0 @@
-[submodule "nlp-gcloud"]
-	path = nlp-gcloud
-	url = ./
-	branch = nlp-gcloud
