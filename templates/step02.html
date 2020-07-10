@@ -15,18 +15,22 @@
             </h2>
         </div>
         <div class="row">
+            <div class="col-10">
             <div class="alert alert-warning" role="alert" style="display:inline-block;font-size: 18px">
                 <strong>Q:</strong> Is the feature a basic feature for faces,
                 i.e. does the feature applies to <b>all faces</b> in real life?
             </div>
+            </div>
+            <div class="col-2">
+            <div class="help-tip" style="left: 10px; top: 10px">
+                <p>
+                    Please select your judgement for each features.<br/>
+                    Common basic feature examples: Eyes, Nose <br/>
+                    Not basic feature examples: Blond Hair, Piercing<br/>
+                </p>
+            </div>
+            </div>
         </div>
-    </div>
-    <div class="help-tip">
-        <p>
-            Please select your judgement for each features.<br/>
-            Common basic feature examples: Eyes, Nose <br/>
-            Not basic feature examples: Blond Hair, Piercing<br/>
-        </p>
     </div>
 
     <!-- The Modal -->
@@ -113,7 +117,7 @@
     {{ form.media }}
     <!--BODY-->
    <div style="color: white; font-family: 'Numans', sans-serif;">
-        <div class="frame" style="height: 70%; overflow: scroll; padding: 20px">
+        <div class="card" style="height: 70%; width: 90%; overflow: scroll; padding: 50px">
             <form method="post">
                 {% csrf_token %}
                 {% for field in form.hidden_fields %}
@@ -122,36 +126,10 @@
                 {% for field in form.visible_fields %}
                 {{ field }}
                 {% endfor %}
-                <button type="submit" class="btn btn-warning float-right mt-2">Submit</button>
+                <button type="submit" class="btn btn-warning float-right">Submit</button>
             </form>
         </div>
-    </div>
-
-<!--        {{ form.non_field_errors }}
-        &lt;!&ndash;​&ndash;&gt;
-        <div style="color: white; font-family: 'Numans', sans-serif;">
-            <div class="frame" style="height: 70%; overflow: scroll; padding: 20px">
-                <form action="/feedback/" , method="post">
-                    <div class="row">
-                        {% csrf_token %}
-                        {% for field in form %}
-                        {{ field.errors }}
-                        <div class="col-sm-6">
-                            <h3 style="font-family: 'Numans', sans-serif"><strong>{{ field.label_tag }}</strong></h3>
-                            {{ field }}
-                            <hr>
-                        </div>
-                        {% endfor %}
-                        ​
-                    </div>
-
-                    <button type="submit" class="btn btn-warning float-right mt-2">Submit</button>
-
-                </form>
-            </div>
-
-        </div>-->
-
+   </div>
     <script>
         $(document).ready(function(){
             if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
@@ -168,8 +146,6 @@
                 $("#closeGIF").show();
             }, 15000);
         });
-
-
     </script>
 
 </div>

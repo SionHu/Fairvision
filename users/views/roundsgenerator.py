@@ -35,7 +35,7 @@ def pushPostList(request, phase='1'):
 
 
 @transaction.atomic
-def popGetList(fullList, count=3, phase='1', recycle=False):
+def popGetList(fullList, count=9, phase='1', recycle=False):
     """
     Get the rounds object and the ID of the next image to show
     on the screen for a particular phase and return them both
