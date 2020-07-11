@@ -264,7 +264,7 @@ def step01(request, previewMode=False):
         print("post result: ", result)
         # replace this with either payment or going on to the next round
         messages.success(request, 'Submitted!')
-        return redirect('step01')
+        return render(request, 'feedback.html')
     else:
         form = featureForm()
 #         for i in range(9):
@@ -321,11 +321,11 @@ def step03(request, previewMode=False):
         result = int(request.POST.get('data'))
         round = int(request.POST.get('round'))
         Feature.objects.filter(feature=feature_list[round]).update(count=F('count') + result)
-        print("round:", round, " feature:", feature_list[round], " post result:", result)
+        print("round:", round, " feature:", feature_list[round], " post result:", result, len(feature_list) - 1)
         if round < len(feature_list) - 1:
             return HttpResponse(status=201)
         else:
-            return over(request, 'step01')
+            return render(request, 'feedback.html')
     else:
 
         # Get rounds played in total and by the current player
