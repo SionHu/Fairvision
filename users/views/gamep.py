@@ -258,9 +258,12 @@ def step01(request, previewMode=False):
     url_list = []
     if request.method == 'POST':
         result = request.POST.getlist('features[]')
-        Feature.objects.bulk_create([
-            Feature(feature=feature, count=0, is_bias=0) for feature in result
-        ])
+        feature = Feature.objects.all().order_by('feature')
+        feature_list = list(feature.values_list('feature', flat=True))
+        for feature in result:
+            if feature not in feature_list:
+                Feature.objects.bulk_create([
+                    Feature(feature=feature, count=0, is_bias=0)])
         print("post result: ", result)
         # replace this with either payment or going on to the next round
         messages.success(request, 'Submitted!')
