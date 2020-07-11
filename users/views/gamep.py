@@ -312,7 +312,7 @@ def step02(request, previewMode=False):
 def step03(request, previewMode=False):
     url_list = []
     assignmentId = request.GET.get('assignmentId')
-    feature = Feature.objects.all().order_by('feature')
+    feature = Feature.objects.filter(is_bias__gt = -3).order_by('feature')
     feature_list = list(feature.values_list('feature', flat=True))
     print(feature_list)
 
