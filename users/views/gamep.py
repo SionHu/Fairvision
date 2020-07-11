@@ -267,9 +267,21 @@ def step01(request, previewMode=False):
         return redirect('step01')
     else:
         form = featureForm()
-        for i in range(9):
-            url_list.append("https://picsum.photos/seed/" + str(i + 1) + "/100")
-    return render(request, 'step01.html', {'url': url_list, 'form': form})
+#         for i in range(9):
+#             url_list.append("https://picsum.photos/seed/" + str(i + 1) + "/100")
+
+        # Get rounds played in total and by the current player
+        rounds, roundsnum = popGetList(ImageModel.objects.filter(img__startswith=KEYRING).values_list('id', flat=True))
+
+        if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
+            # push all to waiting page
+            return over(request, 'step01')
+
+        # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
+        # sending 4 images at a time
+        data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
+        data.extend([None] * (9 - len(data)))
+    return render(request, 'step01.html', {'url': data, 'form': form})
 
 
 # View for step02
@@ -314,7 +326,18 @@ def step03(request, previewMode=False):
         else:
             return over(request, 'step03')
     else:
-        for i in range(1, 22):
-            url_list.append("https://picsum.photos/seed/" + str(i) + "/100")
+
+        # Get rounds played in total and by the current player
+        rounds, roundsnum = popGetList(ImageModel.objects.filter(img__startswith=KEYRING).values_list('id', flat=True), count=21, phase=3)
+
+        if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
+            # push all to waiting page
+            return over(request, 'step03')
+
+        # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
+        # sending 4 images at a time
+        data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
+        data.extend([None] * (21 - len(data)))
+
     return render(request, 'step03.html',
-                  {'feature': feature_list, 'image_url': url_list, 'roundnum': len(feature_list)})
+                  {'feature': feature_list, 'image_url': data, 'roundnum': len(feature_list)})
