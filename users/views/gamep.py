@@ -298,6 +298,7 @@ def step02(request, previewMode=False):
                 chosen_list = (list(item.values_list('feature', flat=True)))
                 for f in chosen_list:
                     Feature.objects.filter(feature=f).update(is_bias=F('is_bias') - 1)
+        return render(request, 'feedback.html')
     else:
         form = MyForm()
 
@@ -324,7 +325,7 @@ def step03(request, previewMode=False):
         if round < len(feature_list) - 1:
             return HttpResponse(status=201)
         else:
-            return over(request, 'step03')
+            return over(request, 'step01')
     else:
 
         # Get rounds played in total and by the current player

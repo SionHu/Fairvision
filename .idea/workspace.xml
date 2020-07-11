@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="76f21add-767d-4350-b501-1238ec35ea8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/step02.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/step02.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/users/views/gamep.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views/gamep.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
