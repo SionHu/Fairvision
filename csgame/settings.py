@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+import sys
 import os
 import configparser
 # Tricky lib to convert string to boolean directly in python.
@@ -34,10 +35,16 @@ if os.path.isfile(settingsFile):
 
 # Environment Variables Import
 try:
-    # Amazon s3 secret
+    # Amazon MTurk secret
     AWS_ACCESS_KEY_ID = my_env['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = my_env['AWS_SECRET_ACCESS_KEY']
-    AWS_STORAGE_BUCKET_NAME = my_env['AWS_STORAGE_BUCKET_NAME']
+
+    # Storage backends
+    AWS_STORAGE_BUCKET_NAME = my_env.get('AWS_STORAGE_BUCKET_NAME', None)
+    SFTP_STORAGE_HOST = my_env.get('SFTP_STORAGE_HOST', None)
+    if SFTP_STORAGE_HOST is not None:
+        SFTP_STORAGE_ROOT = my_env['SFTP_STORAGE_ROOT']
+
     IS_PRODUCTION_SITE = strtobool(my_env['IS_PRODUCTION_SITE'])
     TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
     IS_GOOGLE_CLOUD = strtobool(my_env.get('IS_GOOGLE_CLOUD', 'False'))
@@ -47,33 +54,17 @@ try:
         'phase03': 1 # step 3
     }
 
-    # if not on google cloud
-    if not IS_GOOGLE_CLOUD:
-        print("I am not using googole cloud service!")
-        # Set up database url
-        DATABASE_URL = my_env.get('DATABASE_URL', None) or (
-            'postgres://zmlsulwzkvhqfr:18d1a3bfe23bfd147aae9690fd6c0f57e23de46bbac83eb2cb8e3d0c15930e54@ec2-54-165-36-134.compute-1.amazonaws.com:5432/d9nhjp0ri9coum'
-            )
-        # Database
-        # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-        import dj_database_url
-        DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
-    else:
-        print("I am using google cloud service now!")
-        DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT'],
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD']
-        }
-    }
+    # Set up database url
+    DATABASE_URL = my_env['DATABASE_URL']
+    # Database
+    # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)}
 
     # Environment variable for set up the dataset we are going to use. By default it will be airplanes folder for testing
-    KEY = my_env.get('KEY', 'ImageNet/cars2/{:d}.jpg')
-    print(KEY);
+    KEY = my_env['KEY']
+    if sys.stdout.isatty():
+        print(f"KEY is currently {KEY}")
     KEYRING = KEY.rsplit('/', 1)[0]+'/'
     OBJECT_NAME_PLURAL = my_env.get('OBJECT_NAME_PLURAL', KEY.split('/')[1]+'s')
 

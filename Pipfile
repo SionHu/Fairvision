@@ -21,6 +21,7 @@ openpyxl = "*"
 natsort = "*"           # better sorting
 gunicorn = "*"          # web server used on Heroku
 django-jsoneditor = "*" # for editing JSON files in Admin
+paramiko = "*"          # for SFTP storage
 
 [requires]
 # Should work for Python >=3.5, but we will use 3.8.3 on Heroku

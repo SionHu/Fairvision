@@ -2,7 +2,6 @@ import boto3
 from botocore.client import Config
 from botocore.exceptions import ClientError
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 from threading import Lock
 import os
 
@@ -13,9 +12,47 @@ mturk = boto3.client('mturk',
     endpoint_url = settings.MTURK_URL
 )
 
-class MediaStorage(FileSystemStorage):
-    def __init__(self):
-        super().__init__(location='datasets', base_url='/datasets')
+if settings.AWS_STORAGE_BUCKET_NAME is not None:
+    from storages.backends.s3boto3 import S3Boto3Storage
+
+    s3 = boto3.client('s3',
+        aws_access_key_id = settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY,
+        config = Config(s3 = {'addressing_style': 'path'}),
+        region_name = 'us-east-2'
+    )
+
+    class MediaStorage(S3Boto3Storage):
+        location = 'media'
+        file_overwrite = False
+
+        #url for getting the image link
+        def url(self, name, parameters=None, expire=300):
+            try:
+                params = parameters.copy() if parameters else {}
+                params['Bucket'] = self.bucket.name
+                params['Key'] = self.location+"/"+name
+
+                return s3.generate_presigned_url('get_object', Params=params, ExpiresIn=expire)
+            except ClientError as e:
+                if e.response['Error']['Code'] == "404":
+                    print("The object %s does not exist." % name)
+                    return super().url(name, parameters, expire)
+                else:
+                    raise
+
+elif settings.SFTP_STORAGE_HOST is not None:
+    from django.core.files.storage import SFTPStorage
+
+    class MediaStorage(SFTPStorage):
+        pass
+
+else:
+    from django.core.files.storage import FileSystemStorage
+
+    class MediaStorage(FileSystemStorage):
+        def __init__(self):
+            super().__init__(location='datasets', base_url='/datasets')
 
 from django.core.files.storage import default_storage
 
