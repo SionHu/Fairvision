@@ -20,7 +20,7 @@ from django.utils.html import format_html
 
 from .fields import ListTextInput
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, ImageModel, Attribute, Phase, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Answer, Question, HIT
+from .models import CustomUser, ImageModel, Attribute, Phase, Phase01_instruction, Phase02_instruction, Phase03_instruction, TextInstruction, Answer, Question, HIT, Contact, Feature
 
 
 from mturk_hit import create_hit, hitDescriptions
@@ -32,9 +32,13 @@ from datetime import datetime
 import itertools
 from more_itertools import first, partition
 import operator
-from natsort import natsorted
 import tempfile
 import zipfile
+
+try:
+    from natsort import natsorted
+except:
+    natsorted = sorted
 
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
@@ -792,3 +796,5 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(HIT, HITAdmin)
+admin.site.register(Contact)
+admin.site.register(Feature)

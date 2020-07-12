@@ -1,0 +1,394 @@
+
+html {
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    /*font-family: Numans, sans-serif;*/
+    font-size: 16px;
+    letter-spacing: 1px;
+    word-spacing: 1px;
+    color: #000000;
+    font-weight: 400;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+}
+
+a {
+    color: dimgrey;
+}
+
+a:hover {
+    color: #333333;
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+}
+
+.content {
+    min-height: 70%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.hometitle{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 50px;
+    letter-spacing: 2.8px;
+    word-spacing: 1.6px;
+    font-weight: 700;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: small-caps;
+    text-transform: capitalize;
+    margin: 80px 50px 30px 50px;
+}
+
+.title{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 50px;
+    letter-spacing: 2.8px;
+    word-spacing: 1.6px;
+    color: #000000;
+    font-weight: 700;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: small-caps;
+    text-transform: capitalize;
+    margin: 50px 50px 50px 50px;
+}
+
+.subtitle{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 20px;
+    letter-spacing: 1.4px;
+    word-spacing: 0.8px;
+    color: #6c757d;
+    font-weight: 700;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    margin: 0 50px 20px 50px;
+}
+
+.headline{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 20px;
+    letter-spacing: 1.4px;
+    word-spacing: 0.8px;
+    color: #000000;
+    font-weight: 400;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: capitalize;
+}
+
+.maintext{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    word-spacing: 1px;
+    line-height: 1.6;
+    color: #000000;
+    font-weight: 400;
+    margin: 50px 100px 50px 100px;
+}
+
+
+#textshadow{
+    color: #d9d9d9;
+    background: #e8e8e8;
+    text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);
+}
+
+#boxshadow{
+    -webkit-box-shadow: 5px 5px 17px 1px rgba(0,0,0,0.8);
+    box-shadow: 5px 5px 17px 1px rgba(0,0,0,0.8);
+}
+
+/*Navbar*/
+.navbar {
+    background-color: white;
+    font-size: 18px;
+    padding: 5px!important;
+}
+
+.navbar-brand {
+    color: #333;
+    font-size: 25px;
+    padding-left: 5rem;
+}
+/*End of Navbar*/
+
+/*Button*/
+
+.button {
+    display: inline-block;
+    border-radius: 5px;
+    border: 3px solid #97C0BC;
+    background-color: #6494A0;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px;
+    min-width: 120px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.sbutton {
+    display: inline-block;
+    border-radius: 2px;
+    background-image: linear-gradient(
+            to right,
+            #97C0BC, #6494A0
+    );
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 18px;
+    padding: 4px;
+    width: 120px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.sbutton span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.sbutton span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.sbutton:hover span {
+    padding-right: 15px;
+    color: #FFFFFF;
+}
+
+.sbutton:hover span:after {
+    opacity: 1;
+    right: 0;
+    color: #FFFFFF;
+}
+
+a.back-to-top {
+    display: none;
+    width: 60px;
+    height: 60px;
+    text-indent: -9999px;
+    position: fixed;
+    z-index: 999;
+    right: 20px;
+    bottom: 20px;
+    content: "TOP";
+    background: #6494A0 url('/static/img/up-arrow.png') no-repeat center ;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+}
+/*End of Button*/
+
+/*Card*/
+.card{
+    height: 370px;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 400px;
+    background-color: rgba(164,164,164,0.4);
+}
+
+.rectangle{
+    height: 370px;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 400px;
+    background-color: transparent !important ;
+    border: white 2px solid;
+}
+/*End of Card*/
+
+/*Frame*/
+.frame {
+    overflow-y: auto;
+    border: 2px solid white;
+    line-height: 1em;
+}
+
+.frame::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.frame::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+
+.frame::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid #758B8D; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .5);
+}
+/*End of Frame*/
+
+/*Jumbotron*/
+.jumbotron {
+    background-image: url("/static/img/crowd1.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    color: black;
+    height: 550px;
+}
+
+.jumbotron p {
+    font-size: x-large;
+    font-weight: 400;
+}
+/*End of Jumbotron*/
+
+/*Divider*/
+.divider{
+    border: 2px solid #6494A0;
+    width: 120px;
+    height: 0px;
+}
+/*End of Divider*/
+
+/*Helptip*/
+.help-tip{
+    position: absolute;
+    top: 5px;
+    right: 90px;
+    text-align: center;
+    background-color: #BCDBEA;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+}
+
+.help-tip:before{
+    content:'?';
+    font-weight: bold;
+    color: whitesmoke;
+}
+
+.help-tip:hover p{
+    display:block;
+    transform-origin: 100% 0%;
+
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+    z-index: 999;
+
+}
+
+.help-tip p{    /* The tooltip */
+    display: none;
+    text-align: left;
+    background-color: #1E2021;
+    padding: 20px;
+    width: 350px;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    right: -4px;
+    color: white;
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+.help-tip p:before{ /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width:0;
+    height: 0;
+    border:6px solid transparent;
+    border-bottom-color:#1E2021;
+    right:10px;
+    top:-12px;
+}
+
+.help-tip p:after{ /* Prevents the tooltip from being hidden */
+    width:100%;
+    height:40px;
+    content:'';
+    position: absolute;
+    top:-40px;
+    left:0;
+}
+/*End of helptip*/
+
+/*Team*/
+.team-member {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.team-member img {
+  width: 12rem;
+  height: 12rem;
+  border: 0.5rem solid rgba(0, 0, 0, 0.1);
+}
+.team-member h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+/*Emd of Team*/
+
+/*Contact section*/
+.map-container-section {
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
+}
+.map-container-section iframe {
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
+}
+/*End of Contact section*/
+
+/* CSS animation */
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity:0;
+        transform: scale(0.6);
+    }
+
+    100% {
+        opacity:100%;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    0% { opacity:0; }
+    100% { opacity:100%; }
+}

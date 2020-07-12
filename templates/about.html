@@ -1,51 +1,174 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'info-base.html' %}
 
-{% block css %}
-{% endblock %}
-
-{% block scripts %}
-
-{% endblock %}
 
 {% block content %}
 
-<div class="container" style="padding-top: 50px;">
+<div class="container">
+    <!--Intro-->
+    <div class="row justify-content-center align-items-center">
+        <div style="text-align: center;">
+            <h1 class="title">About Us</h1>
+            <img src="../static/img/crowdsourcing.jpg" class="img-fluid m-3" alt="Responsive image" style="opacity: 0.7;box-shadow: 10px 10px 5px rgba(0,0,0,0.2)">
+        </div>
+        <div class="text-center">
+            <p class="maintext">
+                CAM2 Crowdsourcing Team was created on Jan 8th 2019 under the Purdue CAM2 Research Group.
+                The purpose of this team is to explore the utilization of Crowdsourcing to detect and report the biased attributes in single-object image datasets.
+                We have developed a website of Human Intelligence Tasks(HIT) and started collecting crowdsourcing data on Amazon Mechanical Turk(AMT).
+                Potential focuses of this team can be any topics related to human interactions or collecting human crowd data.
 
-    <div id = "header" style="text-align: center;">
-        <h2 style="padding-top: 80px">About: CAM2 Crowdsourcing Team</h2>
+                Crowdsourcing utilizes the knowledge of humans to complete a task. In the scope of
+                research, we are using the crowd to handle specific tasks that may be hard for a machine to do
+                or improve the work of a machine. This may include tasks such as detecting bias within image datasets
+                using human knowledge rather than machines, since humans are better at
+                distinguishing features within images.
+                We use the crowd to classify images to datasets and generate a confusion matrix detailing the similarity
+                of images across several datasets.
+            </p>
+        </div>
     </div>
 
-<hr> <!--  Divider line  -->
+    <!--Timeline-->
+    <!--    <ul class="timeline">-->
+    <!--        <li>-->
+    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
+    <!--            <div class="timeline-panel">-->
+    <!--                <div class="timeline-heading">-->
+    <!--                    <h4>2009-2011</h4>-->
+    <!--                    <h4 class="subheading">Our Humble Beginnings</h4>-->
+    <!--                </div>-->
+    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
+    <!--            </div>-->
+    <!--        </li>-->
+    <!--        <li class="timeline-inverted">-->
+    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
+    <!--            <div class="timeline-panel">-->
+    <!--                <div class="timeline-heading">-->
+    <!--                    <h4>March 2011</h4>-->
+    <!--                    <h4 class="subheading">An Agency is Born</h4>-->
+    <!--                </div>-->
+    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
+    <!--            </div>-->
+    <!--        </li>-->
+    <!--        <li>-->
+    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
+    <!--            <div class="timeline-panel">-->
+    <!--                <div class="timeline-heading">-->
+    <!--                    <h4>December 2012</h4>-->
+    <!--                    <h4 class="subheading">Transition to Full Service</h4>-->
+    <!--                </div>-->
+    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
+    <!--            </div>-->
+    <!--        </li>-->
+    <!--        <li class="timeline-inverted">-->
+    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
+    <!--            <div class="timeline-panel">-->
+    <!--                <div class="timeline-heading">-->
+    <!--                    <h4>July 2014</h4>-->
+    <!--                    <h4 class="subheading">Phase Two Expansion</h4>-->
+    <!--                </div>-->
+    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
+    <!--            </div>-->
+    <!--        </li>-->
+    <!--        <li class="timeline-inverted">-->
+    <!--            <div class="timeline-image">-->
+    <!--                <h4>Be Part<br />Of Our<br />Story!</h4>-->
+    <!--            </div>-->
+    <!--        </li>-->
+    <!--    </ul>-->
+</div>
+<!-- Team-->
+<section class="page-section bg-light" id="team">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="title">Our Team</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Gore.png"  alt="" />
+                    <h4>Gore Kao (Leader)</h4>
+                    <p class="text-muted">Research & Development</p>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Ani.jpg" alt="" />
+                    <h4>Anirudh Vegesana</h4>
+                    <p class="text-muted">Research & Development</p>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Haobo.jpg" alt="" />
+                    <h4>Haobo Wang</h4>
+                    <p class="text-muted">Research & Development</p>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Xiao.jpg" alt="" />
+                    <h4>Xiao Hu</h4>
+                    <p class="text-muted">Research & Development</p>
+                </div>
+            </div>
+        </div>
 
-<div class="container" style="width: 80%; " >
-<div class="row">
-    <h4>
-        Crowdsourcing Team of <a href="https://www.cam2project.net" style="color: yellow">Purdue CAM2 Research Group</a> was established in 2019 Spring semester, dedicate to find the crowdsourcing approaches for biased image database problem. 
-    </h4>
-</div>
-<hr> <!--  Divider line  -->
-<div class="row">
-    <h4>
-        Team member: 
-        <a href="https://www.cs.purdue.edu//people/faculty/mingyin/" style="color: white">Ming Yin (professor)</a>, 
-        <a href="https://purduehelps.org/people.html#crowdsourcing-for-data-bias" style="color: white">Xiao Hu(team leader), Haobo Wang, Gore Kao, Anirudh Vegesana, Somesh Dube, Kaiwen Yu. </a>
-    </h4>
-</div>
-<hr> <!--  Divider line  -->
-<div class="row">
-    <h4>
-        Research focus: Detect and report the biased attributes in the image datasets by utilizing crowdsourcing. 
-    </h4>
-</div>
-<hr> <!--  Divider line  -->
-<div class="row">
-    <h4>
-        Publication: <b>Discovering Biases in Image Datasets with the Crowd</b><br>
-        <div style="font-size: medium">Accepted by <a href="https://www.humancomputation.com" style="color: yellow">2019 Human Computation and Crowdsourcing Conference(2019HCOMP)</a> Work-in-progress track.</div>
-    </h4>
-</div>
-</div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Kai.png" alt="" />
+                    <h4>Kaiwen Yu (Co-leader)</h4>
+                    <p class="text-muted">Software Engineer</p>
+                </div>
+            </div>
+            <!--            <div class="col-lg-4">-->
+            <!--                <div class="team-member">-->
+            <!--                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Kate.png"  alt="" />-->
+            <!--                    <h4>Kate Lee</h4>-->
+            <!--                    <p class="text-muted">Software Engineer</p>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Tina.png" alt="" />
+                    <h4>Tina Chen</h4>
+                    <p class="text-muted">Software Engineer</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Moya.png" alt="" />
+                    <h4>Moya Zhu</h4>
+                    <p class="text-muted">Software Engineer</p>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Esteban.png" alt="" />
+                    <h4>Esteban Gorostiaga</h4>
+                    <p class="text-muted">Marketing</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Phillip.jpg"  alt="" />
+                    <h4>Phillip	Andrew Archuleta</h4>
+                    <p class="text-muted">Marketing</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <img class="mx-auto rounded-circle" src="../static/img/about/members/Austin.jpg" alt="" />
+                    <h4>Austin Hu</h4>
+                    <p class="text-muted">Marketing</p>
+                </div>
+            </div>
+        </div>
 
-{% endblock %}
+    </div>
+</section>
+{% endblock%}
