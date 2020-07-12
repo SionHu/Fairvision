@@ -10,28 +10,34 @@ from csgame.storage_backends import mturk
 #number of rounds that will be hard coded for other test
 roundsnum = settings.NUMROUNDS
 
-# getting arguments and phases
+# getting arguments and steps
 import sys
 import argparse
 
 from datetime import datetime
 
 hitDescriptions = {
-    'phase01a': "Generating questions and answers and verifying question given a shown image",
-    'phase01b': "Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful",
-    'phase03': "Vote YES or NO for question provided based on common sense",
+    'step01': "Generating questions and answers and verifying question given a shown image",
+    'step02': "Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful",
+    'step03': "Vote YES or NO for question provided based on common sense",
+}
+
+qualificationTypes = {
+    'step01': '35TOCVOB5FZ8HBFUODU53NUZ7JM230',
+    'step02': '35TOCVOB5FZ8HBFUODU53NUZ7JM230',
+    'step03': '35TOCVOB5FZ8HBFUODU53NUZ7JM230',
 }
 
 '''
-create hits assignments with phase01a, phase01b and available rounds number
-create hits assigmments with phase03 only with MaxAssignments defined by us.(Like 60?)
-input: phase round number
+create hits assignments with step01, step02 and available rounds number
+create hits assigmments with step03 only with MaxAssignments defined by us.(Like 60?)
+input: step round number
 output: HITID and HIITGroupID for preview link
 '''
-def create_hit(phase, number):
-    # phase 01a
+def create_hit(step, number):
+    # step 1
     for i in range(number):
-        if(phase == 'phase01a'):
+        if(step == 'step01'):
             try:
                 question = open(file='csgame/hitData/hitp1.xml', mode='r').read()
             except:
@@ -42,7 +48,7 @@ def create_hit(phase, number):
             # create new hit
             new_hit = mturk.create_hit(
                 Title="Image Labeling With Text",
-                Description=hitDescriptions['phase01a'],
+                Description=hitDescriptions['step01'],
                 Keywords='image, tagging, machine learning, text generation',
                 Reward = '0.50',
                 MaxAssignments=1,
@@ -53,17 +59,17 @@ def create_hit(phase, number):
                 QualificationRequirements=[
                     {
                         # this id is used on sandbox only
-                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
+                        'QualificationTypeId': qualificationTypes['step01'],
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
                     }
                 ]
             )
-        # phase 01b
-        elif(phase == 'phase01b'):
+        # step 02
+        elif(step == 'step02'):
             try:
-                question = open(file='csgame/hitData/hitp1b.xml', mode='r').read()
+                question = open(file='csgame/hitData/hitp2.xml', mode='r').read()
             except:
                 print()
                 print("----------------------")
@@ -72,7 +78,7 @@ def create_hit(phase, number):
             # create new hit
             new_hit = mturk.create_hit(
                 Title="Knowledge Answer With Image",
-                Description=hitDescriptions['phase01b'],
+                Description=hitDescriptions['step02'],
                 Keywords='image, tagging',
                 Reward = '0.50',
                 MaxAssignments=1,
@@ -82,7 +88,7 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
+                        'QualificationTypeId': qualificationTypes['step02'],
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
@@ -90,7 +96,7 @@ def create_hit(phase, number):
                 ]
             )
         else:
-            # phase 03
+            # step 03
             try:
                 question = open(file='csgame/hitData/hitp3.xml', mode='r').read()
             except:
@@ -101,7 +107,7 @@ def create_hit(phase, number):
             # create new hit
             new_hit = mturk.create_hit(
                 Title="Binary Selection Question",
-                Description=hitDescriptions['phase03'],
+                Description=hitDescriptions['step03'],
                 Keywords='binary tagging, text verification, computer vision, machine learning',
                 Reward = '0.25',
                 MaxAssignments=1,
@@ -111,7 +117,7 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
+                        'QualificationTypeId': qualificationTypes['step03'],
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
@@ -120,7 +126,7 @@ def create_hit(phase, number):
             )
 
         # some print function for reference
-        print(f"https://worker.mturk.com/mturk/preview?groupId={new_hit['HIT']['HITGroupId']}")
+        print(f"https://worker{'sandbox' if 'sandbox' in settings.MTURK_URL else ''}.mturk.com/mturk/preview?groupId={new_hit['HIT']['HITGroupId']}")
         print(f"HITID = {new_hit['HIT']['HITId']} (Use to Get Results)")
 
 '''
@@ -133,11 +139,11 @@ def print_hit():
 
 '''
 delete_hit for different
-input argument: phase number
+input argument: step number
 output print: delete HIT ID, Status and delete message: success or fail
-Note: This should only been done for sandbox(development) or between the phase gap
+Note: This should only been done for sandbox(development) or between the step gap
 '''
-def delete_hit(phase):
+def delete_hit(step):
     # Delete all HITs for now
     for item in mturk.list_hits()['HITs']:
         hit_id=item['HITId']
@@ -148,8 +154,8 @@ def delete_hit(phase):
         print('HITStatus: ', status)
         description = mturk.get_hit(HITId=hit_id)['HIT']['Description']
 
-        # delete phase01a
-        if phase == 'phase01a' and description == hitDescriptions['phase01a']:
+        # delete step01
+        if step == 'step01' and description == hitDescriptions['step01']:
             # If HIT is active then set it to expire immediately
             if status=='Assignable':
                 response = mturk.update_expiration_for_hit(
@@ -172,7 +178,7 @@ def delete_hit(phase):
                 print('Not deleted')
             else:
                 print('Deleted')
-        elif phase == 'phase01b' and description == hitDescriptions['phase01b']:
+        elif step == 'step02' and description == hitDescriptions['step02']:
 
             # If HIT is active then set it to expire immediately
             if status=='Assignable':
@@ -181,7 +187,7 @@ def delete_hit(phase):
                     ExpireAt=datetime(2015, 1, 1)
                 )
 
-            print("I found for phase1a")
+            print("I found for step2")
             # Delete the HIT
             try:
                 mturk.delete_hit(HITId=hit_id)
@@ -189,7 +195,7 @@ def delete_hit(phase):
                 print('Not deleted')
             else:
                 print('Deleted')
-        elif phase == 'phase03' and description == hitDescriptions['phase03']:
+        elif step == 'step03' and description == hitDescriptions['step03']:
             # If HIT is active then set it to expire immediately
             if status=='Assignable':
                 response = mturk.update_expiration_for_hit(
@@ -197,7 +203,7 @@ def delete_hit(phase):
                     ExpireAt=datetime(2015, 1, 1)
                 )
 
-            print("I found for phase1a")
+            print("I found for step3")
             # Delete the HIT
             try:
                 mturk.delete_hit(HITId=hit_id)
@@ -239,8 +245,8 @@ def reject_assignment(assignment_id, reason):
         RequesterFeedback=reason
     )
 
-def create_qualification(phase):
-    if phase == 'phase01a' or phase == 'phase01b':
+def create_qualification(step):
+    if step == 'step01' or step == 'step02':
         try:
             questions = open(file='csgame/hitData/qualification/testP3.xml', mode='r').read()
             answers = open(file='csgame/hitData/qualification/ansP3.xml', mode='r').read()
@@ -283,15 +289,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     subparsers = parser.add_subparsers(metavar='subcommands', dest='command')
-    phasesArg = dict(type=str, choices=['phase01a', 'phase01b', 'phase03'], metavar='phase',
-                     help='Choose phase01a, phase01b, or phase03.')
+    stepsArg = dict(type=str, choices=['step01', 'step02', 'step03'], metavar='step',
+                     help='Choose step01, step02, or step03.')
 
-    cparser = subparsers.add_parser('create', help='create hits for specfic phase with', aliases=['c'])
-    cparser.add_argument('phase', **phasesArg)
+    cparser = subparsers.add_parser('create', help='create hits for specfic step with', aliases=['c'])
+    cparser.add_argument('step', **stepsArg)
     cparser.add_argument('number', type=int, default=1, help="The number of the HITS to generate each round")
 
-    dparser = subparsers.add_parser('delete', help='delete hits for specfic phase with', aliases=['d'])
-    dparser.add_argument('phase', **phasesArg)
+    dparser = subparsers.add_parser('delete', help='delete hits for specfic step with', aliases=['d'])
+    dparser.add_argument('step', **stepsArg)
 
     pparser = subparsers.add_parser('print', help='print hit or assignment status', aliases=['p'])
     pparser.add_argument('-a', '--assignment', type=str, metavar='assignment', default='all', nargs='?', help='HIT id to show assignments for.')
@@ -303,18 +309,18 @@ if __name__ == "__main__":
     rparser.add_argument('assignment', type=str, metavar='assignment')
     rparser.add_argument('reason', type=str, metavar='reason')
 
-    # a parser that will be only needed once for create a qualificatio for each of the 3 phases
-    qparser = subparsers.add_parser('qualify', help='create a qualification type for different 3 phases', aliases=['q'])
-    qparser.add_argument('phase', **phasesArg)
+    # a parser that will be only needed once for create a qualificatio for each of the 3 steps
+    qparser = subparsers.add_parser('qualify', help='create a qualification type for different 3 steps', aliases=['q'])
+    qparser.add_argument('step', **stepsArg)
 
     options = parser.parse_args()
 
     # Hello world for mturk boto api
     print("I have $" + mturk.get_account_balance()['AvailableBalance'] + " in my account")
     if options.command in ('create', 'c'):
-        create_hit(options.phase, options.number)
+        create_hit(options.step, options.number)
     elif options.command in ('delete', 'd'):
-        delete_hit(options.phase)
+        delete_hit(options.step)
     elif options.command in ('print', 'p'):
         hitId = options.assignment
         if hitId:
@@ -326,6 +332,6 @@ if __name__ == "__main__":
     elif options.command in ('reject', 'r'):
         reject_assignment(options.assignment, options.reason)
     elif options.command in ('qualify', 'q'):
-        create_qualification(options.phase)
+        create_qualification(options.step)
     else:
         sys.exit(2)
