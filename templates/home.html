@@ -1,33 +1,168 @@
-{% extends 'base.html' %}
+{% extends 'info-base.html' %}
 
 {% block content %}
 
-<div class="container" style="padding-top: 50px">
-    {% if messages %}
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-      {% for message in messages %}
-        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
-      {% endfor %}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+<!--Jumbotron-->
+
+<div class="jumbotron align-items-center">
+    <div class="container text-center">
+        <div class="hometitle">Your Dataset Bias Detector</div>
+        <h3 >Helping our clients customize the process of finding image dataset bias using crowdsourcing.</h3>
+        <div style="padding-top: 80px"></div>
+        <a href="#section1" class="button">
+            <span>Learn More</span>
+        </a>
     </div>
-    {% endif %}
-  
-        <div class="row justify-content-center align-items-center">
-        <center>
+</div>
 
-            <img src="static/img/crowdsourcing.jpg" class="img-fluid m-3" alt="Responsive image" style="opacity: 0.7;box-shadow: 10px 10px 5px rgba(0,0,0,0.2)">
+<!--End of Jumbotron-->
 
-            <div style="padding-top: 20px">
-                <h2 style="font-style: italic;font-size: 45px">Welcome to the Crowdsourcing Game!</h2>
+<div id="section1" class="container-fluid" style="padding: 30px 150px">
+    <div class="row">
+        <div class="col-sm">
+            <div class="divider"></div>
+            <h3 style="padding: 20px 0">What is dataset bias?</h3>
+            <p style="max-width: 1000px">
+                Dataset is a collection of related sets of information that is composed of separate elements but can
+                be manipulated as a unit by a computer. A dataset's structure and properties are defined by several
+                characteristic. When a dataset is not representative of the population or phenomenon of study, it's "biased".
+                <br><br>
+                For instance, the image shown on the right can be clearly defined as a "biased dataset" with several biases:
+                <br>
+                <b>Greyscale, facing left, outdoor, sedan ...</b>
+            </p>
+        </div>
+
+        <div class="col-sm">
+            <div class="card" style="width: 30rem; height: auto; margin-top: 60px">
+                <img class="card-img" src="/static/img/bias-dataset.png" alt="Card image cap">
             </div>
 
-            <hr>
-            <a href="{% url 'phase01a' %}">
-                <button class="btn btn-lg btn-outline-light"><span><i class="fa fa-gamepad"></i></span> Start the Game</button>
-            </a>
-        </center>
         </div>
+    </div>
 </div>
-{% endblock %}
+
+<div id="section2" class="container-fluid" style="padding: 50px 150px; background-color: #F1F1F1">
+    <div class="row">
+        <div class="col-sm">
+            <div class="card" style="width: 30rem; height: auto; background-color: white">
+                <img class="card-img-top" src="/static/img/bias-classifier.png" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text" style="font-size: 11px"><i>“Why Should I Trust You?” Explaining the Predictions of Any Classifier</i></p>
+                </div>
+            </div>
+            <p style="padding-top: 20px">
+                The biased training dataset causes the classifier to classify any given wolf/husky images with snow background as wolf.
+            </p>
+
+        </div>
+        <div class="col-sm">
+            <div class="divider"></div>
+            <h3 style="padding: 20px 0">Why is bias important?</h3>
+            <p style="max-width: 1000px">
+                Computer vision technologies have been applied to an increasingly
+                wide range of applications from autonomous navigation, to medical
+                image analysis, to precision agriculture. Despite many exciting innovations in computer vision, recent studies
+                reveal a number of risks in existing computer vision systems,
+                suggesting results of such systems may be <b>unfair and untrustworthy</b>.
+                <br><br>
+                Being able to detect potential
+                sampling biases in the visual dataset prior to model development is
+                thus essential for mitigating the fairness and trustworthy concerns
+                in computer vision.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<div id="section3" class="container-fluid" style="padding: 50px 150px">
+    <div class="row">
+        <div class="col-sm">
+            <div class="divider"></div>
+            <h3 style="padding: 20px 0">How can we help?</h3>
+            <p style="max-width: 1000px">
+                We are the pioneer in detecting image dataset bias, and we provide a <b>costumed platform</b> for our clients to detect bias and correct them using Crowdsourcing and Machine Learning tools.
+                <br><br>
+                You provided a dataset, we help you find the bias and correct them!
+                <br><br>
+                <a href="{% url 'service' %}" style="color: #6494A0; font-size: larger">Checkout our service!<span class="sr-only">(current)</span><i class="fa fa-arrow-right"></i></a>
+            </p>
+        </div>
+
+        <div class="col-sm">
+            <img src="https://pngimage.net/wp-content/uploads/2018/05/crowdsourcing-png-3.png" alt="..." class="center" style="width: 50%">
+
+        </div>
+    </div>
+</div>
+
+<div id="section4" class="container-fluid" style="padding: 50px 120px; background-color: #F1F1F1">
+    <div class="row" style="margin: auto">
+
+        <!--  Video Link  -->
+        <div class="col-sm">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe src="https://drive.google.com/file/d/138WBewfUlb_648qEXcmzit-sjlDvihp6/preview" width="640" height="480" allowfullscreen="allowfullscreen"></iframe>
+            </div>
+        </div>
+
+        <!--  Info  -->
+        <div class="col-sm">
+            <div class="divider"></div>
+            <h3 style="padding: 20px 0">Crowdsourcing Detection of Sampling Biases in Image Datasets</h3>
+            <ul class="list-unstyled">
+                <li><span style="padding:10px" class="fas fa-chalkboard-teacher"></span> Presentation of our latest paper</li>
+                <li><span style="padding:10px" class="fas fa-users"></span>Using <i>Amazon Mechanical Turk</i> crowdsourcing platform</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div id="section5" class="container-fluid" style="padding: 0 150px">
+    <!-- Section: Contact Us -->
+    <section class="my-5">
+
+        <!-- Section heading -->
+        <h2 class="h1-responsive font-weight-bold text-center my-5">Contact Us</h2>
+
+        <!-- Grid row -->
+        <div class="row" style="text-align: center">
+
+            <!-- Grid column -->
+            <div class="col" style="padding: 0 150px">
+
+                <!--Google map-->
+                <div id="map-container-section" class="z-depth-1-half map-container-section mb-4" style="height: 400px">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12149.316689328485!2d-86.9299493325754!3d40.42370946313944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8812fd37423e0507%3A0x8eccb2cf8b1a7c8e!2sPurdue%20University!5e0!3m2!1sen!2sus!4v1591073824787!5m2!1sen!2sus" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                </div>
+                <!-- Buttons-->
+                <div class="row text-center">
+                    <div class="col-md-6">
+                        <a class="btn-floating blue accent-1">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </a>
+                        <p>West Lafayette, 47906</p>
+                        <p class="mb-md-0">United States</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <a class="btn-floating blue accent-1">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <p>cam2crowdsourcing@gmail.com</p>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+
+    </section>
+    <!-- Section: Contact v.1 -->
+</div>
+
+{% endblock%}

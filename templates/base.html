@@ -4,13 +4,13 @@
 
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" type="image/png" href="{% static "img/logo.jpg" %}"/>
-	<title>{% block title %}CSGAME{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/logo.png' %}"/>
+    <title>{% block title %}CSGAME{% endblock %}</title>
 
     <!--  Bootstrap 4 css link  -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -28,46 +28,26 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
-    <!--  Implement base.css  -->
-    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <!--  Implement style.css  -->
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
 
     <style type="text/css">
-   		body { background: #758B8D !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
-	</style>
+        body { background: #758B8D !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+    </style>
 
     {% block css %}{% endblock %}
     {% block scripts %}{% endblock %}
 
 </head>
-<body style="overflow-y:hidden">
+<body>
 
-<!--  Navebar  -->
-<div class="nav-container fixed-top">
-    <nav id = 'navbar'>
-
-        <div class="navbar-header" style="padding-left: 200px">
-            <a class="navbar-brand" href="/" style="color: black">Game</a>
-        </div>
-
-        <div class="nav-item">
-            <a href="{% url 'about' %}" class="nav-link">About</a>
-        </div>
-
-    </nav>
+<div class="content">
+    {% block content %}
+    {% endblock %}
 </div>
 
-<!--  End of Navebar  -->
-
-	{% block content %}
-	{% endblock %}
-
-	<div class=container style="height: 50px">
-		<br/>
-	</div>
 <!--  Footer  -->
-<footer class="footer-copyright py-3 bg-dark fixed-bottom text-center">
-<!-- <footer class="footer-copyright py-2 fixed-bottom text-center" style="background-color:white;color: black"> -->
-
+<footer class="footer-copyright py-3 fixed-bottom text-center" style="background-color: rgba(151,192,188,0.2); color: white;bottom: 0px">
     Copyright © 2019 Purdue CAM2 Research Group Crowdsourcing Team. All rights reserved.
 </footer>
 

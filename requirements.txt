@@ -1,70 +1,30 @@
-natsort==6.0.0
-more-itertools==8.2.0
-Pillow>=6.2.2
-
-# Basic Django
-Django==2.2.13
-django-cors-headers==2.4.0
-djangorestframework==3.9.1
-pytz==2019.1
-whitenoise==4.1.2
-
-# Heroku
-gunicorn==19.9.0
-
-# Postgres Database
-dj-database-url==0.5.0
-psycopg2==2.7.7
-
-# Amazon S3 File System
-boto3==1.9.100
-botocore==1.12.152
-django-storages==1.7.1
-docutils==0.14
-jmespath==0.9.4
-python-dateutil==2.8.0
-s3transfer==0.2.0
-six==1.12.0
-urllib3==1.24.3
-
-# Table Importing and Exporting
-backports.csv==1.0.7
-defusedxml==0.6.0
-diff-match-patch==20181111
-django-import-export==1.2.0
-et-xmlfile==1.0.1
-jdcal==1.4.1
-odfpy==1.4.0
-openpyxl==2.6.2
-PyYAML==5.1
-tablib==0.13.0
-xlrd==1.2.0
-xlwt==1.3.0
-
-# Spacy
-certifi==2019.3.9
+-i https://pypi.org/simple
+boto3==1.14.19
+botocore==1.17.19
+certifi==2020.6.20
 chardet==3.0.4
-cymem==1.31.2
-cytoolz==0.9.0.1
-dill==0.2.9
-idna==2.8
-msgpack==0.5.6
-msgpack-numpy==0.4.3.2
-murmurhash==0.28.0
-numpy==1.16.3
-plac==0.9.6
-preshed==1.0.1
-regex==2018.1.10
-requests==2.22.0
-spacy==2.0.13
-thinc==6.10.3
-toolz==0.9.0
-tqdm==4.32.1
-ujson==1.35
-wrapt==1.10.11
-#https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.1.0/en_core_web_sm-2.1.0.tar.gz
-
-# JSON
-django-jsoneditor==0.1.4
-packaging==19.0
-pyparsing==2.4.0
+dj-database-url==0.5.0
+django-jsoneditor==0.1.6
+django-storages==1.9.1
+django==2.2.14
+docutils==0.15.2; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+et-xmlfile==1.0.1
+gunicorn==20.0.4
+idna==2.10; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+jdcal==1.4.1
+jmespath==0.10.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+more-itertools==8.4.0
+natsort==7.0.1
+openpyxl==3.0.4
+packaging==20.4; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+pillow==7.2.0
+psycopg2-binary==2.8.5
+pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+python-dateutil==2.8.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+pytz==2020.1
+requests==2.24.0
+s3transfer==0.3.3
+six==1.15.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+sqlparse==0.3.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+urllib3==1.25.9; python_version != '3.4'
+whitenoise==5.1.0
