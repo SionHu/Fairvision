@@ -22,7 +22,12 @@ path = os.path.dirname(os.path.abspath(__file__))
 try:
     import django
 except ImportError:
-    if not tryActivate('venv') and tryActivate('mycs'):
+    if os.path.exists('.venv'):
+        with open('.venv') as venvFile:
+            FOLDER = venvFile.read().strip()
+    else:
+        FOLDER = 'venv'
+    if not tryActivate(FOLDER) and not tryActivate('mycs'):
         print("Unable to find a virtual environment.")
     try:
         import django

@@ -9,6 +9,7 @@ import ntpath
 import os
 import shutil
 import subprocess
+from distutils.util import strtobool
 
 activate_this = '''
 #### FROM virtualenv PROJECT ###
@@ -64,6 +65,19 @@ def updateVenv(venv_folder, make=True):
     exec(activate_this, {'__file__': activate_this_path})
     subprocess.run([python_path, '-m', 'pip', 'install', '-r', 'requirements.txt']).check_returncode()
 
+def chooseNewFolder():
+    global FOLDER
+    FOLDER = None
+    while FOLDER is None or not os.path.exists(FOLDER):
+        FOLDER = input("Where is your virtual environment: ")
+        if not os.path.exists(FOLDER) or not os.path.isdir(FOLDER):
+            if strtobool(input(f"{FOLDER} doesn't exist. Do you want to make a virtual environment here: ")):
+                updateVenv('venv')
+            else:
+                FOLDER = None
+    with open('.venv', 'w') as venvFile:
+        venvFile.write(FOLDER)
+
 if __name__ == '__main__':
     cwd = os.getcwd()
     try:
@@ -71,12 +85,18 @@ if __name__ == '__main__':
         os.chdir(path)
 
         # Shim for Xiao
-        if not os.path.exists('venv'):
+        if os.path.exists('.venv'):
+            with open('.venv') as venvFile:
+                FOLDER = venvFile.read().strip()
+            if not os.path.exists(FOLDER) or not os.path.isdir(FOLDER):
+                print(f"{FOLDER} doesn't exist. Choose a different folder.")
+                chooseNewFolder()
+        elif not os.path.exists('venv'):
             if os.path.exists('mycs'):
                 FOLDER = 'mycs'
                 pass # updateVenv('mycs', False)
             else:
-                updateVenv('venv')
+                chooseNewFolder()
         else:
             pass # updateVenv('venv', False)
 
