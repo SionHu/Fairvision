@@ -1,6 +1,33 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+import ntpath
 import os
 import sys
+
+def tryActivate(venv_folder):
+    '''
+    Attempt to activate a virtual environment from within Python
+    '''
+    try:
+        activate_this_path = os.path.join(venv_folder, 'Scripts', 'activate_this.py') if os.path is ntpath else os.path.join(venv_folder, 'bin', 'activate_this.py')
+        if os.path.exists(activate_this_path):
+            with open(activate_this_path) as f:
+                exec(f.read(), {'__file__': activate_this_path})
+            return True
+    except:
+        pass
+    return False
+
+# activate the virtual environment if found
+path = os.path.dirname(os.path.abspath(__file__))
+try:
+    import django
+except ImportError:
+    if not tryActivate('venv') and tryActivate('mycs'):
+        print("Unable to find a virtual environment.")
+    try:
+        import django
+    except ImportError:
+        print("Unable to activate virtual environment. Perhaps you are using the wrong version of Python.")
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "csgame.settings")
