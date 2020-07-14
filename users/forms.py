@@ -105,11 +105,10 @@ class MyForm(forms.Form):
 
     class Media:
         css = {
-            'all':['admin/css/widgets.css',
-                   'css/uid-manage-form.css'],
+            'all':['admin/css/widgets.css'],
         }
         # Adding this javascript is crucial
-        js = ['/admin/jsi18n/']
+        js = ['/jsi18n/']
 
 
 '''

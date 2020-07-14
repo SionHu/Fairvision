@@ -8,7 +8,7 @@
 <div class="container" style="padding-top: 20px; color: white; font-family: 'Numans', sans-serif">
     <div>
         <div class="row">
-            <h2> Step 2 - Bias Judgement
+            <h2>Step 2 - Bias Judgement
                 <button class="btn btn-info" data-toggle="modal" data-target="#myModal">How to Play?</button>&#32;
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agreement">Instruction
                 </button>
@@ -16,19 +16,19 @@
         </div>
         <div class="row">
             <div class="col-10">
-            <div class="alert alert-warning" role="alert" style="display:inline-block;font-size: 18px">
-                Please select the common feature for faces,
-                i.e. the features that apply to <b>all faces</b> in real life.
-            </div>
+                <div class="alert alert-warning" role="alert" style="display:inline-block;font-size: 18px">
+                    Please select the common <b>face</b> feature to the "Chosen Features" box,
+                    <b>i.e</b>. the features that are  <b>not unique</b> and apply to <b>all faces</b> in real life.
+                    Click "submit" to submit your chosen feature list.
+                </div>
             </div>
             <div class="col-2">
-            <div class="help-tip" style="left: 10px; top: 10px">
-                <p>
-                    Please select common features to the "Chosen Feature" box.<br/>
-                    Common basic feature examples: Eyes, Nose <br/>
-                    Not basic feature examples: Blond Hair, Piercing<br/>
-                </p>
-            </div>
+                <div class="help-tip" style="left: 10px; top: 10px">
+                    <p>
+                        Common basic feature examples: Eyes, Nose <br/>
+                        Not basic feature examples: Blond Hair, Piercing<br/>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -115,21 +115,29 @@
     <!-- The Modal End-->
     <!--HEAD -->
     {{ form.media }}
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+
     <!--BODY-->
-   <div style="color: white; font-family: 'Numans', sans-serif;">
-        <div class="card" style="height: 70%; width: 90%; overflow: scroll; padding: 50px">
+    <div style="color: white; font-family: 'Numans', sans-serif;">
+        <div class="card" style="height: 80%; width: 90%;  padding: 30px">
             <form method="post">
                 {% csrf_token %}
-                {% for field in form.hidden_fields %}
-                {{ field }}
-                {% endfor %}
-                {% for field in form.visible_fields %}
-                {{ field }}
-                {% endfor %}
-                <button type="submit" class="btn btn-warning float-right">Submit</button>
+                <div class="row">
+                    {% for field in form.hidden_fields %}
+                    {{ field }}
+                    {% endfor %}
+                    {% for field in form.visible_fields %}
+                    {{ field }}
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-warning" style="height:50px;width:180px;margin-left:31%;
+                margin-right:auto;display:block;margin-top:3%;margin-bottom:12%">Submit</button>
+
             </form>
+
         </div>
-   </div>
+    </div>
     <script>
         $(document).ready(function(){
             if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
@@ -146,6 +154,8 @@
                 $("#closeGIF").show();
             }, 15000);
         });
+
+
     </script>
 
 </div>
