@@ -5,7 +5,7 @@
 {% endblock %}
 ​
 {% block content %}
-<div class="container" style="padding-top: 20px; color: white; font-family: 'Numans', sans-serif">
+<div style="padding: 20px 10% 0px 10%; color: white; font-family: 'Numans', sans-serif">
     <div>
         <div class="row">
             <h2>Step 2 - Bias Judgement
@@ -120,7 +120,8 @@
 
     <!--BODY-->
     <div style="color: white; font-family: 'Numans', sans-serif;">
-        <div class="card" style="height: 80%; width: 90%;  padding: 30px">
+        <div class="card" style="height: 75%; width: 90%;  padding: 30px">
+            <div class=" row d-flex justify-content-center">
             <form method="post">
                 {% csrf_token %}
                 <div class="row">
@@ -131,10 +132,11 @@
                     {{ field }}
                     {% endfor %}
                 </div>
-                <button type="submit" class="btn btn-warning" style="height:50px;width:180px;margin-left:31%;
-                margin-right:auto;display:block;margin-top:3%;margin-bottom:12%">Submit</button>
+                <button type="submit" class="btn btn-warning" style="height:50px;width:180px;margin-left:40%;
+                display:block;margin-top: 3%">Submit</button>
 
             </form>
+            </div>
 
         </div>
     </div>

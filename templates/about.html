@@ -3,83 +3,35 @@
 
 {% block content %}
 
-<div class="container">
-    <!--Intro-->
-    <div class="row justify-content-center align-items-center">
-        <div style="text-align: center;">
-            <h1 class="title">About Us</h1>
-            <img src="../static/img/crowdsourcing.jpg" class="img-fluid m-3" alt="Responsive image" style="opacity: 0.7;box-shadow: 10px 10px 5px rgba(0,0,0,0.2)">
-        </div>
-        <div class="text-center">
-            <p class="maintext">
-                CAM2 Crowdsourcing Team was created on Jan 8th 2019 under the Purdue CAM2 Research Group.
-                The purpose of this team is to explore the utilization of Crowdsourcing to detect and report the biased attributes in single-object image datasets.
-                We have developed a website of Human Intelligence Tasks(HIT) and started collecting crowdsourcing data on Amazon Mechanical Turk(AMT).
-                Potential focuses of this team can be any topics related to human interactions or collecting human crowd data.
-
-                Crowdsourcing utilizes the knowledge of humans to complete a task. In the scope of
-                research, we are using the crowd to handle specific tasks that may be hard for a machine to do
-                or improve the work of a machine. This may include tasks such as detecting bias within image datasets
-                using human knowledge rather than machines, since humans are better at
-                distinguishing features within images.
-                We use the crowd to classify images to datasets and generate a confusion matrix detailing the similarity
-                of images across several datasets.
-            </p>
-        </div>
+<div style="padding: 0px 5%">
+<!--Intro-->
+<div class="row justify-content-center align-items-center">
+    <div style="text-align: center;">
+        <h1 class="title">About Us</h1>
+        <img src="../static/img/crowdsourcing.jpg" class="img-fluid m-3" alt="Responsive image" style="max-width:100%; opacity: 0.7;box-shadow: 10px 10px 5px rgba(0,0,0,0.2)">
     </div>
+    <div class="text-center">
+        <p class="maintext">
+            CAM2 Crowdsourcing Team was created on Jan 8th 2019 under the Purdue CAM2 Research Group.
+            The purpose of this team is to explore the utilization of Crowdsourcing to detect and report the biased attributes in single-object image datasets.
+            We have developed a website of Human Intelligence Tasks(HIT) and started collecting crowdsourcing data on Amazon Mechanical Turk(AMT).
+            Potential focuses of this team can be any topics related to human interactions or collecting human crowd data.
 
-    <!--Timeline-->
-    <!--    <ul class="timeline">-->
-    <!--        <li>-->
-    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
-    <!--            <div class="timeline-panel">-->
-    <!--                <div class="timeline-heading">-->
-    <!--                    <h4>2009-2011</h4>-->
-    <!--                    <h4 class="subheading">Our Humble Beginnings</h4>-->
-    <!--                </div>-->
-    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
-    <!--            </div>-->
-    <!--        </li>-->
-    <!--        <li class="timeline-inverted">-->
-    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
-    <!--            <div class="timeline-panel">-->
-    <!--                <div class="timeline-heading">-->
-    <!--                    <h4>March 2011</h4>-->
-    <!--                    <h4 class="subheading">An Agency is Born</h4>-->
-    <!--                </div>-->
-    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
-    <!--            </div>-->
-    <!--        </li>-->
-    <!--        <li>-->
-    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
-    <!--            <div class="timeline-panel">-->
-    <!--                <div class="timeline-heading">-->
-    <!--                    <h4>December 2012</h4>-->
-    <!--                    <h4 class="subheading">Transition to Full Service</h4>-->
-    <!--                </div>-->
-    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
-    <!--            </div>-->
-    <!--        </li>-->
-    <!--        <li class="timeline-inverted">-->
-    <!--            <div class="timeline-image"><img class="rounded-circle img-fluid" src="" alt="" /></div>-->
-    <!--            <div class="timeline-panel">-->
-    <!--                <div class="timeline-heading">-->
-    <!--                    <h4>July 2014</h4>-->
-    <!--                    <h4 class="subheading">Phase Two Expansion</h4>-->
-    <!--                </div>-->
-    <!--                <div class="timeline-body"><p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt ut voluptatum eius sapiente, totam reiciendis temporibus qui quibusdam, recusandae sit vero unde, sed, incidunt et ea quo dolore laudantium consectetur!</p></div>-->
-    <!--            </div>-->
-    <!--        </li>-->
-    <!--        <li class="timeline-inverted">-->
-    <!--            <div class="timeline-image">-->
-    <!--                <h4>Be Part<br />Of Our<br />Story!</h4>-->
-    <!--            </div>-->
-    <!--        </li>-->
-    <!--    </ul>-->
+            Crowdsourcing utilizes the knowledge of humans to complete a task. In the scope of
+            research, we are using the crowd to handle specific tasks that may be hard for a machine to do
+            or improve the work of a machine. This may include tasks such as detecting bias within image datasets
+            using human knowledge rather than machines, since humans are better at
+            distinguishing features within images.
+            We use the crowd to classify images to datasets and generate a confusion matrix detailing the similarity
+            of images across several datasets.
+        </p>
+    </div>
 </div>
+</div>
+
 <!-- Team-->
 <section class="page-section bg-light" id="team">
-    <div class="container">
+    <div>
         <div class="text-center">
             <h2 class="title">Our Team</h2>
         </div>
@@ -171,4 +123,5 @@
 
     </div>
 </section>
+
 {% endblock%}
