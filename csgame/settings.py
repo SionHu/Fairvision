@@ -83,11 +83,9 @@ SECRET_KEY = 'jsl5xrm^in$mx)ftkdeybi0#(uqr)j=e=eer%eg2rxk#h#1l9r'
 DEBUG=not(IS_PRODUCTION_SITE or TEST_HTTP_HANDLING)
 
 ALLOWED_HOSTS = [
-	'test-csgame.herokuapp.com',
-    '127.0.0.1',
-    'localhost',
-    'cam2-crowdsourcing.herokuapp.com',
-    'cam2-cds-test-243502.appspot.com',
+    'fairvision.net',
+] if IS_PRODUCTION_SITE else [
+    '*',
 ]
 
 
@@ -110,6 +108,7 @@ INSTALLED_APPS.extend(filter(importlib.util.find_spec, (
     'rest_framework',
     'import_export',
     'jsoneditor',
+    'mod_wsgi.server',
 )))
 
 MIDDLEWARE = [
