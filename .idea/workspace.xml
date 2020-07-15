@@ -3,17 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="76f21add-767d-4350-b501-1238ec35ea8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/step03.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/step03.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/about.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/info-base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/info-base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/publication.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/publication.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/service.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/service.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/step01.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/step01.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/step02.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/step02.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/step03.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/step03.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
