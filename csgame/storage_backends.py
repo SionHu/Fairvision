@@ -42,10 +42,12 @@ if settings.AWS_STORAGE_BUCKET_NAME is not None:
                     raise
 
 elif settings.SFTP_STORAGE_HOST is not None:
-    from django.core.files.storage import SFTPStorage
+    from storages.backends.sftpstorage import SFTPStorage
 
     class MediaStorage(SFTPStorage):
-        pass
+        #url for getting the image link
+        def url(self, name, parameters=None, expire=300):
+            return f"http://{settings.SFTP_STORAGE_HOST}/datasets/{name}"
 
 else:
     from django.core.files.storage import FileSystemStorage

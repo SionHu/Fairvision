@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+import ast
 import sys
 import os
 import configparser
@@ -44,6 +45,7 @@ try:
     SFTP_STORAGE_HOST = my_env.get('SFTP_STORAGE_HOST', None)
     if SFTP_STORAGE_HOST is not None:
         SFTP_STORAGE_ROOT = my_env['SFTP_STORAGE_ROOT']
+        SFTP_STORAGE_PARAMS = ast.literal_eval(my_env.get("SFTP_STORAGE_PARAMS", "{}"))
 
     IS_PRODUCTION_SITE = strtobool(my_env['IS_PRODUCTION_SITE'])
     TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
@@ -102,8 +104,14 @@ INSTALLED_APPS = [
     'storages',
 ]
 
+def find_spec(module):
+    try:
+        return importlib.util.find_spec(module, package=__package__)
+    except ImportError:
+        return False
+
  # Optional applications that are not required for the working of the game
-INSTALLED_APPS.extend(filter(importlib.util.find_spec, (
+INSTALLED_APPS.extend(filter(find_spec, (
     'corsheaders',
     'rest_framework',
     'import_export',
