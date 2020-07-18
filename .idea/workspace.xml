@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="76f21add-767d-4350-b501-1238ec35ea8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/step01.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/step01.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/step02.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/step02.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/decorators.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/decorators.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/users/views/gamep.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views/gamep.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +88,7 @@
       <workItem from="1591320973355" duration="11830000" />
       <workItem from="1591740675101" duration="3401000" />
       <workItem from="1594825860526" duration="402000" />
-      <workItem from="1595034780665" duration="1746000" />
+      <workItem from="1595034780665" duration="3941000" />
     </task>
     <servers />
   </component>
@@ -116,9 +113,9 @@
       <screen x="0" y="23" width="1440" height="810" />
     </state>
     <state x="621" y="87" width="683" height="729" key="find.popup/0.23.1440.810@0.23.1440.810" timestamp="1587961833692" />
-    <state x="770" y="157" width="670" height="676" key="search.everywhere.popup" timestamp="1587960987431">
+    <state x="440" y="221" width="670" height="699" key="search.everywhere.popup" timestamp="1595041072186">
       <screen x="0" y="23" width="1440" height="810" />
     </state>
-    <state x="770" y="157" width="670" height="676" key="search.everywhere.popup/0.23.1440.810@0.23.1440.810" timestamp="1587960987431" />
+    <state x="440" y="221" width="670" height="699" key="search.everywhere.popup/0.23.1440.810@0.23.1440.810" timestamp="1595041072186" />
   </component>
 </project>

@@ -282,7 +282,7 @@ def step01(request, previewMode=False):
         # sending 4 images at a time
         data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
         data.extend([None] * (9 - len(data)))
-    return render(request, 'step01.html', {'url': data, 'form': form})
+    return render(request, 'step01.html', {'url': data, 'form': form, 'previewMode': previewMode})
 
 
 # View for step02
@@ -306,7 +306,7 @@ def step02(request, previewMode=False):
     form.feature = feature
     form.feature_list = feature_list
 
-    return render(request, 'step02.html', {'form': form})
+    return render(request, 'step02.html', {'form': form, 'previewMode': previewMode})
 
 
 # View for step03
@@ -342,4 +342,4 @@ def step03(request, previewMode=False):
         data.extend([None] * (21 - len(data)))
 
     return render(request, 'step03.html',
-                  {'feature': feature_list, 'image_url': data, 'roundnum': len(feature_list)})
+                  {'feature': feature_list, 'image_url': data, 'roundnum': len(feature_list), 'previewMode': previewMode})
