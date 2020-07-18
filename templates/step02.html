@@ -132,8 +132,10 @@
                     {{ field }}
                     {% endfor %}
                 </div>
+                {% if not previewMode %}
                 <button type="submit" class="btn btn-warning" style="height:50px;width:180px;margin-left:40%;
                 display:block;margin-top: 3%">Submit</button>
+                {% endif %}
 
             </form>
             </div>

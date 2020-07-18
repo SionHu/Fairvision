@@ -164,7 +164,9 @@
                     {% csrf_token %}
                     <button type='button' id="add" class="btn btn-success ml-3 mt-2">Add</button>
                     <button type='button' id="removeLast" class="btn btn-danger ml-3 mt-2" >Undo</button>
+                    {% if not previewMode %}
                     <button type='submit' class="btn btn-warning ml-3 mt-2" >Submit</button>
+                    {% endif %}
                     <a hidden id="list_f" ></a>
                     {% if messages %}
                         {% for message in messages %}

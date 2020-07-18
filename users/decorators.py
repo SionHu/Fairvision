@@ -14,7 +14,8 @@ import uuid
 
 
 NUMROUNDS = settings.NUMROUNDS
-ROUNDSMAX = {k:1 if k == 'phase01b' else v for k, v in NUMROUNDS.items()}
+# ROUNDSMAX = {k:1 if k == 'phase01b' else v for k, v in NUMROUNDS.items()}
+ROUNDSMAX = {'step01':3, 'step02':1, 'step03':1}
 
 def player_required(func):
     '''
@@ -24,6 +25,8 @@ def player_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         assignmentId = request.GET.get('assignmentId')
+
+        print("numround: ", NUMROUNDS)
 
         if assignmentId is not None and assignmentId != 'ASSIGNMENT_ID_NOT_AVAILABLE':
             hitObj = HIT.objects.only('data').get_or_create(assignment_id=assignmentId, defaults={'data': {'startTime': datetime.now()}})[0]

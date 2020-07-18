@@ -253,7 +253,7 @@ from ..models import Feature
 
 
 # View for step01
-# @player_required
+@player_required
 def step01(request, previewMode=False):
     url_list = []
     if request.method == 'POST':
@@ -270,8 +270,6 @@ def step01(request, previewMode=False):
         return render(request, 'feedback.html')
     else:
         form = featureForm()
-#         for i in range(9):
-#             url_list.append("https://picsum.photos/seed/" + str(i + 1) + "/100")
 
         # Get rounds played in total and by the current player
         rounds, roundsnum = popGetList(ImageModel.objects.filter(img__startswith=KEYRING).values_list('id', flat=True))
@@ -288,7 +286,7 @@ def step01(request, previewMode=False):
 
 
 # View for step02
-# @player_required
+@player_required
 def step02(request, previewMode=False):
     feature = Feature.objects.all().order_by('feature')
     feature_list = list(feature.values_list('feature', flat=True))
@@ -312,7 +310,7 @@ def step02(request, previewMode=False):
 
 
 # View for step03
-# @player_required
+@player_required
 def step03(request, previewMode=False):
     url_list = []
     assignmentId = request.GET.get('assignmentId')
@@ -339,7 +337,7 @@ def step03(request, previewMode=False):
             return over(request, 'step03')
 
         # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
-        # sending 4 images at a time
+        # sending 21 images at a time
         data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
         data.extend([None] * (21 - len(data)))
 
