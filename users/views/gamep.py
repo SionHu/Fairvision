@@ -257,7 +257,8 @@ from ..models import Feature
 def step01(request, previewMode=False):
     url_list = []
     if request.method == 'POST':
-        result = request.POST.getlist('features[]')
+        # result = request.POST.getlist('features[]')
+        result = request.POST.getlist('data[]')
         feature = Feature.objects.all().order_by('feature')
         feature_list = list(feature.values_list('feature', flat=True))
         for feature in result:
@@ -269,7 +270,7 @@ def step01(request, previewMode=False):
         messages.success(request, 'Submitted!')
         return render(request, 'feedback.html')
     else:
-        form = featureForm()
+        # form = featureForm()
 
         # Get rounds played in total and by the current player
         rounds, roundsnum = popGetList(ImageModel.objects.filter(img__startswith=KEYRING).values_list('id', flat=True))
@@ -282,7 +283,7 @@ def step01(request, previewMode=False):
         # sending 4 images at a time
         data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
         data.extend([None] * (9 - len(data)))
-    return render(request, 'step01.html', {'url': data, 'form': form, 'previewMode': previewMode})
+    return render(request, 'step01.html', {'url': data, 'previewMode': previewMode, 'NUMROUNDS': NUMROUNDS[step01.__name__],'imgnum': roundsnum})
 
 
 # View for step02

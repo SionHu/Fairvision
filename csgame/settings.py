@@ -42,9 +42,12 @@ try:
     TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
     IS_GOOGLE_CLOUD = strtobool(my_env.get('IS_GOOGLE_CLOUD', 'False'))
     NUMROUNDS = {
-        'phase01a': int(my_env.get('NUMROUNDS_STEP1', my_env.get('NUMROUNDS', '5'))), # step 1
-        'phase01b': int(my_env.get('NUMROUNDS_STEP2', '5')), # step 2
-        'phase03': 1 # step 3
+        # 'phase01a': int(my_env.get('NUMROUNDS_STEP1', my_env.get('NUMROUNDS', '5'))), # step 1
+        # 'phase01b': int(my_env.get('NUMROUNDS_STEP2', '5')), # step 2
+        # 'phase03': 1 # step 3
+        'step01': 3,
+        'step02': 1,
+        'step03': 1
     }
 
     # if not on google cloud

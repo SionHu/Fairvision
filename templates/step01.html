@@ -106,7 +106,9 @@
                   <img src="{{ url.3 }}" style="width: 30%; padding: 6px">
                   <img src="{{ url.4 }}" style="width: 30%; padding: 6px">
                   <img src="{{ url.5 }}" style="width: 30%; padding: 6px">
+
               </div>
+
             </div>
 
             <div class="row">
@@ -114,8 +116,11 @@
                   <img src="{{ url.6 }}" style="width: 30%; padding: 6px">
                   <img src="{{ url.7 }}" style="width: 30%; padding: 6px">
                   <img src="{{ url.8 }}" style="width: 30%; padding: 6px">
+
               </div>
             </div>
+
+            <div style="padding: 10px; text-align: center; font-size: 20px;">Round {{ request.hit.roundnums.step01|default:0|add:1 }} of {{ NUMROUNDS }}</div>
 
             <!-- END IMAGE -->
         </div>
@@ -165,7 +170,8 @@
                     <button type='button' id="add" class="btn btn-success ml-3 mt-2">Add</button>
                     <button type='button' id="removeLast" class="btn btn-danger ml-3 mt-2" >Undo</button>
                     {% if not previewMode %}
-                    <button type='submit' class="btn btn-warning ml-3 mt-2" >Submit</button>
+<!--                    <button type='submit' class="btn btn-warning ml-3 mt-2" >Submit</button>-->
+                    <button type="button" id="submitbtn" class="btn btn-warning ml-3 mt-2" >Submit</button>
                     {% endif %}
                     <a hidden id="list_f" ></a>
                     {% if messages %}
@@ -227,6 +233,39 @@
 
           listNode_f.removeChild(listNode_f.lastChild);
           listNode.removeChild(listNode.lastChild);
+        });
+
+        document.getElementById("submitbtn").addEventListener("click", function() {
+            var features = []
+            if (document.getElementById("list_all").getElementsByTagName("LI").length >= 1) {
+                //retrieve the values and store it
+                $('#list_all LI').each(function(){
+                    features.push($(this).text());
+                });
+                // get the value of CSRF token
+                var CSRFtoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+                //post method
+                $.post(window.location, {
+                    'data': features,
+                    'imgnum': {{ imgnum }},
+                    csrfmiddlewaretoken : CSRFtoken
+                }, function(data){}).fail(function() {
+                    alert( "An error occurred. Could not submit your data." );
+                });
+               // reload the webpage to set new images
+                var countdown = 300;  // your countdown in milliseconds
+                //catch the error when the reloading process crashes
+                try{
+                    setTimeout(function() {
+                    // hide your loading image after "countdown" milliseconds
+                        document.getElementById("F").value = ""; //clear entry field
+                        location.reload();
+                    }, countdown);
+                }
+                catch(err){
+                    alert(err.message);
+                }
+            }
         });
 
         $(document).ready(function(){
