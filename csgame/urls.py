@@ -56,5 +56,7 @@ urlpatterns = [
 
 ]
 
+urlpatterns += static('/datasets/', document_root='datasets')
+
 handler404 = 'csgame.views.handler404'
 handler500 = 'csgame.views.handler500'
