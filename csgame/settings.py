@@ -234,5 +234,7 @@ CSRF_COOKIE_SAMESITE = None
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 
-if DEBUG:
-    ALLOWED_HOSTS += ['fairvision.app.local']
+# if using HTTPS, disable Django security. Apache will handle it
+if IS_PRODUCTION_SITE:
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
