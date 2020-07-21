@@ -89,6 +89,7 @@ DEBUG=not(IS_PRODUCTION_SITE or TEST_HTTP_HANDLING)
 
 ALLOWED_HOSTS = [
     'fairvision.net',
+    'cam2-crowdsourcing.herokuapp.com'
 ] if IS_PRODUCTION_SITE else [
     '*',
 ]
