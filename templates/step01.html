@@ -269,7 +269,7 @@
         });
 
         $(document).ready(function(){
-            if ({{ request.hit.roundnums.phase01b|default:0 }} == 0) {
+            if ({{ request.hit.roundnums.step01|default:0 }} == 0) {
                 $("#agreement").modal();
             }
         });

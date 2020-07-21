@@ -1,5 +1,5 @@
 from collections import defaultdict
-from csgame.views import over
+from csgame.views import over, feedback
 from datetime import datetime
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -45,7 +45,7 @@ def player_required(func):
 
             # either pay the worker or move onto the next round
             if numInPhase >= ROUNDSMAX[func.__name__]:
-                return over(request, func.__name__)
+                return feedback(request)
             else:
                 return func(request, *args, **kwargs)
 
