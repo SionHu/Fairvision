@@ -115,7 +115,7 @@ Unidecode==1.0.23
 uritemplate==3.0.0
 urllib3==1.24.3
 virtualenv==16.5.0
-wagtail==2.7.2
+wagtail==2.7.4
 wasabi==0.2.2
 webencodings==0.5.1
 Werkzeug==0.15.5
