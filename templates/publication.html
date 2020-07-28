@@ -1,0 +1,51 @@
+{% extends 'info-base.html' %}
+
+{% block content %}
+
+<div style="padding: 0px 5% 5% 5%">
+    <div class="row justify-content-center align-items-center">
+        <div style="text-align: center">
+            <h1 class="title">Publication</h1>
+            <h3 class="headline">Discovering Biases in Image Datasets with the Crowd</h3>
+            <h4 class="subtitle">Human Computation 2019</h4>
+
+            <table><tr>
+                <td style="padding: 30px; background-color: #748B8D"><img src="../static/img/publication/HCOMP.png" style="width: 100%"></td>
+                <td width="50%" style="text-align: center; padding: 30px; line-height: 1.6; font-size: 18px">
+                    Increasingly, computer vision technology is being used in a range of fields and applications. However, several studies have revealed that there are downsides when it comes to computer vision systems. Many of these risks stem from biased training datasets that do not accurately reflect reality. Therefore, being able to detect biases in the training datasets prior to model development is a necessity for mitigating the fairness, accountability, and transparency concerns in computer vision systems. In this paper, we propose a three-step crowdsourcing workflow to get humans into the loop for facilitating bias discovery in image datasets. After conducting a preliminary experiment to evaluate the effectiveness of the proposed workflow, we found that workers were able to detect intentional biases in an artificially created dataset and discover additional biases.
+                    <br><br>
+                    <a href="../static/pdf/BiasDetection_camera.pdf" style="margin: 30px;color: #6494A0; font-size: larger">Learn more<span class="sr-only">(current)</span><i class="fa fa-arrow-right"></i></a>
+                </td>
+            </tr></table>
+
+            <hr style="margin: 50px">
+
+            <h3 class="headline">Crowdsourcing Detection of Sampling Biases in Image Datasets</h3>
+            <h4 class="subtitle">International World Wide Web Conference 2020</h4>
+
+            <table><tr>
+                <td width="50%" style="text-align: center; padding: 30px; line-height: 1.6; font-size: 18px">
+                    Despite many exciting innovations in computer vision, recent studies reveal a number of risks in existing computer vision systems,
+                    suggesting results of such systems may be unfair and untrustworthy.
+                    Many of these risks can be partly attributed to the use of a training
+                    image dataset that exhibits sampling biases and thus does not accurately reflect the real visual world. Being able to detect potential
+                    sampling biases in the visual dataset prior to model development is
+                    thus essential for mitigating the fairness and trustworthy concerns
+                    in computer vision. In this paper, we propose a three-step crowdsourcing workflow to get humans into the loop for facilitating bias
+                    discovery in image datasets. Through two sets of evaluation studies,
+                    we find that the proposed workflow can effectively organize the
+                    crowd to detect sampling biases in both datasets that are artificially
+                    created with designed biases and real-world image datasets that are
+                    widely used in computer vision research and system development.
+                    <br><br>
+                    <a href="../static/pdf/www20-72.pdf" style="margin: 30px;color: #6494A0; font-size: larger">Learn more<span class="sr-only">(current)</span><i class="fa fa-arrow-right"></i></a>
+
+                </td>
+                <td style="padding: 30px; background-color: #748B8D"><img src="../static/img/publication/www20.png" style="width: 100%"></td>
+            </tr></table>
+
+        </div>
+    </div>
+</div>
+
+{% endblock%}

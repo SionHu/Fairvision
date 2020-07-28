@@ -20,12 +20,17 @@ from users.views import player, home, gamep
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
-
+from django.views.i18n import JavaScriptCatalog
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path('admin/users/experiment', player.downloadExperiment),
-    path('', home.home, name='home'),
+    #     path('', home.home, name='home'),
+    url(r'^$', home.home, name='home'),
+    url(r'^about/$', views.about, name='about'),
+    url(r'^publication/$', views.publication, name='publication'),
+    url(r'^service/$', views.service, name='service'),
+    url(r'^service-index/$', views.serviceindex, name='serviceindex'),
 
     path('accounts/', include('django.contrib.auth.urls')),
     # path('accounts/signup/', home.SignUpView.as_view(), name='signup'),
@@ -39,12 +44,19 @@ urlpatterns = [
     url(r'^stop/$', views.stop, name='stop'),
     url(r'^feedback/$', views.feedback, name='feedback'),
 
-    # url(r'^phase01/$', gamep.phase01, name='phase01'),
     url(r'^phase01a/$', gamep.phase01a, name='phase01a'),
     url(r'^phase01b/$', gamep.phase01b, name='phase01b'),
     url(r'^phase02/$', gamep.phase02, name='phase02'),
     url(r'^phase03/$', gamep.phase03, name='phase03'),
+
+    url(r'^step01/$', gamep.step01, name='step01'),
+    url(r'^step02/$', gamep.step02, name='step02'),
+    url(r'^step03/$', gamep.step03, name='step03'),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
+
 ]
+
+urlpatterns += static('/datasets/', document_root='datasets')
 
 handler404 = 'csgame.views.handler404'
 handler500 = 'csgame.views.handler500'

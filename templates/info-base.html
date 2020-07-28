@@ -1,0 +1,98 @@
+{% load static %}
+
+</!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--  Bootstrap 4 css link  -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <!--  Implement style.css  -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Load icon library -->
+    <script src="https://kit.fontawesome.com/089c8a99ff.js" crossorigin="anonymous"></script>
+
+    <!-- JQuery UI -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    {% if title %}
+    <title>InfoSite - {{ title }}</title>
+    {% else %}
+    <title>InfoSite</title>
+    {% endif %}
+
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon.ico' %}"/>
+
+</head>
+<body>
+
+<!--  Navebar  -->
+<div class="nav-container">
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand ml-4" href="/">
+            <img src="../static/img/logo.png" width="40" height="40" class="d-inline-block align-top" alt="">
+            FairVision
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto" style="padding-right: 8rem">
+                <li class="nav-item active ml-5">
+                    <a class="nav-link" href="{% url 'about' %}">About Us<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ml-4">
+                    <a class="nav-link" href="{% url 'publication' %}">Publication</a>
+                </li>
+                <li class="nav-item ml-4">
+                    <a class="nav-link" href="{% url 'home' %}#section5">Contact</a>
+                </li>
+                <li class="nav-item ml-4">
+                    <a href="{% url 'service' %}" class="sbutton"><span>Service</span></a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+</div>
+
+<a href="#" class="back-to-top">TOP</a>
+<!--  Content of pages that implements base  -->
+<div class="content">
+    {% block content %} {% endblock %}
+</div>
+<!--  End of content  -->
+
+<!--  Footer  -->
+<footer class="footer footer-copyright py-3 text-center">
+    Copyright © 2019 Purdue CAM2 Research Group Crowdsourcing Team. All rights reserved.
+</footer>
+
+<!--  End of Footer  -->
+
+<script>
+    var amountScrolled = 300;
+
+    $(window).scroll(function() {
+        if ( $(window).scrollTop() > amountScrolled ) {
+            $('a.back-to-top').fadeIn('slow');
+        } else {
+            $('a.back-to-top').fadeOut('slow');
+        }
+    });
+</script>
+
+</body>
+</html>
