@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'storages',
+    'livereload', # for local deployment
 ]
 
 def find_spec(module):
@@ -134,6 +135,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'livereload.middleware.LiveReloadScript', # used for livereload during local deployment
 ]
 
 ROOT_URLCONF = 'csgame.urls'
