@@ -106,7 +106,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'storages',
-    'livereload', # for local deployment
 ]
 
 def find_spec(module):
@@ -122,6 +121,7 @@ INSTALLED_APPS.extend(filter(find_spec, (
     'import_export',
     'jsoneditor',
     'mod_wsgi.server',
+    'livereload', # for local deployment
 )))
 
 MIDDLEWARE = [
