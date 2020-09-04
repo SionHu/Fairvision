@@ -51,9 +51,9 @@ try:
     TEST_HTTP_HANDLING = strtobool(my_env.get('TEST_HTTP_HANDLING', 'False'))
     IS_GOOGLE_CLOUD = strtobool(my_env.get('IS_GOOGLE_CLOUD', 'False'))
     NUMROUNDS = {
-        # 'phase01a': int(my_env.get('NUMROUNDS_STEP1', my_env.get('NUMROUNDS', '5'))), # step 1
-        # 'phase01b': int(my_env.get('NUMROUNDS_STEP2', '5')), # step 2
-        # 'phase03': 1 # step 3
+        'phase01a': int(my_env.get('NUMROUNDS_STEP1', my_env.get('NUMROUNDS', '5'))), # step 1
+        'phase01b': int(my_env.get('NUMROUNDS_STEP2', '5')), # step 2
+        'phase03': 1, # step 3
         'step01': 3,
         'step02': 1,
         'step03': 1
@@ -241,6 +241,4 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 
 # if using HTTPS, disable Django security. Apache will handle it
-if IS_PRODUCTION_SITE:
-    CSRF_COOKIE_SECURE = False
-    SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_DOMAIN = 'fairvision.net'
