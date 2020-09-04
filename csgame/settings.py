@@ -135,8 +135,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'livereload.middleware.LiveReloadScript', # used for livereload during local deployment
 ]
+if find_spec('livereload'):
+    MIDDLEWARE.append('livereload.middleware.LiveReloadScript') # used for livereload during local deployment
 
 ROOT_URLCONF = 'csgame.urls'
 
