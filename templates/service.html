@@ -12,36 +12,40 @@
             </div>
 
             <p style="max-width: 1000px">
-                We are the pioneer in detecting image dataset bias, and we provide a <b>costumed platform</b> for our clients to detect bias and correct them using Crowdsourcing and Machine Learning tools.
+                We are the pioneer in detecting image dataset bias, aiming to develop a <b>costumed platform</b> for our clients to detect bias and correct them using Crowdsourcing and Machine Learning tools.
                 <br><br>
-                You provided a dataset, we help you find the bias and correct them!
+                We are currently performing research experiments on improving the workflow of detecting dataset bias on Amazon Mechanical Turk and optimizing our platform!
             </p>
-            <img src="https://pngimage.net/wp-content/uploads/2018/05/crowdsourcing-png-3.png" alt="..." class="center" style="width: 30%">
+
         </div>
 
         <div class="col-5 d-flex justify-content-center">
-
-            <!-- Form with header -->
-            <div class="card" style="width:30rem; height: auto">
-                <div class="card-body" style="background-color: rgba(152, 192, 188, 0.6)">
-                    <form role="form" action="" method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <div style="text-align: center">
-                            <button class="button" type="submit">Request a demo</button>
-                        </div>
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    </form>
-                </div>
+            <div style="padding-top: 50px">
+                <img src="https://pngimage.net/wp-content/uploads/2018/05/crowdsourcing-png-3.png" alt="..." class="center" style="width: 80%">
             </div>
 
+
+            <!-- Form with header -->
+<!--            <div class="card" style="width:30rem; height: auto">-->
+<!--                <div class="card-body" style="background-color: rgba(152, 192, 188, 0.6)">-->
+<!--                    <form role="form" action="" method="post">-->
+<!--                        {% csrf_token %}-->
+<!--                        {{ form.as_p }}-->
+<!--                        <div style="text-align: center">-->
+<!--                            <button class="button" type="submit">Request a demo</button>-->
+<!--                        </div>-->
+<!--                        {% if messages %}-->
+<!--                            {% for message in messages %}-->
+<!--                                <div class="alert alert-{{ message.tags }}">-->
+<!--                                    {{ message }}-->
+<!--                                </div>-->
+<!--                            {% endfor %}-->
+<!--                        {% endif %}-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
+
     </div>
 </div>
 
