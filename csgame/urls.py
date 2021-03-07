@@ -49,9 +49,9 @@ urlpatterns = [
     url(r'^phase02/$', gamep.phase02, name='phase02'),
     url(r'^phase03/$', gamep.phase03, name='phase03'),
 
-    url(r'^step01/$', gamep.step01, name='step01'),
-    url(r'^step02/$', gamep.step02, name='step02'),
-    url(r'^step03/$', gamep.step03, name='step03'),
+#     url(r'^step01/$', gamep.step01, name='step01'),
+#     url(r'^step02/$', gamep.step02, name='step02'),
+#     url(r'^step03/$', gamep.step03, name='step03'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 
 ]
