@@ -108,7 +108,7 @@ if __name__ == '__main__':
             finally:
                 os.chdir(path)
             if not os.path.islink('.env'):
-                shutil.copyfile('venv/secrets/.env', '.env')
+                shutil.copyfile(os.path.join(FOLDER, 'secrets/.env'), '.env')
         else:
             # git clone
             try:
@@ -117,9 +117,9 @@ if __name__ == '__main__':
             finally:
                 os.chdir(path)
             try:
-                os.symlink('venv/secrets/.env', '.env')
+                os.symlink(os.path.join(FOLDER, 'secrets/.env'), '.env')
             except:
-                shutil.copyfile('venv/secrets/.env', '.env')
+                shutil.copyfile(os.path.join(FOLDER, 'secrets/.env'), '.env')
 
     finally:
         os.chdir(cwd)

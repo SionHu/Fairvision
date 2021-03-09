@@ -4,7 +4,7 @@ html {
 }
 
 body{
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     /*font-family: Numans, sans-serif;*/
     font-size: 20px;
     letter-spacing: 1px;
@@ -29,7 +29,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 .container {
@@ -63,7 +63,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .title{
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 50px;
     letter-spacing: 2.8px;
     word-spacing: 1.6px;
@@ -77,7 +77,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .subtitle{
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 20px;
     letter-spacing: 1.4px;
     word-spacing: 0.8px;
@@ -91,7 +91,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .headline{
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 24px;
     letter-spacing: 1.4px;
     word-spacing: 0.8px;
@@ -104,7 +104,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .maintext{
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 18px;
     letter-spacing: 1px;
     word-spacing: 1px;
