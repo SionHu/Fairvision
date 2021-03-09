@@ -48,7 +48,7 @@ google-resumable-media==0.3.2
 googleapis-common-protos==1.5.8
 gunicorn==19.9.0
 html5lib==1.0.1
-httplib2==0.18.0
+httplib2==0.19.0
 idna==2.8
 itsdangerous==1.1.0
 jdcal==1.4.1
