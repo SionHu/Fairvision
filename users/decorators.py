@@ -14,8 +14,8 @@ import uuid
 
 
 NUMROUNDS = settings.NUMROUNDS
-# ROUNDSMAX = {k:1 if k == 'phase01b' else v for k, v in NUMROUNDS.items()}
-ROUNDSMAX = {'step01':3, 'step02':1, 'step03':1}
+ROUNDSMAX = {k:1 if k == 'phase01b' else v for k, v in NUMROUNDS.items()}
+# ROUNDSMAX = {'step01':3, 'step02':1, 'step03':1}
 
 def player_required(func):
     '''
