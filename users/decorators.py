@@ -45,7 +45,7 @@ def player_required(func):
 
             # either pay the worker or move onto the next round
             if numInPhase >= ROUNDSMAX[func.__name__]:
-                return feedback(request)
+                return over(request, func.__name__)
             else:
                 return func(request, *args, **kwargs)
 
