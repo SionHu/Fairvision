@@ -5,14 +5,13 @@ botocore==1.17.63
 certifi==2020.12.5
 cffi==1.14.5
 chardet==3.0.4
-cryptography==3.4.6
+cryptography==3.4.7
 dj-database-url==0.5.0
 django-jsoneditor==0.1.6
 django-storages==1.9.1
-django==2.2.18
+django==2.2.20
 docutils==0.15.2
 et-xmlfile==1.0.1
-futures==3.1.1
 gunicorn==20.0.4
 idna==2.10
 jdcal==1.4.1
@@ -30,7 +29,7 @@ pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2021.1
 requests==2.24.0
-s3transfer==0.3.5
+s3transfer==0.3.6
 six==1.15.0
 sqlparse==0.4.1
 urllib3==1.25.11 ; python_version != '3.4'
