@@ -26,7 +26,7 @@ def over(request, phase=None):
     return output
 
 def feedback(request):
-    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.COOKIES['assignmentid'], defaults={'data': {}})[0]
+    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.COOKIES['assignmentId'], defaults={'data': {}})[0]
     request.hit = hitObj.data
     request.hit['endTime'] = datetime.now()
     hitObj.save()
