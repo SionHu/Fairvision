@@ -71,7 +71,7 @@ try:
     if sys.stdout.isatty():
         print(f"KEY is currently {KEY}")
     KEYRING = KEY.rsplit('/', 1)[0]+'/'
-    OBJECT_NAME_PLURAL = my_env.get('OBJECT_NAME_PLURAL', KEY.split('/')[1]+'s')
+    OBJECT_NAME_PLURAL = my_env.get('OBJECT_NAME_PLURAL', KEY.split('/')[1])
 
 except KeyError as e:
     exit('Lacking Environment Variables: ' + str(e)) # indicate to the OS that the program has failed
