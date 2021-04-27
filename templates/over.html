@@ -34,14 +34,25 @@
 
 <div style="text-align: center">
   {% if roundNums %}
-    <h5>Click the button below to fill in the feedback survey and finish <b style="color: yellow"> final submission </b>to MTurk!</h5>
+    <h5>Please<b> click the button </b>below to go back to MTurk page.</h5>
+    <hr>
+    <div style="text-align: center">
+        <form name="mturk" method="post" action="{{ request.COOKIES.submissionUrl }}/mturk/externalSubmit" style="text-align: center">
+            <input type="hidden" name="assignmentId" value="{{ request.COOKIES.assignmentid }}">
+            <input type="hidden" name="hitId" value="{{ request.hit.hitId }}">
+            <input type="hidden" name="questions" value="{{ request.hit.questions|make_list|escape }}">
+            <input type="hidden" name="answers" value="{{ request.hit.answers|make_list|escape }}">
+            <input type="submit" class= "btn btn-lg btn-success" value="Go Back to MTurk" >
+        </form>
+    </div>
+<!--     <h5>Click the button below to fill in the feedback survey and finish <b style="color: yellow"> final submission </b>to MTurk!</h5>
     {% if phase == 'phase01a' %}
     <a href="https://docs.google.com/forms/d/e/1FAIpQLScXGcYai89-FwQkxvmpmXlkbRo_mNaFHPmiqAXz2ZmlDwEG6w/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
     {% elif phase == 'phase01b' %}
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSfRkpNMT9sWdz4wx3uhriDKpBKaCgn0A4cNl8ZdxbvDjK9NHA/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
     {% else %}
     <a href="https://docs.google.com/forms/d/e/1FAIpQLScbVEuQMn2sM2kDA61QbFg50h6WvRCQG88nO0RVslWR51lMdQ/viewform?usp=sf_link" class="btn btn-lg btn-success">Go to feedback</a>
-    {% endif %}
+    {% endif %} -->
   {% else %}
     <h5>You can play the game when it opens again.</h5>
   {% endif %}
