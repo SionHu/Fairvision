@@ -18,7 +18,7 @@ def over(request, phase=None, assignmentId="empty"):
     if 'assignmentId' in request.GET:
         hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.GET['assignmentId'], defaults={'data': {}})[0]
         request.hit = hitObj.data
-        output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase)})
+        output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase), 'assignmentId': assignmentId})
         output.set_cookie('assignmentId', request.GET['assignmentId'])
         turkUrl = "https://workersandbox.mturk.com" if request.GET['turkSubmitTo'] == "" else request.GET['turkSubmitTo']
         output.set_cookie('submissionUrl', turkUrl)
