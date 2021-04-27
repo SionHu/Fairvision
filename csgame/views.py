@@ -20,12 +20,12 @@ def over(request, phase=None):
         request.hit = hitObj.data
         output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase)})
         output.set_cookie('assignmentId', request.GET['assignmentId'])
-        turkUrl = "https://workersandbox.mturk.com" if x is "" else request.GET['turkSubmitTo']
+        turkUrl = "https://workersandbox.mturk.com" if request.GET['turkSubmitTo'] is "" else request.GET['turkSubmitTo']
         output.set_cookie('submissionUrl', turkUrl)
     else:
         output = render(request, 'over.html', {'phase': phase, 'roundNums': 0})
         output.set_cookie("assignmentId", 'None')
-        turkUrl = "https://workersandbox.mturk.com" if x is "" else request.GET['turkSubmitTo']
+        turkUrl = "https://workersandbox.mturk.com" if request.GET['turkSubmitTo'] is "" else request.GET['turkSubmitTo']
         output.set_cookie('submissionUrl', turkUrl)
     return output
 
