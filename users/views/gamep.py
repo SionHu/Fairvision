@@ -32,6 +32,8 @@ from .roundsgenerator import pushPostList, popGetList, step2_push, step2_pop
 
 from ..models import Phase
 
+from django.views.decorators.csrf import csrf_exempt
+
 # We should set up in backend manually
 KEYRING = settings.KEYRING
 OBJECT_NAME_PLURAL = settings.OBJECT_NAME_PLURAL
@@ -45,6 +47,7 @@ from ..reducer.client import send__receive_data
 
 
 @player_required
+@csrf_exempt
 def phase01a(request, previewMode=False):
     # assignmentID for front-end submit javascript
     assignmentId = request.GET.get('assignmentId')
@@ -150,6 +153,7 @@ POST = method that retrieve the QA dictionary from the crowd workers
 
 
 @player_required
+@csrf_exempt
 def phase01b(request, previewMode=False):
     # Only show people all the question and the answer. Keep in mind that people have the chance to click skip for different questions
     # There should be an array of question that got skipped. Each entry should the final question value
@@ -203,6 +207,7 @@ def phase01b(request, previewMode=False):
 
 # function that should be accessible only with admin
 @player_required
+@csrf_exempt
 def phase02(request, previewMode=False):
     if request.user.is_superuser or request.user.is_staff:
         print("This is admin")
@@ -218,6 +223,7 @@ NUMROUNDS_3 = 50
 
 # View for phase3
 @player_required
+@csrf_exempt
 def phase03(request, previewMode=False):
     # Update count
     if request.method == 'POST':
@@ -254,6 +260,7 @@ from ..models import Feature
 
 # View for step01
 @player_required
+@csrf_exempt
 def step01(request, previewMode=False):
     url_list = []
     if request.method == 'POST':
@@ -289,6 +296,7 @@ def step01(request, previewMode=False):
 
 # View for step02
 @player_required
+@csrf_exempt
 def step02(request, previewMode=False):
     feature = Feature.objects.all().order_by('feature')
     feature_list = list(feature.values_list('feature', flat=True))
@@ -313,6 +321,7 @@ def step02(request, previewMode=False):
 
 # View for step03
 @player_required
+@csrf_exempt
 def step03(request, previewMode=False):
     url_list = []
     assignmentId = request.GET.get('assignmentId')

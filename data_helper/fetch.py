@@ -4,8 +4,8 @@ import os
 from tqdm import tqdm
 
 category = "dog"
-path = "./flickr30k_images/results.csv"  # change path if needed
-source = "./flickr30k_images/flickr30k_images/"  # change if needed
+path = "/home/fairvision/sites/fairvision.net/datasets/flickr30k_images/results.csv"  # change path if needed
+source = "/home/fairvision/sites/fairvision.net/datasets/flickr30k_images/flickr30k_images/"  # change if needed
 dest = category  # create folder first
 pattern = "^{}s? | {}s? | {}s?$".format(category, category, category)  # change regex if needed
 

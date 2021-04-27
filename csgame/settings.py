@@ -239,6 +239,7 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 
 # if using HTTPS, disable Django security. Apache will handle it
-if IS_PRODUCTION_SITE:
+# if IS_PRODUCTION_SITE:
+if True:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
