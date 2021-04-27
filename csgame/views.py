@@ -23,6 +23,7 @@ def over(request, phase=None):
         output.set_cookie('submissionUrl', request.GET['turkSubmitTo'])
     else:
         output = render(request, 'over.html', {'phase': phase, 'roundNums': 0})
+        output.set_cookie("assignmentId", 'none')
     return output
 
 def feedback(request):
