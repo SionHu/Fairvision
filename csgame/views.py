@@ -23,7 +23,7 @@ def over(request, phase=None, assignmentId="empty"):
         turkUrl = "https://workersandbox.mturk.com" if request.GET['turkSubmitTo'] == "" else request.GET['turkSubmitTo']
         output.set_cookie('submissionUrl', turkUrl)
     else:
-        output = render(request, 'over.html', {'phase': phase, 'roundNums': 0})
+        output = render(request, 'over.html', {'phase': phase, 'roundNums': 0, 'assignmentId': assignmentId})
         output.set_cookie("assignmentId", 'None')
         turkUrl = "https://workersandbox.mturk.com" if request.GET['turkSubmitTo'] == "" else request.GET['turkSubmitTo']
         output.set_cookie('submissionUrl', turkUrl)
