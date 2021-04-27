@@ -37,8 +37,9 @@
     <h5>Please<b> click the button </b>below to go back to MTurk page.</h5>
     <hr>
     <div style="text-align: center">
-        <form name="mturk" method="post" action="{{ request.COOKIES.submissionUrl }}/mturk/externalSubmit" style="text-align: center">
-            <input type="hidden" name="assignmentId" value="{{ request.COOKIES.assignmentid }}">
+        <!-- <form name="mturk" method="post" action="{{ request.COOKIES.submissionUrl }}/mturk/externalSubmit" style="text-align: center"> -->
+            <form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center">
+            <input type="hidden" name="assignmentId" value="{{ assignmentId }}">
             <input type="submit" class= "btn btn-lg btn-success" value="Go Back to MTurk" >
         </form>
     </div>

@@ -124,7 +124,7 @@ def phase01a(request, previewMode=False):
 
     if len(rounds.post) >= ImageModel.objects.filter(img__startswith=KEYRING).count():
         # push all to waiting page
-        return over(request, 'phase01a')
+        return over(request, 'phase01a', assignmentId)
 
     # Single image that will be sent to front-end, will expire in 300 seconds (temporary)
     # sending 4 images at a time

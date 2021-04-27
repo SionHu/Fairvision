@@ -14,7 +14,7 @@ import requests
 def profile(request):
     return render(request, 'profile.html')
 
-def over(request, phase=None):
+def over(request, phase=None, assignmentId="empty"):
     if 'assignmentId' in request.GET:
         hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.GET['assignmentId'], defaults={'data': {}})[0]
         request.hit = hitObj.data
