@@ -35,7 +35,7 @@ def pushPostList(request, phase='1'):
 
 
 @transaction.atomic
-def popGetList(fullList, count=9, phase='1', recycle=False):
+def popGetList(fullList, count=3, phase='1', shuffle=False, recycle=False):
     """
     Get the rounds object and the ID of the next image to show
     on the screen for a particular phase and return them both
@@ -43,6 +43,7 @@ def popGetList(fullList, count=9, phase='1', recycle=False):
     less than the number of images.
     """
     # Get the rounds object
+    fullList = [4379, 3308, 5219, 5423, 3476, 5362, 4371, 3483, 4258, 5327, 5113, 5349, 4827, 4166, 5471, 4826, 3988, 3715, 3676, 4228, 5508, 4201, 5504, 3821, 4691, 4763, 4856, 4847, 4814, 3926, 5434, 4418, 4119, 4861, 4972, 3592, 3849, 4390, 5089, 4339, 4925, 5304, 3911, 3525, 4017, 5334, 4859, 4403, 4927, 4138, 3223, 3617, 4901, 3902, 3294, 3995, 5479, 4487, 3604, 4174, 5274, 4784, 5443, 5384, 3993, 3422, 4205, 4967, 4975, 5168, 3723, 3574, 5034, 4636, 4787, 4410, 4777, 4981, 5272, 4504, 4850, 4134, 3365, 5151, 5424, 4940, 4157, 3698, 3394, 3246, 3500, 5476, 5063, 4034, 3910, 3620, 5492, 4854, 4528, 3912, 4837, 4429, 3382, 3391, 5281, 4764, 4273, 3973, 4164, 3756, 3363, 4397, 3957, 4491, 4832, 5199, 5284, 4013, 4498, 3915, 4194, 5011, 4441, 3386, 3918, 4997, 4078, 3486, 5310, 4912, 4988, 5280, 3724, 4525, 4836, 3675, 3437, 5268, 4596, 4570, 4879, 4427, 5390, 4308, 4848, 5523, 3790, 3454, 3900, 3648, 3576, 4216, 3384, 4145, 5099, 5470, 5346, 4051, 4424, 3599, 3789, 3930, 3304, 5415, 3870, 4626, 3403, 3905, 3944, 4277, 5032, 5117, 4382, 3392, 3825, 3532, 3377, 4251, 5125, 4613, 4111, 4469, 5426, 3670, 4303, 3558, 3867, 5148, 5466, 4641, 4391, 4312, 3607, 3940, 4758, 5056, 3632, 4511, 4408, 3616, 4731, 5347, 3487, 5458, 4084, 4163, 4330, 3356, 5406, 3477, 3336, 3785, 4476, 3901, 4419, 4178, 4647, 4790, 3762, 5224, 3624, 4470, 5425, 4202, 3705, 3936, 3836, 3204, 3846, 3866, 3968, 3634, 3932, 4473, 4939, 4869, 4806, 3234, 3501, 4675, 5373, 3654, 4210, 4108, -1, 3376, 3933, -1]
     rounds = Phase.objects.select_for_update().get_or_create(phase=phase)[0]
     getList = rounds.get
 
@@ -52,11 +53,13 @@ def popGetList(fullList, count=9, phase='1', recycle=False):
         # Create a new GET list if necessary
         postList = rounds.post
         getList = [i for i in fullList if i not in postList and i not in nextImage]
-        random.shuffle(getList)
+        if shuffle:
+            random.shuffle(getList)
         if recycle and len(getList) < count:
             rounds.post = []
             getList = [i for i in fullList if i not in nextImage]
-            random.shuffle(getList)
+            if shuffle:
+                random.shuffle(getList)
     else:
         nextImage = []
 

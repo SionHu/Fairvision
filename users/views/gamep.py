@@ -130,6 +130,9 @@ def phase01a(request, previewMode=False):
     # sending 4 images at a time
     data = [i.img.url for i in ImageModel.objects.filter(id__in=roundsnum)]
     data.extend([None] * (3 - len(data)))
+
+    if all([d is None for d in data]):
+        return over(request, 'phase01a', assignmentId)
     # print("I got: ",     serving_img_url)
     # Previous all question pairs that will be sent to front-end
 
