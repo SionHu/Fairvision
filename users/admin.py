@@ -385,11 +385,13 @@ class HITAdmin(admin.ModelAdmin):
     list_filter = (HITStatusFilter,)
 
     def start_time(self, obj):
-        return fromisoformat(obj.data['startTime'])
+        if 'startTime' in obj.data:
+            return fromisoformat(obj.data['startTime'])
+        return None
     start_time.admin_order_field = 'data__startTime'
 
     def worker_id(self, obj):
-        return obj.data['workerId']
+        return obj.data.get('workerId', None)
     worker_id.admin_order_field = 'data__workerId'
 
     def questions(self, obj):
@@ -461,6 +463,8 @@ class HITAdmin(admin.ModelAdmin):
         #    obj.save()
         #except Exception as e:
         #    return None
+        if not hasattr(self, 'assignments'):
+            return None
         assignmentStatus = self.assignments.get(obj.assignment_id, {}).get('AssignmentStatus', '')
         # Update assignment statuses of any old assignments
         if 'status' in obj.data:
@@ -484,7 +488,9 @@ class HITAdmin(admin.ModelAdmin):
 
     def registerAutoField(self, humanFieldName, fieldName):
         def field(obj):
-            return self.assignments.get(obj.assignment_id, {}).get(fieldName, '')
+            if hasattr(self, 'assignments'):
+                return self.assignments.get(obj.assignment_id, {}).get(fieldName, '')
+            return None
         field.short_description = humanFieldName
         if not hasattr(self, fieldName):
             setattr(self, fieldName, field)

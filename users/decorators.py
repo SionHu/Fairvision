@@ -35,6 +35,10 @@ def player_required(func):
             roundnums = request.hit.setdefault('roundnums', {})
 
             numInPhase = roundnums.get(func.__name__, 0) # this line is pretty unsafe, but it will do
+            
+            whits = HIT.objects.filter(data__workerId=request.GET['workerId']).exclude(data__hitId = request.GET['hitId']).exists()
+            if whits:
+                return over(request, func.__name__)
 
             # increment roundsnum by 1
             if request.method == 'POST':

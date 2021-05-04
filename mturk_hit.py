@@ -16,6 +16,8 @@ import argparse
 
 from datetime import datetime
 
+qualid = '31U92A8DCPK4Y3YKWXG0UMDSNIRXFE' if 'sandbox' in settings.MTURK_URL else '37IFZYW5I26FAG5GLHPFZ5IKZ1GH51'
+
 hitDescriptions = {
     'phase01a': "Generating questions and answers and verifying question given a shown image",
     'phase01b': "Given 4 images of same single object and list of questions, answer all the questions that you think are meaningful",
@@ -44,7 +46,7 @@ def create_hit(phase, number):
                 Title="Image Labeling With Text",
                 Description=hitDescriptions['phase01a'],
                 Keywords='image, tagging, machine learning, text generation',
-                Reward = '0.50',
+                Reward = '1.00',
                 MaxAssignments=1,
                 LifetimeInSeconds=60*60*24*10,
                 AssignmentDurationInSeconds=35*60,
@@ -53,7 +55,7 @@ def create_hit(phase, number):
                 QualificationRequirements=[
                     {
                         # this id is used on sandbox only
-                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
+                        'QualificationTypeId': qualid,
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
@@ -82,7 +84,7 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
+                        'QualificationTypeId': qualid,
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',
@@ -111,7 +113,7 @@ def create_hit(phase, number):
                 Question=question,
                 QualificationRequirements=[
                     {
-                        'QualificationTypeId': '39GW9SGGAFJE7KP1M1X8MFKH3ZLRO3',
+                        'QualificationTypeId': qualid,
                         'Comparator': 'GreaterThanOrEqualTo',
                         'IntegerValues':[60],
                         'ActionsGuarded': 'Accept',

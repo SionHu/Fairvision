@@ -15,9 +15,15 @@ def profile(request):
     return render(request, 'profile.html')
 
 def over(request, phase=None, assignmentId="empty"):
+    #with open('log', 'w') as f:
+    print(request.GET)
     if 'assignmentId' in request.GET:
         hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.GET['assignmentId'], defaults={'data': {}})[0]
         request.hit = hitObj.data
+        if phase is None:
+            a = list(request.hit.get('roundnums', {}))
+            if a:
+                phase = a[0]
         output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase), 'assignmentId': assignmentId})
         output.set_cookie('assignmentId', request.GET['assignmentId'])
         turkUrl = "https://workersandbox.mturk.com" if request.GET['turkSubmitTo'] == "" else request.GET['turkSubmitTo']
@@ -30,7 +36,7 @@ def over(request, phase=None, assignmentId="empty"):
     return output
 
 def feedback(request):
-    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.COOKIES['assignmentId'], defaults={'data': {}})[0]
+    hitObj = HIT.objects.only('data').get_or_create(assignment_id=request.GET['assignmentId'], defaults={'data': {}})[0]
     request.hit = hitObj.data
     request.hit['endTime'] = datetime.now()
     hitObj.save()
