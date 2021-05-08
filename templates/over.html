@@ -37,7 +37,7 @@
     <h5>Please<b> click the button </b>below to go back to MTurk page.</h5>
     <hr>
     <div style="text-align: center">
-        <form name="mturk" method="post" action="{{ request.GET.turkSubmitTo }}/mturk/externalSubmit" style="text-align: center">
+        <form name="mturk" method="post" action="{{ turkSubmitTo }}/mturk/externalSubmit" style="text-align: center">
 		{%comment%}<form name="mturk" method="post" action="https://workersandbox.mturk.com/mturk/externalSubmit" style="text-align: center">{%endcomment%}
             <input type="hidden" name="assignmentId" value="{{ request.GET.assignmentId }}">
             <input type="hidden" name="hitId" value="{{ request.hit.hitId }}">

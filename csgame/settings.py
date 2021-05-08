@@ -230,7 +230,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 1073741824
 DEFAULT_FILE_STORAGE = 'csgame.storage_backends.MediaStorage'
 
 # Only enable the mturk link when we done with experimenting mturk sandbox
-MTURK_URL = my_env.get('MTURK_URL', 'https://www.mturk.com') #'https://mturk-requester-sandbox.us-east-1.amazonaws.com')
+MTURK_URL = my_env.get('MTURK_URL', 'https://mturk-requester.us-east-1.amazonaws.com') #'https://mturk-requester-sandbox.us-east-1.amazonaws.com')
 CSRF_TRUSTED_ORIGINS = ['www.mturk.com', 'mturk-requester.us-east-1.amazonaws.com', 'mturk-requester-sandbox.us-east-1.amazonaws.com', 'workersandbox.mturk.com']
 CSRF_COOKIE_SAMESITE = None
 
