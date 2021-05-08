@@ -24,7 +24,8 @@ def over(request, phase=None, assignmentId="empty"):
             a = list(request.hit.get('roundnums', {}))
             if a:
                 phase = a[0]
-        output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase), 'assignmentId': assignmentId})
+        turkSubmitTo = request.GET.get('turkSubmitTo', 'https://www.mturk.com')
+        output = render(request, 'over.html', {'phase': phase, 'roundNums': request.hit.get('roundnums', {}).get(phase), 'assignmentId': assignmentId, 'turkSubmitTo': turkSubmitTo})
         output.set_cookie('assignmentId', request.GET['assignmentId'])
         turkUrl = "https://workersandbox.mturk.com" if request.GET['turkSubmitTo'] == "" else request.GET['turkSubmitTo']
         output.set_cookie('submissionUrl', turkUrl)
