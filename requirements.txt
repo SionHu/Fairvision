@@ -32,5 +32,5 @@ requests==2.24.0
 s3transfer==0.3.6
 six==1.15.0
 sqlparse==0.4.1
-urllib3==1.25.11 ; python_version != '3.4'
+urllib3==1.26.5 ; python_version != '3.4'
 whitenoise==5.1.0
