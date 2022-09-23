@@ -74,7 +74,7 @@ Pillow>=6.2.2
 plac==0.9.6
 pluggy==0.8.1
 preshed==2.0.1
-protobuf==3.6.1
+protobuf==3.18.3
 psycopg2==2.7.7
 py==1.10.0
 pyasn1==0.4.5
