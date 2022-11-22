@@ -21,7 +21,7 @@ natsort==7.0.1
 openpyxl==3.0.4
 packaging==20.9
 paramiko==2.7.1
-pillow==8.1.1
+pillow==9.3.0
 psycopg2-binary==2.8.5
 pycparser==2.20
 pynacl==1.4.0
